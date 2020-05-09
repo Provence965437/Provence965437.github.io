@@ -3,14 +3,12 @@
   <entry>
     <title>hexo博客搭建与使用：搭建篇</title>
     <url>/2020/05/09/hexo1/</url>
-    <content><![CDATA[<p>#hexo博客搭建与使用：搭建篇</p>
-<blockquote>
+    <content><![CDATA[<blockquote>
 <p>&emsp;一个好的开始。。。<br>&emsp;花了一天的时间终于搭建好了自己的个人博客，从今天开始，我会在这个新的home中记录并分享自己的学习和生活。往事如风，吾欲乘风破浪。与诸君共勉。</p>
 </blockquote>
 <hr>
 <p><a href="https://provence965437.github.io/" target="_blank" rel="noopener"><strong>主页地址</strong></a></p>
 <hr>
-<p>[TOC]</p>
 <h2 id="nodejs和npm安装"><a href="#nodejs和npm安装" class="headerlink" title="nodejs和npm安装"></a>nodejs和npm安装</h2><p> 这个比较简单，我以win10为例介绍。去<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载最新的稳定版windows安装包下载、点击安装，一路next即可。<br>之后打开cmd，输入下面命令查看是否安装成功<br> <code>node -v</code><br> <code>npm -v</code></p>
 <h2 id="git安装和部署"><a href="#git安装和部署" class="headerlink" title="git安装和部署"></a>git安装和部署</h2><p>还是<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网</a>下载windows安装包，点击安装，选项很多，一般直接next到底。</p>
 <h2 id="hexo安装与部署"><a href="#hexo安装与部署" class="headerlink" title="hexo安装与部署"></a>hexo安装与部署</h2><p>进入cmd，安装<strong>hexo-cli</strong><br> <code>npm install -g hexo-cli</code>  全局安装<br>不想全局安装，就cd到一个目录，直接安装在这个目录下<br>  <code>npm install hexo-cli</code><br>另外npm可以用<code>--prefix</code>指定安装路径。<br>如果不是全局安装，需要添加环境变量，在Path中添加hexo的安装路径即可<br>在hexo的安装路径下新建一个文件夹，这个文件夹就是你的<strong>博客根目录</strong>，例如名字叫做 blog。那么根目录就是XXX/blog/</p>
