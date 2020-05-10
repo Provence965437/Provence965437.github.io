@@ -400,7 +400,8 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
             <blockquote>
 <p>这篇文档主要总结git的安装与配置相关内容<br>主要包括git安装，ssh秘钥配置，下载加速等内容</p>
 </blockquote>
-<p>###git安装<br>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。<br>###ssh秘钥配置<br> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
+<h3 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h3><p>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。</p>
+<h3 id="ssh秘钥配置"><a href="#ssh秘钥配置" class="headerlink" title="ssh秘钥配置"></a>ssh秘钥配置</h3><p> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
 <h4 id="生成秘钥对"><a href="#生成秘钥对" class="headerlink" title="生成秘钥对"></a>生成秘钥对</h4><p>使用命令<br><code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code><br>其中<a href="mailto:your_email@youremail.com">your_email@youremail.com</a>是你的邮箱<br>然后会让你输入一些密码信息，直接三次回车即可<br>执行完这个命令后会在目录<code>~/.ssh</code>下面生成几个文件，打开其中的<code>id_dsa.pub</code>文件复制其内容。</p>
 <h4 id="将秘钥添加到仓库"><a href="#将秘钥添加到仓库" class="headerlink" title="将秘钥添加到仓库"></a>将秘钥添加到仓库</h4><p>登录你的github，右上角点击你的头像-&gt;设置-&gt;左栏点击 SSH and GPG keys。点击New SSH key，在下面的窗口中粘贴你刚才复制的秘钥。在上面随便起一个名字。最后点击Add key。<br>之后进入终端，输入命令：<br><code>ssh -T git@github.com</code><br>如果看到：</p>
 <pre><code>Hi xxx! You&apos;ve successfully authenticated, but GitHub does not # provide shell access.</code></pre><p>代表设置成功。</p>
