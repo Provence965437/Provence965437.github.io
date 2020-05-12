@@ -74,7 +74,7 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="hyperledger,fabric,go,docker," />
 
 
 
@@ -85,14 +85,16 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 
 
 
-<meta name="description" content="风雪追击的技术分享空间">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风雪追击5437">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="为了导师的项目要研究超级账本，fabric是hyperledger的核心项目，于是花了两天时间搭建hyperledger fabric的环境。涉及的东西挺多挺杂的，这里记录一下吧。本文主要参考这篇博客，内容基本一致，一些不同点是我出现的问题和解决方案，可以先按照链接文档去做，如果有问题，再来看我这篇文档有没有解决方案。  ###Docker安装如果安装过老版的docker，需要先卸载：sudo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu-fabric2.1环境搭建">
+<meta property="og:url" content="http://yoursite.com/2020/05/12/fabric-build/index.html">
 <meta property="og:site_name" content="风雪追击5437">
-<meta property="og:description" content="风雪追击的技术分享空间">
+<meta property="og:description" content="为了导师的项目要研究超级账本，fabric是hyperledger的核心项目，于是花了两天时间搭建hyperledger fabric的环境。涉及的东西挺多挺杂的，这里记录一下吧。本文主要参考这篇博客，内容基本一致，一些不同点是我出现的问题和解决方案，可以先按照链接文档去做，如果有问题，再来看我这篇文档有没有解决方案。  ###Docker安装如果安装过老版的docker，需要先卸载：sudo">
+<meta property="article:published_time" content="2020-05-12T08:55:12.000Z">
+<meta property="article:modified_time" content="2020-05-12T08:56:25.991Z">
 <meta property="article:author" content="Prov">
-<meta property="article:tag" content="blockchain fabic">
+<meta property="article:tag" content="hyperledger,fabric,go,docker">
 <meta name="twitter:card" content="summary">
 
 
@@ -123,13 +125,13 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/05/12/fabric-build/"/>
 
 
 
 
 
-  <title>风雪追击5437</title>
+  <title>ubuntu-fabric2.1环境搭建 | 风雪追击5437</title>
   
 
 
@@ -150,8 +152,7 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -278,9 +279,9 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -310,9 +311,7 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/12/fabric-build/" itemprop="url">ubuntu-fabric2.1环境搭建</a></h1>
+          <h1 class="post-title" itemprop="name headline">ubuntu-fabric2.1环境搭建</h1>
         
 
         <div class="post-meta">
@@ -395,9 +394,7 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
       
 
       
-        
-          
-            <blockquote>
+        <blockquote>
 <p>为了导师的项目要研究超级账本，fabric是hyperledger的核心项目，于是花了两天时间搭建hyperledger fabric的环境。涉及的东西挺多挺杂的，这里记录一下吧。<br>本文主要参考<a href="https://blog.csdn.net/MARK4993885/article/details/105409596/" target="_blank" rel="noopener">这篇博客</a>，内容基本一致，一些不同点是我出现的问题和解决方案，可以先按照链接文档去做，如果有问题，再来看我这篇文档有没有解决方案。</p>
 </blockquote>
 <p>###Docker安装<br>如果安装过老版的docker，需要先卸载：<br><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></p>
@@ -427,8 +424,6 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 GO111MODULE=on go mod vendor</code></pre><p>我不懂shell脚本，不过这个地方能猜个差不多，就是进入<strong>../chaincode/abstore/go</strong>这个目录去执行<code>go mod vendor</code><br>进行尝试后，下载了一系列文件，果然不是go安装的问题，应该是因为什么原因bash获得不了go命令的执行路径。<br>手动执行命令后执行关闭脚本：<br><code>sudo ./bysn.sh down</code><br>再次执行<br><code>sudo ./bysn.sh up</code><br>当界面上出现一个大大的<strong><strong>END</strong></strong>时，代表运行成功。</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>搭建的过程充满曲折，主要问题出在git和go的安装上。这只是开始，后续还要尝试去使用fabric，继续加油吧。</p>
 
-          
-        
       
     </div>
     
@@ -443,348 +438,36 @@ GO111MODULE=on go mod vendor</code></pre><p>我不懂shell脚本，不过这个�
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/10/tools-git/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Prov">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/tx.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风雪追击5437">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/10/tools-git/" itemprop="url">ubuntu-Git安装与配置</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-10T20:59:43+08:00">
-                2020-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" itemprop="url" rel="index">
-                    <span itemprop="name">各种工具的安装配置</span>
-                  </a>
-                </span>
-
-                
-                
-                  >
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/git/" itemprop="url" rel="index">
-                    <span itemprop="name">git</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/hyperledger-fabric-go-docker/" rel="tag"><i class="fa fa-tag"></i> hyperledger,fabric,go,docker</a>
           
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>这篇文档主要总结git的安装与配置相关内容<br>主要包括git安装，ssh秘钥配置，下载加速等内容</p>
-</blockquote>
-<h3 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h3><p>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。</p>
-<h3 id="ssh秘钥配置"><a href="#ssh秘钥配置" class="headerlink" title="ssh秘钥配置"></a>ssh秘钥配置</h3><p> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
-<h4 id="生成秘钥对"><a href="#生成秘钥对" class="headerlink" title="生成秘钥对"></a>生成秘钥对</h4><p>使用命令<br><code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code><br>其中<a href="mailto:your_email@youremail.com">your_email@youremail.com</a>是你的邮箱<br>然后会让你输入一些密码信息，直接三次回车即可<br>执行完这个命令后会在目录<code>~/.ssh</code>下面生成几个文件，打开其中的<code>id_dsa.pub</code>文件复制其内容。</p>
-<h4 id="将秘钥添加到仓库"><a href="#将秘钥添加到仓库" class="headerlink" title="将秘钥添加到仓库"></a>将秘钥添加到仓库</h4><p>登录你的github，右上角点击你的头像-&gt;设置-&gt;左栏点击 SSH and GPG keys。点击New SSH key，在下面的窗口中粘贴你刚才复制的秘钥。在上面随便起一个名字。最后点击Add key。<br>之后进入终端，输入命令：<br><code>ssh -T git@github.com</code><br>如果看到：</p>
-<pre><code>Hi xxx! You&apos;ve successfully authenticated, but GitHub does not # provide shell access.</code></pre><p>代表设置成功。</p>
-<h3 id="加速设置"><a href="#加速设置" class="headerlink" title="加速设置"></a>加速设置</h3><p>这是常规的加速方法，未必能获得理想的速度，如需达到理想速度，需要设置代理。<br>打开<a href="ipaddress.com">ip查询网址</a>,分别查询<br><code>github.com</code><br><code>github.global.ssl.net</code><br>的地址，然后填入到/etc/hosts文件中<br>如下</p>
-<pre><code>151.101.185.194 github.global-ssl.fastly.net
-192.30.253.112  github.com    </code></pre><p>然后更新dns缓存，输入命令：<br><code>sudo  /etc/init.d/networking restart</code><br>这只在进行git clone速度会有一些提升。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/09/hexo1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Prov">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/tx.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风雪追击5437">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/09/hexo1/" itemprop="url">hexo博客搭建与使用：搭建篇</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-09T14:35:11+08:00">
-                2020-05-09
-              </time>
+              <a href="/2020/05/10/tools-git/" rel="next" title="ubuntu-Git安装与配置">
+                <i class="fa fa-chevron-left"></i> ubuntu-Git安装与配置
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/blog%E7%AE%A1%E7%90%86%E6%8A%80%E5%B7%A7/" itemprop="url" rel="index">
-                    <span itemprop="name">blog管理技巧</span>
-                  </a>
-                </span>
-
-                
-                
-                  >
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/blog%E7%AE%A1%E7%90%86%E6%8A%80%E5%B7%A7/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo博客搭建与使用</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <blockquote>
-<p>&emsp;一个好的开始。。。<br>&emsp;花了一天的时间终于搭建好了自己的个人博客，从今天开始，我会在这个新的home中记录并分享自己的学习和生活。往事如风，吾欲乘风破浪。与诸君共勉。</p>
-</blockquote>
-<hr>
-<p><a href="https://provence965437.github.io/" target="_blank" rel="noopener"><strong>主页地址</strong></a></p>
-<hr>
-<h2 id="nodejs和npm安装"><a href="#nodejs和npm安装" class="headerlink" title="nodejs和npm安装"></a>nodejs和npm安装</h2><p> 这个比较简单，我以win10为例介绍。去<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载最新的稳定版windows安装包下载、点击安装，一路next即可。<br>之后打开cmd，输入下面命令查看是否安装成功<br> <code>node -v</code><br> <code>npm -v</code></p>
-<h2 id="git安装和部署"><a href="#git安装和部署" class="headerlink" title="git安装和部署"></a>git安装和部署</h2><p>还是<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网</a>下载windows安装包，点击安装，选项很多，一般直接next到底。</p>
-<h2 id="hexo安装与部署"><a href="#hexo安装与部署" class="headerlink" title="hexo安装与部署"></a>hexo安装与部署</h2><p>进入cmd，安装<strong>hexo-cli</strong><br> <code>npm install -g hexo-cli</code>  全局安装<br>不想全局安装，就cd到一个目录，直接安装在这个目录下<br>  <code>npm install hexo-cli</code><br>另外npm可以用<code>--prefix</code>指定安装路径。<br>如果不是全局安装，需要添加环境变量，在Path中添加hexo的安装路径即可<br>在hexo的安装路径下新建一个文件夹，这个文件夹就是你的<strong>博客根目录</strong>，例如名字叫做 blog。那么根目录就是XXX/blog/</p>
-<h2 id="博客安装"><a href="#博客安装" class="headerlink" title="博客安装"></a>博客安装</h2><p>进入刚才创建的blog目录，输入命令：<br><code>hexo init blog</code><br><code>npm install</code><br>这样网站根目录就部署完成了。<br>在网站根目录下，需要注意的是Theme文件夹和 _config.yml文件。theme文件夹下存放的是hexo主题配置，我们可以在这个文件夹下导入我们下载的主题。<br>其中默认有一个landscape主题。而_config.yml是博客的基本配置文件，这个要和后面提到的，主题文件夹中的_config.yml相区分，主题文件夹中的_config.yml叫做主题配置文件。在基本配置文件中可以进行一些基本的配置</p>
-<pre><code># Site
-title: 我的家
-subtitle: 另起炉灶
-description: 欢迎光临
-keywords: 
-author: author
-email: 
-language: zh-Hans
-timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br><code>hexo ghexo s</code><br>启动server，如果命令不存在，就执行：<br><code>npm install hexo-server --save</code><br>安装server，然后命令就有了。<br>执行完后项目就启动了，在浏览器中输入地址<a href="http://localhost:4000就可以看到已启动的博客网站的雏形。">http://localhost:4000就可以看到已启动的博客网站的雏形。</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -794,10 +477,11 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -805,6 +489,10 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
 
 
           
+
+  
+
+
 
         </div>
         
@@ -825,8 +513,17 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -890,6 +587,22 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装docker"><span class="nav-number">1.</span> <span class="nav-text">安装docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装DOCKER-ENGINE："><span class="nav-number">2.</span> <span class="nav-text">安装DOCKER ENGINE：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装Docker-Compose"><span class="nav-number">3.</span> <span class="nav-text">安装Docker Compose</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fabric安装"><span class="nav-number"></span> <span class="nav-text">fabric安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#源码下载"><span class="nav-number">1.</span> <span class="nav-text">源码下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行拉取镜像镜像脚本"><span class="nav-number">2.</span> <span class="nav-text">执行拉取镜像镜像脚本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行sample"><span class="nav-number">3.</span> <span class="nav-text">执行sample</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number"></span> <span class="nav-text">总结</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1036,6 +749,10 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
