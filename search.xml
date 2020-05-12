@@ -6,7 +6,7 @@
     <content><![CDATA[<blockquote>
 <p>为了导师的项目要研究超级账本，fabric是hyperledger的核心项目，于是花了两天时间搭建hyperledger fabric的环境。涉及的东西挺多挺杂的，这里记录一下吧。<br>本文主要参考<a href="https://blog.csdn.net/MARK4993885/article/details/105409596/" target="_blank" rel="noopener">这篇博客</a>，内容基本一致，一些不同点是我出现的问题和解决方案，可以先按照链接文档去做，如果有问题，再来看我这篇文档有没有解决方案。</p>
 </blockquote>
-<p>###Docker安装<br>如果安装过老版的docker，需要先卸载：<br><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></p>
+<h3 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h3><p>如果安装过老版的docker，需要先卸载：<br><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></p>
 <h4 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h4><p><code>sudo apt-get update</code></p>
 <p><code>sudo apt-get install \
     apt-transport-https \
@@ -24,7 +24,8 @@
 <p>没有出现问题。</p>
 <h4 id="安装Docker-Compose"><a href="#安装Docker-Compose" class="headerlink" title="安装Docker Compose"></a>安装Docker Compose</h4><p><code>sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code></p>
 <p>这一步可能会非常慢，最好是换国内镜像网站下载下载，使用下面的命令代替：<br><code>sudo curl -L &quot;https://get.daocloud.io/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code><br>get.daocloud.io是国内的一家镜像网站。</p>
-<p>设置权限<br><code>sudo chmod +x /usr/local/bin/docker-compose</code><br><code>docker-compose --version</code><br>###Go环境安装<br>建议是使用go1.4以上的版本<br>去<a href="https://studygolang.com/dl" target="_blank" rel="noopener">go语言中文网</a>下载最新版本<br>我下载的是<strong>go1.14.2.linux-amd64.tar.gz</strong>。<br>解压并复制到相应目录：<br><code>tar -zxvf  go1.14.2.linux-amd64.tar.gz -C /usr/local</code><br>配置环境变量，打开配置文件/etc/profile<br><code>sudo vim /etc/profile</code><br>写入：<br><code>export PATH=$PATH:/usr/local/go/bin</code><br><code>export GOPATH=/opt/gopath</code><br>然后执行：<br><code>source /etc/profile</code><br>使配置生效。<br><strong>另外我出现了关闭终端，配置失效，需要重新source的情况，我的解决方法是改为将内容写入到~/.bashrc</strong><br><code>sudo vim ~/.bashrc</code><br>使配置执行：<br><code>source ~/.bashrc</code></p>
+<p>设置权限<br><code>sudo chmod +x /usr/local/bin/docker-compose</code><br><code>docker-compose --version</code></p>
+<h3 id="Go环境安装"><a href="#Go环境安装" class="headerlink" title="Go环境安装"></a>Go环境安装</h3><p>建议是使用go1.4以上的版本<br>去<a href="https://studygolang.com/dl" target="_blank" rel="noopener">go语言中文网</a>下载最新版本<br>我下载的是<strong>go1.14.2.linux-amd64.tar.gz</strong>。<br>解压并复制到相应目录：<br><code>tar -zxvf  go1.14.2.linux-amd64.tar.gz -C /usr/local</code><br>配置环境变量，打开配置文件/etc/profile<br><code>sudo vim /etc/profile</code><br>写入：<br><code>export PATH=$PATH:/usr/local/go/bin</code><br><code>export GOPATH=/opt/gopath</code><br>然后执行：<br><code>source /etc/profile</code><br>使配置生效。<br><strong>另外我出现了关闭终端，配置失效，需要重新source的情况，我的解决方法是改为将内容写入到~/.bashrc</strong><br><code>sudo vim ~/.bashrc</code><br>使配置执行：<br><code>source ~/.bashrc</code></p>
 <p>然后创建文件夹：<br><code>mkdir -p /opt/gopath/src/github.com/hyperledger</code><br>这个文件夹和前面设置的$GOPATH的路径一致</p>
 <h3 id="fabric安装"><a href="#fabric安装" class="headerlink" title="fabric安装"></a>fabric安装</h3><h4 id="源码下载"><a href="#源码下载" class="headerlink" title="源码下载"></a>源码下载</h4><p>首先为了保证搭建环境的时效性，应该用git进行安装<br><a href="https://provence965437.github.io/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/git/" target="_blank" rel="noopener">git的安装与配置</a><br>然后执行下面的命令：<br><code>cd /opt/gopath/src/github.com/hyperledger</code><br><code>git clone https://github.com/hyperledger/fabric.git</code><br>这前提是你的git速度可以，并且下载之后没有什么问题。我开始时用git下载，下了30分钟，好不容易下下来，关掉终端，git下载的文件又会自动删除。真是无语了。<br>如果你的git不好用，那就直接去github上下载好再解压到相应目录。</p>
 <h4 id="执行拉取镜像镜像脚本"><a href="#执行拉取镜像镜像脚本" class="headerlink" title="执行拉取镜像镜像脚本"></a>执行拉取镜像镜像脚本</h4><p>进入到<strong>/fabric/scripts/</strong><br>先给当前用docker权限，执行：<br><code>sudo groupadd docker</code>   &emsp;&emsp; 添加docker用户组<br><code>sudo gpasswd -a $USER docker</code>&emsp;&emsp;将当前用户加如docker用户组<br><code>newgrp docker</code> &emsp;&emsp;&emsp;    #更新用户组<br>执行：<br><code>sudo ./bootstrap.sh</code><br>切换到/<strong>fabric</strong>根目录<br>再执行：<br><code>sudo curl -sSL https://bit.ly/2ysbOFE | bash -s</code><br>然后目录下会出现fabric-sample文件，另外原文提到还有<strong>hyperledger-fabric-linux-amd64-2.0.0</strong>这个文件夹，我的脚本执行时倒是有下载，但是我结束之后发现目录下并没有这个。确保万无一失，去github自己下过来解压，记得下载2.1版本的。</p>
@@ -39,6 +40,29 @@ GO111MODULE=on go mod vendor</code></pre><p>我不懂shell脚本，不过这个�
       </categories>
       <tags>
         <tag>hyperledger,fabric,go,docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ubuntu-Git安装与配置</title>
+    <url>/2020/05/10/tools-git/</url>
+    <content><![CDATA[<blockquote>
+<p>这篇文档主要总结git的安装与配置相关内容<br>主要包括git安装，ssh秘钥配置，下载加速等内容</p>
+</blockquote>
+<h3 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h3><p>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。</p>
+<h3 id="ssh秘钥配置"><a href="#ssh秘钥配置" class="headerlink" title="ssh秘钥配置"></a>ssh秘钥配置</h3><p> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
+<h4 id="生成秘钥对"><a href="#生成秘钥对" class="headerlink" title="生成秘钥对"></a>生成秘钥对</h4><p>使用命令<br><code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code><br>其中<a href="mailto:your_email@youremail.com">your_email@youremail.com</a>是你的邮箱<br>然后会让你输入一些密码信息，直接三次回车即可<br>执行完这个命令后会在目录<code>~/.ssh</code>下面生成几个文件，打开其中的<code>id_dsa.pub</code>文件复制其内容。</p>
+<h4 id="将秘钥添加到仓库"><a href="#将秘钥添加到仓库" class="headerlink" title="将秘钥添加到仓库"></a>将秘钥添加到仓库</h4><p>登录你的github，右上角点击你的头像-&gt;设置-&gt;左栏点击 SSH and GPG keys。点击New SSH key，在下面的窗口中粘贴你刚才复制的秘钥。在上面随便起一个名字。最后点击Add key。<br>之后进入终端，输入命令：<br><code>ssh -T git@github.com</code><br>如果看到：</p>
+<pre><code>Hi xxx! You&apos;ve successfully authenticated, but GitHub does not # provide shell access.</code></pre><p>代表设置成功。</p>
+<h3 id="加速设置"><a href="#加速设置" class="headerlink" title="加速设置"></a>加速设置</h3><p>这是常规的加速方法，未必能获得理想的速度，如需达到理想速度，需要设置代理。<br>打开<a href="ipaddress.com">ip查询网址</a>,分别查询<br><code>github.com</code><br><code>github.global.ssl.net</code><br>的地址，然后填入到/etc/hosts文件中<br>如下</p>
+<pre><code>151.101.185.194 github.global-ssl.fastly.net
+192.30.253.112  github.com    </code></pre><p>然后更新dns缓存，输入命令：<br><code>sudo  /etc/init.d/networking restart</code><br>这只在进行git clone速度会有一些提升。</p>
+]]></content>
+      <categories>
+        <category>各种工具的安装配置</category>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -70,29 +94,6 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
       </categories>
       <tags>
         <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ubuntu-Git安装与配置</title>
-    <url>/2020/05/10/tools-git/</url>
-    <content><![CDATA[<blockquote>
-<p>这篇文档主要总结git的安装与配置相关内容<br>主要包括git安装，ssh秘钥配置，下载加速等内容</p>
-</blockquote>
-<h3 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h3><p>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。</p>
-<h3 id="ssh秘钥配置"><a href="#ssh秘钥配置" class="headerlink" title="ssh秘钥配置"></a>ssh秘钥配置</h3><p> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
-<h4 id="生成秘钥对"><a href="#生成秘钥对" class="headerlink" title="生成秘钥对"></a>生成秘钥对</h4><p>使用命令<br><code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code><br>其中<a href="mailto:your_email@youremail.com">your_email@youremail.com</a>是你的邮箱<br>然后会让你输入一些密码信息，直接三次回车即可<br>执行完这个命令后会在目录<code>~/.ssh</code>下面生成几个文件，打开其中的<code>id_dsa.pub</code>文件复制其内容。</p>
-<h4 id="将秘钥添加到仓库"><a href="#将秘钥添加到仓库" class="headerlink" title="将秘钥添加到仓库"></a>将秘钥添加到仓库</h4><p>登录你的github，右上角点击你的头像-&gt;设置-&gt;左栏点击 SSH and GPG keys。点击New SSH key，在下面的窗口中粘贴你刚才复制的秘钥。在上面随便起一个名字。最后点击Add key。<br>之后进入终端，输入命令：<br><code>ssh -T git@github.com</code><br>如果看到：</p>
-<pre><code>Hi xxx! You&apos;ve successfully authenticated, but GitHub does not # provide shell access.</code></pre><p>代表设置成功。</p>
-<h3 id="加速设置"><a href="#加速设置" class="headerlink" title="加速设置"></a>加速设置</h3><p>这是常规的加速方法，未必能获得理想的速度，如需达到理想速度，需要设置代理。<br>打开<a href="ipaddress.com">ip查询网址</a>,分别查询<br><code>github.com</code><br><code>github.global.ssl.net</code><br>的地址，然后填入到/etc/hosts文件中<br>如下</p>
-<pre><code>151.101.185.194 github.global-ssl.fastly.net
-192.30.253.112  github.com    </code></pre><p>然后更新dns缓存，输入命令：<br><code>sudo  /etc/init.d/networking restart</code><br>这只在进行git clone速度会有一些提升。</p>
-]]></content>
-      <categories>
-        <category>各种工具的安装配置</category>
-        <category>git</category>
-      </categories>
-      <tags>
-        <tag>git</tag>
       </tags>
   </entry>
 </search>
