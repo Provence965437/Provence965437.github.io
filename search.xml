@@ -1,6 +1,333 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>fabric2.1简单网络手动网络搭建-1</title>
+    <url>/2020/05/20/fabric-mynetwork1/</url>
+    <content><![CDATA[<blockquote>
+<p>有将近一周没有更新博客。目前的任务主要在研究fabric上，上周的时候搭建好了fabric的测试环境，并成功运行了network-test的测试网络。但因为这个sample都是执行的脚本，每个脚本实际上执行了很多步骤，还不能完全看清fabric网络搭建的过程。所以只能硬着头皮照着老书本再去搭建一下。、</p>
+</blockquote>
+<blockquote>
+<p>本以为会是轻松的事情，但因为版本差异，以及外文啃着吃力的原因，遇到了很多问题花了一个星期才解决。不管怎么说，幸运的是，我解决了。</p>
+<p>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">官方文档</a>以及《区块链开发实战》<br>本文不再涉及环境搭建，请参照<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
+</blockquote>
+<hr>
+<h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>手动搭建fabric网路主要包含两部分内容：<br><strong>1.fabric网络的手动搭建</strong><br>本文以一个orderer节点，两个peer节点的网络模型为例<br><strong>2.链码的安装和测试</strong><br>链码使用fabcar<br>本文主要记录第一部分内容</p>
+<h3 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h3><p>搭建好fabric2.1·的运行环境，详情请见<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
+<h3 id="3-简单网络的搭建"><a href="#3-简单网络的搭建" class="headerlink" title="3.简单网络的搭建"></a>3.简单网络的搭建</h3><h4 id="3-1主要流程"><a href="#3-1主要流程" class="headerlink" title="3.1主要流程"></a>3.1主要流程</h4><p>搭建一个fabric的建议网络的主要流程是：</p>
+<pre><code>1.创建证书文件
+2.创建创世区块、通道区块、锚点文件
+3.启动orderer节点和peer节点
+4.创建通道和加入节点加入</code></pre><p>另外列出创建网络至关重要的几个配置文件：<br><strong>cryto-config.yaml</strong>，<strong>configtx.yaml</strong>，<strong>core.yaml</strong>，<strong>orderer.yaml</strong><br>这几个文件的配置要格外小心，错误往往出自这里。</p>
+<h4 id="3-2-创建证书文件"><a href="#3-2-创建证书文件" class="headerlink" title="3.2.创建证书文件"></a>3.2.创建证书文件</h4><p>在进行一切之前首先建议将fabric-sample/bin/目录加入到path环境变量，因为后面要每一步使用的命令的可执行文件都在这个文件夹中或者，每当开始一个新的终端时，执行:</p>
+<pre><code>export PATH= \$PATH:\$fabric-sample\bin</code></pre><p>这里创建的是fabric网络的证书文件。主要依据配置文件<strong>cryto-config.yaml</strong><br>这个文件的内容末班可以通过执行：</p>
+<pre><code>cryptogen showtemplate</code></pre><p>得到。这里给出样例。</p>
+<pre><code>  - Name: Orderer
+    Domain: mynetwork.com
+    EnableNodeOUs: false
+
+    Specs:
+      - Hostname: orderer
+
+
+PeerOrgs:
+
+  - Name: Org1
+    Domain: org1.mynetwork.com
+    EnableNodeOUs: false
+
+    Template:
+      Count: 2
+    Users:
+      Count: 3
+
+  - Name: Org2
+    Domain: org2.mynetwork.com
+    EnableNodeOUs: false
+    Template:
+      Count: 2
+    Users:
+      Count: 2</code></pre><p>这个文件的内容较少，也不复杂。<br>为了便于介绍，我们创建一个自网络的文件夹名字叫<strong>mynetwork</strong>，在这个文件夹下创建<strong>cryto-config.yaml</strong>并写入以上内容。<br>之后进入<strong>mynetwork</strong>文件夹执行命令</p>
+<pre><code>cryptogen generate --config=crypto-config.yaml --output ./crypto-config</code></pre><p>然后在这个目录下就生成了<strong>crypto-config</strong>文件夹，这个里面就是我们需要的各种证书文件。</p>
+<h4 id="3-3-创建创世区块、通道区块、锚点文件"><a href="#3-3-创建创世区块、通道区块、锚点文件" class="headerlink" title="3.3.创建创世区块、通道区块、锚点文件"></a>3.3.创建创世区块、通道区块、锚点文件</h4><h5 id="3-3-1创建创世区块"><a href="#3-3-1创建创世区块" class="headerlink" title="3.3.1创建创世区块"></a>3.3.1创建创世区块</h5><p>首先填写配置文件<strong>configtx.yaml</strong>，这个文件的模版在fabric-sample/config/文件夹下<br>，复制到我们的<strong>mynetwork</strong>文件下来修改。因为篇幅很长，我列出重要部分：</p>
+<pre><code>Organizations:
+
+- &amp;OrderOrg
+
+    # Name can include alphanumeric characters as well as dots and dashes.
+    Name: OrderOrg
+
+    SkipAsForeign: false
+
+    ID: OrdererMSP   #id比较重要，要和后面配置文件一致，下同
+
+    #这个目录按照你的目录去修改即可，下同
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/msp
+
+    #  策略很重要，容易出错，不知道怎么填写的话就直接填写成xx.member吧
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+
+    # orderer的地址，重要
+        - &quot;127.0.0.1:7050
+
+    #组织1相关配置
+- &amp;Org1
+
+    Name: Org1MSP
+    ID: Org1MSP
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/msp
+    AdminPrincipal: Role.ADMIN
+    AnchorPeers:
+        - Host: peer0.org1.mynetwork.com
+          Port: 7051
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+
+- &amp;Org2
+    Name: Org2MSP
+    ID: Org2MSP
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org2.mynetwork.com/msp
+    AdminPrincipal: Role.ADMIN
+    AnchorPeers:
+        - Host: peer0.org2.mynetwork.com
+          Port: 9051                                 #注意这个理地址和1不同因为是两个节点
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+            aaa</code></pre><p>手动分割0.0</p>
+<pre><code>Orderer: &amp;OrdererDefaults
+
+
+OrdererType: solo
+
+# 域名加端口和crypto-config.yaml一致
+Addresses:
+     - orderer.mynetwork.com:7050
+
+BatchTimeout: 2s
+
+BatchSize:
+
+    MaxMessageCount: 500
+
+    AbsoluteMaxBytes: 10 MB
+
+    PreferredMaxBytes: 2 MB
+
+MaxChannels: 0
+
+Kafka:
+
+    Brokers:
+        - 127.0.0.1:9092
+        - kafka0:9092
+        - kafka1:9092
+        - kafka2:9092</code></pre><p>手动分割=_=</p>
+<pre><code>    #这部分尤其重要，是后续步骤的启动文件
+Profiles:
+    TwoOrgsOrdererGenesis:
+        &lt;&lt;: *ChannelDefaults   #这句话在每个字段里都要有
+        Orderer:
+            &lt;&lt;: *OrdererDefaults
+            Organizations:
+                - *OrderOrg
+
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+    TwoOrgsChannel:
+        &lt;&lt;: *ChannelDefaults
+        Consortium: SampleConsortium
+        Application:
+            &lt;&lt;: *ApplicationDefaults
+            Organizations:
+
+                - *Org1
+                - *Org2</code></pre><p>以上内容只是配置文件模版改动的部分，因为yaml文件对格式的要求很严格，最好不要直接复制粘贴，在原文件基础上修改。<br>执行命令前要么通过设置<strong>FABRIC_CFG_PATH</strong>环境变量来指定配置文件读取路径，要么应在配置文件所在目录执行命令。</p>
+<p>修改好配置文件后，创建文件夹<strong>mynetwork/order</strong>,执行：</p>
+<pre><code>configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./order/mynetworkgenesis.block --channel cha1</code></pre><p>会在<strong>mynetwork/order</strong>文件夹下产生创世快文件<strong>mynetworkgenesis.block</strong></p>
+<h5 id="3-3-2创建通道区块文件"><a href="#3-3-2创建通道区块文件" class="headerlink" title="3.3.2创建通道区块文件"></a>3.3.2创建通道区块文件</h5><p>该文件用于创建通道时使用，在<strong>mynetwork</strong>下直接执行命令：</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./order/mynetworkchannel.tx -channelID cha2</code></pre><p>这里注意<strong>-channelID</strong>标记的通道id不要和上一步相同，不然会报错。<br>成功后会在<strong>mynetwork/order</strong>文件夹下产生<strong>mynetworkchannel.tx</strong>文件</p>
+<h5 id="3-3-3创建锚点文件"><a href="#3-3-3创建锚点文件" class="headerlink" title="3.3.3创建锚点文件"></a>3.3.3创建锚点文件</h5><p>执行命令：</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./order/Org1MSPanchors.tx -channelID cha2 -asOrg Org1MSP
+
+
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./order/Org2MSPanchors.tx -channelID cha2 -asOrg Org2MSP</code></pre><p>成功后会在<strong>mynetwork/orderer</strong>文件下产生<strong>Org1MSPanchors.tx</strong>和<strong>Org2MSPanchors.tx</strong></p>
+<h4 id="3-4启动orderer节点"><a href="#3-4启动orderer节点" class="headerlink" title="3.4启动orderer节点"></a>3.4启动orderer节点</h4><p>首先在<strong>mynetwork</strong>文件夹下1个文件夹<strong>orderer</strong><br>同样在<strong>fabric-sample/config/</strong>目录下找到<strong>orderer.yaml</strong>文件复制到<strong>mynetwork/</strong>目录下，这是<strong>orderer</strong>启动所需要的配置文件。</p>
+<pre><code>General:
+    ListenAddress: 127.0.0.1
+    ListenPort: 7050
+    TLS:
+        Enabled: false
+        PrivateKey: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/server.key
+        Certificate: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/server.crt
+        RootCAs:
+          - /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/ca.crt
+        ClientAuthRequired: false
+        ClientRootCAs:</code></pre><p>分割</p>
+<pre><code>BootstrapMethod: file
+
+BootstrapFile: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/order/mynetworkgenesis.block
+
+LocalMSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/msp
+
+LocalMSPID: OrdererMSP</code></pre><p>分割</p>
+<pre><code>FileLedger:
+
+    Location: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/orderer</code></pre><p>修改好配置文件后执行</p>
+<pre><code>orderer start</code></pre><p><strong>orderer</strong>节点启动。</p>
+<h4 id="3-4启动peer节点"><a href="#3-4启动peer节点" class="headerlink" title="3.4启动peer节点"></a>3.4启动peer节点</h4><p>首先在<strong>mynetwork</strong>文件夹下创建两个文件夹org1和org2<br>同样从<strong>fabric-sample/config/</strong>目录下找到<strong>core.yaml</strong>文件复制到<strong>mynetwork/org1</strong>目录下，这是peer启动所需要的配置文件。<br>打开<strong>core.yaml</strong>文件进行修改<br>修改部分如下：</p>
+<pre><code>peer:
+
+    id: peer0.org1.mynetwork.com
+
+    networkId: dev
+
+    # 这是org1的地址对于org2，统一改成90xx以区分
+    listenAddress: 0.0.0.0:7051
+
+    chaincodeListenAddress: 0.0.0.0:7052
+
+    # chaincodeAddress: 0.0.0.0:7052
+
+    address: peer0.org1.mynetwork.com:7051</code></pre><p>分割</p>
+<pre><code>gossip:
+    bootstrap: 127.0.0.1:7051</code></pre><p>分割</p>
+<pre><code># TLS Settings
+tls:
+    enabled:  false
+    clientAuthRequired: false
+    cert:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/server.crt
+
+    key:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/server.key
+
+    rootcert:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/ca.crt
+
+    clientRootCAs:
+        files:
+          - /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/ca.crt
+    clientKey:
+        file:
+    clientCert:
+        file:
+
+authentication:
+
+    timewindow: 15m
+
+fileSystemPath: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/org1/peer0</code></pre><p>分割</p>
+<pre><code>    mspConfigPath: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/msp
+
+    localMspId: Org1MSP
+
+vm:
+
+    endpoint: unix:///var/run/docker.sock
+    docker:
+        tls:
+            enabled: false
+            ca:
+                file: docker/ca.crt
+            cert:
+                file: docker/tls.crt
+            key:
+                file: docker/tls.key
+
+        attachStdout: false
+
+        hostConfig:
+            NetworkMode: host
+            Dns:
+                - 172.17.0.1                #**这个地方改成你的docker地址**
+            LogConfig:
+                Type: json-file
+                Config:
+                    max-size: &quot;50m&quot;
+                    max-file: &quot;5&quot;
+            Memory: 2147483648</code></pre><p>修改好后在<strong>mynetwork/org1</strong>目录下执行</p>
+<pre><code>peer node start </code></pre><p>值得一提的是，<strong>172.17.0.1</strong>这个地址是你的docker服务的地址，使用ifconfig查看并填入，如果不修改这里，后面可能会报奇怪的的错误，连接不上docker的容器。<br>之后peer.org1启动<br>对于org2的配置文件需要注意的地方主要是所有端口号尽量不要和org1重复，不然可能会有冲突。<br>同样的方法启动peer0.org2</p>
+<h4 id="3-5-创建通道和加入节点加入"><a href="#3-5-创建通道和加入节点加入" class="headerlink" title="3.5 创建通道和加入节点加入"></a>3.5 创建通道和加入节点加入</h4><h5 id="3-5-1创建通道"><a href="#3-5-1创建通道" class="headerlink" title="3.5.1创建通道"></a>3.5.1创建通道</h5><p>在<strong>mynetwork\org1</strong>下执行以下命令来预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel create -t 50s -o orderer.mynetwork.com:7050 -c cha2 -f ../order/mynetworkchannel.tx</code></pre><p>此时会在当前目录下创建出通道块文件<strong>cha2.block</strong>。将这个文件移动到<strong>mynetwork/order</strong>目录下。</p>
+<h5 id="3-5-2节点加入"><a href="#3-5-2节点加入" class="headerlink" title="3.5.2节点加入"></a>3.5.2节点加入</h5><p>预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel join -b ./order/cha2.block</code></pre><p>同样的方法来将另一个节点加入</p>
+<h5 id="3-5-3锚点更新"><a href="#3-5-3锚点更新" class="headerlink" title="3.5.3锚点更新"></a>3.5.3锚点更新</h5><p>预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel update -o orderer.mynetwork.com:7050 -c cha2 -f ./Org1MSPanchors.tx</code></pre><p>同样的方法来将另一个节锚点更新。<br>至此网络搭建部分基本完成。</p>
+]]></content>
+      <categories>
+        <category>hyperledger</category>
+        <category>fabric</category>
+      </categories>
+      <tags>
+        <tag>hyperledger,fabric,docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker权限设置</title>
+    <url>/2020/05/14/docker-sudo/</url>
+    <content><![CDATA[<blockquote>
+<p>在使用测试fabric-sample时几乎每个脚本或者命令执行都会调用docker，对于sudo可以调用的命令直接加上sudo执行还好，但是对于一些命令，比如peer，sudo默认调用的环境变量里没有有这条命令，所以调用peer的当前用户无法为peer获得docker的使用权限。这篇工具文主要为解决该问题。<br>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">这篇博客</a>，内容基本一致。<br>没错，其实就是抄过来的。</p>
+</blockquote>
+<h4 id="1-添加-docker-group"><a href="#1-添加-docker-group" class="headerlink" title="1.添加 docker group"></a>1.添加 docker group</h4><pre><code>$ sudo groupadd docker</code></pre><h4 id="2-将用户加入该-group-内"><a href="#2-将用户加入该-group-内" class="headerlink" title="2.将用户加入该 group 内"></a>2.将用户加入该 group 内</h4><p><code>sudo apt-get update</code></p>
+<pre><code>$ sudo usermod -aG docker $USER
+# 或者使用下面命令
+$ sudo gpasswd -a ${USER} docker</code></pre><h4 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="3.重启服务"></a>3.重启服务</h4><pre><code>$ sudo service docker restart
+# 或者
+$ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新-group-或者重启-X-会话"><a href="#4-切换当前会话到新-group-或者重启-X-会话" class="headerlink" title="4.切换当前会话到新 group 或者重启 X 会话"></a>4.切换当前会话到新 group 或者重启 X 会话</h4><pre><code>$ newgrp - docker</code></pre><p>这样基本上每次打开新终端都要先执行一下第四步的命令。</p>
+]]></content>
+      <categories>
+        <category>各种工具的安装配置</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ubuntu-fabric2.1环境搭建</title>
     <url>/2020/05/12/fabric-build/</url>
     <content><![CDATA[<blockquote>
@@ -41,6 +368,29 @@
       </tags>
   </entry>
   <entry>
+    <title>ubuntu-Git安装与配置</title>
+    <url>/2020/05/10/tools-git/</url>
+    <content><![CDATA[<blockquote>
+<p>这篇文档主要总结git的安装与配置相关内容<br>主要包括git安装，ssh秘钥配置，下载加速等内容</p>
+</blockquote>
+<h3 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h3><p>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。</p>
+<h3 id="ssh秘钥配置"><a href="#ssh秘钥配置" class="headerlink" title="ssh秘钥配置"></a>ssh秘钥配置</h3><p> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
+<h4 id="生成秘钥对"><a href="#生成秘钥对" class="headerlink" title="生成秘钥对"></a>生成秘钥对</h4><p>使用命令<br><code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code><br>其中<a href="mailto:your_email@youremail.com">your_email@youremail.com</a>是你的邮箱<br>然后会让你输入一些密码信息，直接三次回车即可<br>执行完这个命令后会在目录<code>~/.ssh</code>下面生成几个文件，打开其中的<code>id_dsa.pub</code>文件复制其内容。</p>
+<h4 id="将秘钥添加到仓库"><a href="#将秘钥添加到仓库" class="headerlink" title="将秘钥添加到仓库"></a>将秘钥添加到仓库</h4><p>登录你的github，右上角点击你的头像-&gt;设置-&gt;左栏点击 SSH and GPG keys。点击New SSH key，在下面的窗口中粘贴你刚才复制的秘钥。在上面随便起一个名字。最后点击Add key。<br>之后进入终端，输入命令：<br><code>ssh -T git@github.com</code><br>如果看到：</p>
+<pre><code>Hi xxx! You&apos;ve successfully authenticated, but GitHub does not # provide shell access.</code></pre><p>代表设置成功。</p>
+<h3 id="加速设置"><a href="#加速设置" class="headerlink" title="加速设置"></a>加速设置</h3><p>这是常规的加速方法，未必能获得理想的速度，如需达到理想速度，需要设置代理。<br>打开<a href="ipaddress.com">ip查询网址</a>,分别查询<br><code>github.com</code><br><code>github.global.ssl.net</code><br>的地址，然后填入到/etc/hosts文件中<br>如下</p>
+<pre><code>151.101.185.194 github.global-ssl.fastly.net
+192.30.253.112  github.com    </code></pre><p>然后更新dns缓存，输入命令：<br><code>sudo  /etc/init.d/networking restart</code><br>这只在进行git clone速度会有一些提升。</p>
+]]></content>
+      <categories>
+        <category>各种工具的安装配置</category>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hexo博客搭建与使用：搭建篇</title>
     <url>/2020/05/09/hexo1/</url>
     <content><![CDATA[<blockquote>
@@ -69,50 +419,6 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
       </categories>
       <tags>
         <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker权限设置</title>
-    <url>/2020/05/14/docker-sudo/</url>
-    <content><![CDATA[<blockquote>
-<p>在使用测试fabric-sample时几乎每个脚本或者命令执行都会调用docker，对于sudo可以调用的命令直接加上sudo执行还好，但是对于一些命令，比如peer，sudo默认调用的环境变量里没有有这条命令，所以调用peer的当前用户无法为peer获得docker的使用权限。这篇工具文主要为解决该问题。<br>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">这篇博客</a>，内容基本一致。<br>没错，其实就是抄过来的。</p>
-</blockquote>
-<h4 id="1-添加-docker-group"><a href="#1-添加-docker-group" class="headerlink" title="1.添加 docker group"></a>1.添加 docker group</h4><pre><code>$ sudo groupadd docker</code></pre><h4 id="2-将用户加入该-group-内"><a href="#2-将用户加入该-group-内" class="headerlink" title="2.将用户加入该 group 内"></a>2.将用户加入该 group 内</h4><p><code>sudo apt-get update</code></p>
-<pre><code>$ sudo usermod -aG docker $USER
-# 或者使用下面命令
-$ sudo gpasswd -a ${USER} docker</code></pre><h4 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="3.重启服务"></a>3.重启服务</h4><pre><code>$ sudo service docker restart
-# 或者
-$ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新-group-或者重启-X-会话"><a href="#4-切换当前会话到新-group-或者重启-X-会话" class="headerlink" title="4.切换当前会话到新 group 或者重启 X 会话"></a>4.切换当前会话到新 group 或者重启 X 会话</h4><pre><code>$ newgrp - docker</code></pre><p>这样基本上每次打开新终端都要先执行一下第四步的命令。</p>
-]]></content>
-      <categories>
-        <category>各种工具的安装配置</category>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ubuntu-Git安装与配置</title>
-    <url>/2020/05/10/tools-git/</url>
-    <content><![CDATA[<blockquote>
-<p>这篇文档主要总结git的安装与配置相关内容<br>主要包括git安装，ssh秘钥配置，下载加速等内容</p>
-</blockquote>
-<h3 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h3><p>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。</p>
-<h3 id="ssh秘钥配置"><a href="#ssh秘钥配置" class="headerlink" title="ssh秘钥配置"></a>ssh秘钥配置</h3><p> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
-<h4 id="生成秘钥对"><a href="#生成秘钥对" class="headerlink" title="生成秘钥对"></a>生成秘钥对</h4><p>使用命令<br><code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code><br>其中<a href="mailto:your_email@youremail.com">your_email@youremail.com</a>是你的邮箱<br>然后会让你输入一些密码信息，直接三次回车即可<br>执行完这个命令后会在目录<code>~/.ssh</code>下面生成几个文件，打开其中的<code>id_dsa.pub</code>文件复制其内容。</p>
-<h4 id="将秘钥添加到仓库"><a href="#将秘钥添加到仓库" class="headerlink" title="将秘钥添加到仓库"></a>将秘钥添加到仓库</h4><p>登录你的github，右上角点击你的头像-&gt;设置-&gt;左栏点击 SSH and GPG keys。点击New SSH key，在下面的窗口中粘贴你刚才复制的秘钥。在上面随便起一个名字。最后点击Add key。<br>之后进入终端，输入命令：<br><code>ssh -T git@github.com</code><br>如果看到：</p>
-<pre><code>Hi xxx! You&apos;ve successfully authenticated, but GitHub does not # provide shell access.</code></pre><p>代表设置成功。</p>
-<h3 id="加速设置"><a href="#加速设置" class="headerlink" title="加速设置"></a>加速设置</h3><p>这是常规的加速方法，未必能获得理想的速度，如需达到理想速度，需要设置代理。<br>打开<a href="ipaddress.com">ip查询网址</a>,分别查询<br><code>github.com</code><br><code>github.global.ssl.net</code><br>的地址，然后填入到/etc/hosts文件中<br>如下</p>
-<pre><code>151.101.185.194 github.global-ssl.fastly.net
-192.30.253.112  github.com    </code></pre><p>然后更新dns缓存，输入命令：<br><code>sudo  /etc/init.d/networking restart</code><br>这只在进行git clone速度会有一些提升。</p>
-]]></content>
-      <categories>
-        <category>各种工具的安装配置</category>
-        <category>git</category>
-      </categories>
-      <tags>
-        <tag>git</tag>
       </tags>
   </entry>
 </search>
