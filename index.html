@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="风雪追击的技术分享空间">
+<meta property="og:type" content="website">
+<meta property="og:title" content="风雪追击5437">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="风雪追击5437">
+<meta property="og:description" content="风雪追击的技术分享空间">
+<meta property="article:author" content="Prov">
+<meta property="article:tag" content="blockchain fabic">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/"/>
+
+
+
+
+
+  <title>风雪追击5437</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">风雪追击5437</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">空</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/20/fabric-mynetwork1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/20/fabric-mynetwork1/" itemprop="url">fabric2.1简单网络手动网络搭建-1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-20T21:32:42+08:00">
+                2020-05-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/" itemprop="url" rel="index">
+                    <span itemprop="name">hyperledger</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/fabric/" itemprop="url" rel="index">
+                    <span itemprop="name">fabric</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/20/fabric-mynetwork1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/20/fabric-mynetwork1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>有将近一周没有更新博客。目前的任务主要在研究fabric上，上周的时候搭建好了fabric的测试环境，并成功运行了network-test的测试网络。但因为这个sample都是执行的脚本，每个脚本实际上执行了很多步骤，还不能完全看清fabric网络搭建的过程。所以只能硬着头皮照着老书本再去搭建一下。、</p>
+</blockquote>
+<blockquote>
+<p>本以为会是轻松的事情，但因为版本差异，以及外文啃着吃力的原因，遇到了很多问题花了一个星期才解决。不管怎么说，幸运的是，我解决了。</p>
+<p>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">官方文档</a>以及《区块链开发实战》<br>本文不再涉及环境搭建，请参照<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
+</blockquote>
+<hr>
+<h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>手动搭建fabric网路主要包含两部分内容：<br><strong>1.fabric网络的手动搭建</strong><br>本文以一个orderer节点，两个peer节点的网络模型为例<br><strong>2.链码的安装和测试</strong><br>链码使用fabcar<br>本文主要记录第一部分内容</p>
+<h3 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h3><p>搭建好fabric2.1·的运行环境，详情请见<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
+<h3 id="3-简单网络的搭建"><a href="#3-简单网络的搭建" class="headerlink" title="3.简单网络的搭建"></a>3.简单网络的搭建</h3><h4 id="3-1主要流程"><a href="#3-1主要流程" class="headerlink" title="3.1主要流程"></a>3.1主要流程</h4><p>搭建一个fabric的建议网络的主要流程是：</p>
+<pre><code>1.创建证书文件
+2.创建创世区块、通道区块、锚点文件
+3.启动orderer节点和peer节点
+4.创建通道和加入节点加入</code></pre><p>另外列出创建网络至关重要的几个配置文件：<br><strong>cryto-config.yaml</strong>，<strong>configtx.yaml</strong>，<strong>core.yaml</strong>，<strong>orderer.yaml</strong><br>这几个文件的配置要格外小心，错误往往出自这里。</p>
+<h4 id="3-2-创建证书文件"><a href="#3-2-创建证书文件" class="headerlink" title="3.2.创建证书文件"></a>3.2.创建证书文件</h4><p>在进行一切之前首先建议将fabric-sample/bin/目录加入到path环境变量，因为后面要每一步使用的命令的可执行文件都在这个文件夹中或者，每当开始一个新的终端时，执行:</p>
+<pre><code>export PATH= \$PATH:\$fabric-sample\bin</code></pre><p>这里创建的是fabric网络的证书文件。主要依据配置文件<strong>cryto-config.yaml</strong><br>这个文件的内容末班可以通过执行：</p>
+<pre><code>cryptogen showtemplate</code></pre><p>得到。这里给出样例。</p>
+<pre><code>  - Name: Orderer
+    Domain: mynetwork.com
+    EnableNodeOUs: false
+
+    Specs:
+      - Hostname: orderer
+
+
+PeerOrgs:
+
+  - Name: Org1
+    Domain: org1.mynetwork.com
+    EnableNodeOUs: false
+
+    Template:
+      Count: 2
+    Users:
+      Count: 3
+
+  - Name: Org2
+    Domain: org2.mynetwork.com
+    EnableNodeOUs: false
+    Template:
+      Count: 2
+    Users:
+      Count: 2</code></pre><p>这个文件的内容较少，也不复杂。<br>为了便于介绍，我们创建一个自网络的文件夹名字叫<strong>mynetwork</strong>，在这个文件夹下创建<strong>cryto-config.yaml</strong>并写入以上内容。<br>之后进入<strong>mynetwork</strong>文件夹执行命令</p>
+<pre><code>cryptogen generate --config=crypto-config.yaml --output ./crypto-config</code></pre><p>然后在这个目录下就生成了<strong>crypto-config</strong>文件夹，这个里面就是我们需要的各种证书文件。</p>
+<h4 id="3-3-创建创世区块、通道区块、锚点文件"><a href="#3-3-创建创世区块、通道区块、锚点文件" class="headerlink" title="3.3.创建创世区块、通道区块、锚点文件"></a>3.3.创建创世区块、通道区块、锚点文件</h4><h5 id="3-3-1创建创世区块"><a href="#3-3-1创建创世区块" class="headerlink" title="3.3.1创建创世区块"></a>3.3.1创建创世区块</h5><p>首先填写配置文件<strong>configtx.yaml</strong>，这个文件的模版在fabric-sample/config/文件夹下<br>，复制到我们的<strong>mynetwork</strong>文件下来修改。因为篇幅很长，我列出重要部分：</p>
+<pre><code>Organizations:
+
+- &amp;OrderOrg
+
+    # Name can include alphanumeric characters as well as dots and dashes.
+    Name: OrderOrg
+
+    SkipAsForeign: false
+
+    ID: OrdererMSP   #id比较重要，要和后面配置文件一致，下同
+
+    #这个目录按照你的目录去修改即可，下同
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/msp
+
+    #  策略很重要，容易出错，不知道怎么填写的话就直接填写成xx.member吧
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+
+    # orderer的地址，重要
+        - &quot;127.0.0.1:7050
+
+    #组织1相关配置
+- &amp;Org1
+
+    Name: Org1MSP
+    ID: Org1MSP
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/msp
+    AdminPrincipal: Role.ADMIN
+    AnchorPeers:
+        - Host: peer0.org1.mynetwork.com
+          Port: 7051
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+
+- &amp;Org2
+    Name: Org2MSP
+    ID: Org2MSP
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org2.mynetwork.com/msp
+    AdminPrincipal: Role.ADMIN
+    AnchorPeers:
+        - Host: peer0.org2.mynetwork.com
+          Port: 9051                                 #注意这个理地址和1不同因为是两个节点
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+            aaa</code></pre><p>手动分割0.0</p>
+<pre><code>Orderer: &amp;OrdererDefaults
+
+
+OrdererType: solo
+
+# 域名加端口和crypto-config.yaml一致
+Addresses:
+     - orderer.mynetwork.com:7050
+
+BatchTimeout: 2s
+
+BatchSize:
+
+    MaxMessageCount: 500
+
+    AbsoluteMaxBytes: 10 MB
+
+    PreferredMaxBytes: 2 MB
+
+MaxChannels: 0
+
+Kafka:
+
+    Brokers:
+        - 127.0.0.1:9092
+        - kafka0:9092
+        - kafka1:9092
+        - kafka2:9092</code></pre><p>手动分割=_=</p>
+<pre><code>    #这部分尤其重要，是后续步骤的启动文件
+Profiles:
+    TwoOrgsOrdererGenesis:
+        &lt;&lt;: *ChannelDefaults   #这句话在每个字段里都要有
+        Orderer:
+            &lt;&lt;: *OrdererDefaults
+            Organizations:
+                - *OrderOrg
+
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+    TwoOrgsChannel:
+        &lt;&lt;: *ChannelDefaults
+        Consortium: SampleConsortium
+        Application:
+            &lt;&lt;: *ApplicationDefaults
+            Organizations:
+
+                - *Org1
+                - *Org2</code></pre><p>以上内容只是配置文件模版改动的部分，因为yaml文件对格式的要求很严格，最好不要直接复制粘贴，在原文件基础上修改。<br>执行命令前要么通过设置<strong>FABRIC_CFG_PATH</strong>环境变量来指定配置文件读取路径，要么应在配置文件所在目录执行命令。</p>
+<p>修改好配置文件后，创建文件夹<strong>mynetwork/order</strong>,执行：</p>
+<pre><code>configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./order/mynetworkgenesis.block --channel cha1</code></pre><p>会在<strong>mynetwork/order</strong>文件夹下产生创世快文件<strong>mynetworkgenesis.block</strong></p>
+<h5 id="3-3-2创建通道区块文件"><a href="#3-3-2创建通道区块文件" class="headerlink" title="3.3.2创建通道区块文件"></a>3.3.2创建通道区块文件</h5><p>该文件用于创建通道时使用，在<strong>mynetwork</strong>下直接执行命令：</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./order/mynetworkchannel.tx -channelID cha2</code></pre><p>这里注意<strong>-channelID</strong>标记的通道id不要和上一步相同，不然会报错。<br>成功后会在<strong>mynetwork/order</strong>文件夹下产生<strong>mynetworkchannel.tx</strong>文件</p>
+<h5 id="3-3-3创建锚点文件"><a href="#3-3-3创建锚点文件" class="headerlink" title="3.3.3创建锚点文件"></a>3.3.3创建锚点文件</h5><p>执行命令：</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./order/Org1MSPanchors.tx -channelID cha2 -asOrg Org1MSP
+
+
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./order/Org2MSPanchors.tx -channelID cha2 -asOrg Org2MSP</code></pre><p>成功后会在<strong>mynetwork/orderer</strong>文件下产生<strong>Org1MSPanchors.tx</strong>和<strong>Org2MSPanchors.tx</strong></p>
+<h4 id="3-4启动orderer节点"><a href="#3-4启动orderer节点" class="headerlink" title="3.4启动orderer节点"></a>3.4启动orderer节点</h4><p>首先在<strong>mynetwork</strong>文件夹下1个文件夹<strong>orderer</strong><br>同样在<strong>fabric-sample/config/</strong>目录下找到<strong>orderer.yaml</strong>文件复制到<strong>mynetwork/</strong>目录下，这是<strong>orderer</strong>启动所需要的配置文件。</p>
+<pre><code>General:
+    ListenAddress: 127.0.0.1
+    ListenPort: 7050
+    TLS:
+        Enabled: false
+        PrivateKey: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/server.key
+        Certificate: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/server.crt
+        RootCAs:
+          - /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/ca.crt
+        ClientAuthRequired: false
+        ClientRootCAs:</code></pre><p>分割</p>
+<pre><code>BootstrapMethod: file
+
+BootstrapFile: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/order/mynetworkgenesis.block
+
+LocalMSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/msp
+
+LocalMSPID: OrdererMSP</code></pre><p>分割</p>
+<pre><code>FileLedger:
+
+    Location: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/orderer</code></pre><p>修改好配置文件后执行</p>
+<pre><code>orderer start</code></pre><p><strong>orderer</strong>节点启动。</p>
+<h4 id="3-4启动peer节点"><a href="#3-4启动peer节点" class="headerlink" title="3.4启动peer节点"></a>3.4启动peer节点</h4><p>首先在<strong>mynetwork</strong>文件夹下创建两个文件夹org1和org2<br>同样从<strong>fabric-sample/config/</strong>目录下找到<strong>core.yaml</strong>文件复制到<strong>mynetwork/org1</strong>目录下，这是peer启动所需要的配置文件。<br>打开<strong>core.yaml</strong>文件进行修改<br>修改部分如下：</p>
+<pre><code>peer:
+
+    id: peer0.org1.mynetwork.com
+
+    networkId: dev
+
+    # 这是org1的地址对于org2，统一改成90xx以区分
+    listenAddress: 0.0.0.0:7051
+
+    chaincodeListenAddress: 0.0.0.0:7052
+
+    # chaincodeAddress: 0.0.0.0:7052
+
+    address: peer0.org1.mynetwork.com:7051</code></pre><p>分割</p>
+<pre><code>gossip:
+    bootstrap: 127.0.0.1:7051</code></pre><p>分割</p>
+<pre><code># TLS Settings
+tls:
+    enabled:  false
+    clientAuthRequired: false
+    cert:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/server.crt
+
+    key:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/server.key
+
+    rootcert:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/ca.crt
+
+    clientRootCAs:
+        files:
+          - /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/ca.crt
+    clientKey:
+        file:
+    clientCert:
+        file:
+
+authentication:
+
+    timewindow: 15m
+
+fileSystemPath: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/org1/peer0</code></pre><p>分割</p>
+<pre><code>    mspConfigPath: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/msp
+
+    localMspId: Org1MSP
+
+vm:
+
+    endpoint: unix:///var/run/docker.sock
+    docker:
+        tls:
+            enabled: false
+            ca:
+                file: docker/ca.crt
+            cert:
+                file: docker/tls.crt
+            key:
+                file: docker/tls.key
+
+        attachStdout: false
+
+        hostConfig:
+            NetworkMode: host
+            Dns:
+                - 172.17.0.1                #**这个地方改成你的docker地址**
+            LogConfig:
+                Type: json-file
+                Config:
+                    max-size: &quot;50m&quot;
+                    max-file: &quot;5&quot;
+            Memory: 2147483648</code></pre><p>修改好后在<strong>mynetwork/org1</strong>目录下执行</p>
+<pre><code>peer node start </code></pre><p>值得一提的是，<strong>172.17.0.1</strong>这个地址是你的docker服务的地址，使用ifconfig查看并填入，如果不修改这里，后面可能会报奇怪的的错误，连接不上docker的容器。<br>之后peer.org1启动<br>对于org2的配置文件需要注意的地方主要是所有端口号尽量不要和org1重复，不然可能会有冲突。<br>同样的方法启动peer0.org2</p>
+<h4 id="3-5-创建通道和加入节点加入"><a href="#3-5-创建通道和加入节点加入" class="headerlink" title="3.5 创建通道和加入节点加入"></a>3.5 创建通道和加入节点加入</h4><h5 id="3-5-1创建通道"><a href="#3-5-1创建通道" class="headerlink" title="3.5.1创建通道"></a>3.5.1创建通道</h5><p>在<strong>mynetwork\org1</strong>下执行以下命令来预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel create -t 50s -o orderer.mynetwork.com:7050 -c cha2 -f ../order/mynetworkchannel.tx</code></pre><p>此时会在当前目录下创建出通道块文件<strong>cha2.block</strong>。将这个文件移动到<strong>mynetwork/order</strong>目录下。</p>
+<h5 id="3-5-2节点加入"><a href="#3-5-2节点加入" class="headerlink" title="3.5.2节点加入"></a>3.5.2节点加入</h5><p>预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel join -b ./order/cha2.block</code></pre><p>同样的方法来将另一个节点加入</p>
+<h5 id="3-5-3锚点更新"><a href="#3-5-3锚点更新" class="headerlink" title="3.5.3锚点更新"></a>3.5.3锚点更新</h5><p>预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel update -o orderer.mynetwork.com:7050 -c cha2 -f ./Org1MSPanchors.tx</code></pre><p>同样的方法来将另一个节锚点更新。<br>至此网络搭建部分基本完成。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/14/docker-sudo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/14/docker-sudo/" itemprop="url">docker权限设置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-14T21:22:08+08:00">
+                2020-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">各种工具的安装配置</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/docker/" itemprop="url" rel="index">
+                    <span itemprop="name">docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/14/docker-sudo/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/14/docker-sudo/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>在使用测试fabric-sample时几乎每个脚本或者命令执行都会调用docker，对于sudo可以调用的命令直接加上sudo执行还好，但是对于一些命令，比如peer，sudo默认调用的环境变量里没有有这条命令，所以调用peer的当前用户无法为peer获得docker的使用权限。这篇工具文主要为解决该问题。<br>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">这篇博客</a>，内容基本一致。<br>没错，其实就是抄过来的。</p>
+</blockquote>
+<h4 id="1-添加-docker-group"><a href="#1-添加-docker-group" class="headerlink" title="1.添加 docker group"></a>1.添加 docker group</h4><pre><code>$ sudo groupadd docker</code></pre><h4 id="2-将用户加入该-group-内"><a href="#2-将用户加入该-group-内" class="headerlink" title="2.将用户加入该 group 内"></a>2.将用户加入该 group 内</h4><p><code>sudo apt-get update</code></p>
+<pre><code>$ sudo usermod -aG docker $USER
+# 或者使用下面命令
+$ sudo gpasswd -a ${USER} docker</code></pre><h4 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="3.重启服务"></a>3.重启服务</h4><pre><code>$ sudo service docker restart
+# 或者
+$ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新-group-或者重启-X-会话"><a href="#4-切换当前会话到新-group-或者重启-X-会话" class="headerlink" title="4.切换当前会话到新 group 或者重启 X 会话"></a>4.切换当前会话到新 group 或者重启 X 会话</h4><pre><code>$ newgrp - docker</code></pre><p>这样基本上每次打开新终端都要先执行一下第四步的命令。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/fabric-build/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/12/fabric-build/" itemprop="url">ubuntu-fabric2.1环境搭建</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-12T16:55:12+08:00">
+                2020-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/" itemprop="url" rel="index">
+                    <span itemprop="name">hyperledger</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/fabric/" itemprop="url" rel="index">
+                    <span itemprop="name">fabric</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/12/fabric-build/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/12/fabric-build/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>为了导师的项目要研究超级账本，fabric是hyperledger的核心项目，于是花了两天时间搭建hyperledger fabric的环境。涉及的东西挺多挺杂的，这里记录一下吧。<br>本文主要参考<a href="https://blog.csdn.net/MARK4993885/article/details/105409596/" target="_blank" rel="noopener">这篇博客</a>，内容基本一致，一些不同点是我出现的问题和解决方案，可以先按照链接文档去做，如果有问题，再来看我这篇文档有没有解决方案。</p>
+</blockquote>
+<h3 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h3><p>如果安装过老版的docker，需要先卸载：<br><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></p>
+<h4 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h4><p><code>sudo apt-get update</code></p>
+<p><code>sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common</code></p>
+<p>加入Docker官方GPG key：<br><code>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</code></p>
+<p>验证：<br><code>sudo apt-key fingerprint 0EBFCD88</code></p>
+<p>设置稳定版仓库：<br><code>sudo add-apt-repository \
+   &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable&quot;</code></p>
+<h4 id="安装DOCKER-ENGINE："><a href="#安装DOCKER-ENGINE：" class="headerlink" title="安装DOCKER ENGINE："></a>安装DOCKER ENGINE：</h4><p><code>sudo apt-get update</code><br><code>docker-ce-cli containerd.io</code></p>
+<p>没有出现问题。</p>
+<h4 id="安装Docker-Compose"><a href="#安装Docker-Compose" class="headerlink" title="安装Docker Compose"></a>安装Docker Compose</h4><p><code>sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code></p>
+<p>这一步可能会非常慢，最好是换国内镜像网站下载下载，使用下面的命令代替：<br><code>sudo curl -L &quot;https://get.daocloud.io/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code><br>get.daocloud.io是国内的一家镜像网站。</p>
+<p>设置权限<br><code>sudo chmod +x /usr/local/bin/docker-compose</code><br><code>docker-compose --version</code></p>
+<h3 id="Go环境安装"><a href="#Go环境安装" class="headerlink" title="Go环境安装"></a>Go环境安装</h3><p>建议是使用go1.4以上的版本<br>去<a href="https://studygolang.com/dl" target="_blank" rel="noopener">go语言中文网</a>下载最新版本<br>我下载的是<strong>go1.14.2.linux-amd64.tar.gz</strong>。<br>解压并复制到相应目录：<br><code>tar -zxvf  go1.14.2.linux-amd64.tar.gz -C /usr/local</code><br>配置环境变量，打开配置文件/etc/profile<br><code>sudo vim /etc/profile</code><br>写入：<br><code>export PATH=$PATH:/usr/local/go/bin</code><br><code>export GOPATH=/opt/gopath</code><br>然后执行：<br><code>source /etc/profile</code><br>使配置生效。<br><strong>另外我出现了关闭终端，配置失效，需要重新source的情况，我的解决方法是改为将内容写入到~/.bashrc</strong><br><code>sudo vim ~/.bashrc</code><br>使配置执行：<br><code>source ~/.bashrc</code></p>
+<p>然后创建文件夹：<br><code>mkdir -p /opt/gopath/src/github.com/hyperledger</code><br>这个文件夹和前面设置的$GOPATH的路径一致</p>
+<h3 id="fabric安装"><a href="#fabric安装" class="headerlink" title="fabric安装"></a>fabric安装</h3><h4 id="源码下载"><a href="#源码下载" class="headerlink" title="源码下载"></a>源码下载</h4><p>首先为了保证搭建环境的时效性，应该用git进行安装<br><a href="https://provence965437.github.io/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/git/" target="_blank" rel="noopener">git的安装与配置</a><br>然后执行下面的命令：<br><code>cd /opt/gopath/src/github.com/hyperledger</code><br><code>git clone https://github.com/hyperledger/fabric.git</code><br>这前提是你的git速度可以，并且下载之后没有什么问题。我开始时用git下载，下了30分钟，好不容易下下来，关掉终端，git下载的文件又会自动删除。真是无语了。<br>如果你的git不好用，那就直接去github上下载好再解压到相应目录。</p>
+<h4 id="执行拉取镜像镜像脚本"><a href="#执行拉取镜像镜像脚本" class="headerlink" title="执行拉取镜像镜像脚本"></a>执行拉取镜像镜像脚本</h4><p>进入到<strong>/fabric/scripts/</strong><br>先给当前用docker权限，执行：<br><code>sudo groupadd docker</code>   &emsp;&emsp; 添加docker用户组<br><code>sudo gpasswd -a $USER docker</code>&emsp;&emsp;将当前用户加如docker用户组<br><code>newgrp docker</code> &emsp;&emsp;&emsp;    #更新用户组<br>执行：<br><code>sudo ./bootstrap.sh</code><br>切换到/<strong>fabric</strong>根目录<br>再执行：<br><code>sudo curl -sSL https://bit.ly/2ysbOFE | bash -s</code><br>然后目录下会出现fabric-sample文件，另外原文提到还有<strong>hyperledger-fabric-linux-amd64-2.0.0</strong>这个文件夹，我的脚本执行时倒是有下载，但是我结束之后发现目录下并没有这个。确保万无一失，去github自己下过来解压，记得下载2.1版本的。</p>
+<h4 id="执行sample"><a href="#执行sample" class="headerlink" title="执行sample"></a>执行sample</h4><p>进入到<strong>/fabric-sample</strong>目录<br>执行:<br><code>sudo ./bysn.sh up</code><br>不知道为什么，总是会提示go:command not found ，我明明装了go的，版本也是1.14+。就很怪。应该是因为什么原因bash获得不了go命令的执行路径。后来我想了想，我把go解压在<strong>/usr/local</strong>下面，但是很多命令是在<strong>usr/bin</strong>下的。<br>于是我尝试在<strong>/usr/bin</strong>建立软链接：<br><code>ln -s \usr\local\go\bin\go \usr\bin\go</code><br>就可以了。<br>手动执行命令后执行关闭脚本：<br><code>sudo ./bysn.sh down</code><br>再次执行<br><code>sudo ./bysn.sh up</code><br>当界面上出现一个大大的<strong><strong>END</strong></strong>时，代表运行成功。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>搭建的过程充满曲折，主要问题出在git和go的安装上。这只是开始，后续还要尝试去使用fabric，继续加油吧。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/10/tools-git/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/10/tools-git/" itemprop="url">ubuntu-Git安装与配置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-10T20:59:43+08:00">
+                2020-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" itemprop="url" rel="index">
+                    <span itemprop="name">各种工具的安装配置</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/git/" itemprop="url" rel="index">
+                    <span itemprop="name">git</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/10/tools-git/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/10/tools-git/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>这篇文档主要总结git的安装与配置相关内容<br>主要包括git安装，ssh秘钥配置，下载加速等内容</p>
+</blockquote>
+<h3 id="git安装"><a href="#git安装" class="headerlink" title="git安装"></a>git安装</h3><p>输入命令：<br><code>sudo apt-get install git</code><br>即可安装。</p>
+<h3 id="ssh秘钥配置"><a href="#ssh秘钥配置" class="headerlink" title="ssh秘钥配置"></a>ssh秘钥配置</h3><p> git clone是git从远程仓库拉取项目的命令，分为两种方式，分别是ssh方式和http方式<br>点击github页面的下载按钮，可以选择用不同方式下载的链接。<br>刚刚安装好git，使用ssh方式拉取项目时，会报被拒绝的错误错误。应该进行如下配置：</p>
+<h4 id="生成秘钥对"><a href="#生成秘钥对" class="headerlink" title="生成秘钥对"></a>生成秘钥对</h4><p>使用命令<br><code>ssh-keygen -t rsa -C &quot;your_email@youremail.com&quot;</code><br>其中<a href="mailto:your_email@youremail.com">your_email@youremail.com</a>是你的邮箱<br>然后会让你输入一些密码信息，直接三次回车即可<br>执行完这个命令后会在目录<code>~/.ssh</code>下面生成几个文件，打开其中的<code>id_dsa.pub</code>文件复制其内容。</p>
+<h4 id="将秘钥添加到仓库"><a href="#将秘钥添加到仓库" class="headerlink" title="将秘钥添加到仓库"></a>将秘钥添加到仓库</h4><p>登录你的github，右上角点击你的头像-&gt;设置-&gt;左栏点击 SSH and GPG keys。点击New SSH key，在下面的窗口中粘贴你刚才复制的秘钥。在上面随便起一个名字。最后点击Add key。<br>之后进入终端，输入命令：<br><code>ssh -T git@github.com</code><br>如果看到：</p>
+<pre><code>Hi xxx! You&apos;ve successfully authenticated, but GitHub does not # provide shell access.</code></pre><p>代表设置成功。</p>
+<h3 id="加速设置"><a href="#加速设置" class="headerlink" title="加速设置"></a>加速设置</h3><p>这是常规的加速方法，未必能获得理想的速度，如需达到理想速度，需要设置代理。<br>打开<a href="ipaddress.com">ip查询网址</a>,分别查询<br><code>github.com</code><br><code>github.global.ssl.net</code><br>的地址，然后填入到/etc/hosts文件中<br>如下</p>
+<pre><code>151.101.185.194 github.global-ssl.fastly.net
+192.30.253.112  github.com    </code></pre><p>然后更新dns缓存，输入命令：<br><code>sudo  /etc/init.d/networking restart</code><br>这只在进行git clone速度会有一些提升。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/09/hexo1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/09/hexo1/" itemprop="url">hexo博客搭建与使用：搭建篇</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-09T14:35:11+08:00">
+                2020-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/blog%E7%AE%A1%E7%90%86%E6%8A%80%E5%B7%A7/" itemprop="url" rel="index">
+                    <span itemprop="name">blog管理技巧</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/blog%E7%AE%A1%E7%90%86%E6%8A%80%E5%B7%A7/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index">
+                    <span itemprop="name">hexo博客搭建与使用</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/09/hexo1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/09/hexo1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>&emsp;一个好的开始。。。<br>&emsp;花了一天的时间终于搭建好了自己的个人博客，从今天开始，我会在这个新的home中记录并分享自己的学习和生活。往事如风，吾欲乘风破浪。与诸君共勉。</p>
+</blockquote>
+<hr>
+<p><a href="https://provence965437.github.io/" target="_blank" rel="noopener"><strong>主页地址</strong></a></p>
+<hr>
+<h2 id="nodejs和npm安装"><a href="#nodejs和npm安装" class="headerlink" title="nodejs和npm安装"></a>nodejs和npm安装</h2><p> 这个比较简单，我以win10为例介绍。去<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载最新的稳定版windows安装包下载、点击安装，一路next即可。<br>之后打开cmd，输入下面命令查看是否安装成功<br> <code>node -v</code><br> <code>npm -v</code></p>
+<h2 id="git安装和部署"><a href="#git安装和部署" class="headerlink" title="git安装和部署"></a>git安装和部署</h2><p>还是<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网</a>下载windows安装包，点击安装，选项很多，一般直接next到底。</p>
+<h2 id="hexo安装与部署"><a href="#hexo安装与部署" class="headerlink" title="hexo安装与部署"></a>hexo安装与部署</h2><p>进入cmd，安装<strong>hexo-cli</strong><br> <code>npm install -g hexo-cli</code>  全局安装<br>不想全局安装，就cd到一个目录，直接安装在这个目录下<br>  <code>npm install hexo-cli</code><br>另外npm可以用<code>--prefix</code>指定安装路径。<br>如果不是全局安装，需要添加环境变量，在Path中添加hexo的安装路径即可<br>在hexo的安装路径下新建一个文件夹，这个文件夹就是你的<strong>博客根目录</strong>，例如名字叫做 blog。那么根目录就是XXX/blog/</p>
+<h2 id="博客安装"><a href="#博客安装" class="headerlink" title="博客安装"></a>博客安装</h2><p>进入刚才创建的blog目录，输入命令：<br><code>hexo init blog</code><br><code>npm install</code><br>这样网站根目录就部署完成了。<br>在网站根目录下，需要注意的是Theme文件夹和 _config.yml文件。theme文件夹下存放的是hexo主题配置，我们可以在这个文件夹下导入我们下载的主题。<br>其中默认有一个landscape主题。而_config.yml是博客的基本配置文件，这个要和后面提到的，主题文件夹中的_config.yml相区分，主题文件夹中的_config.yml叫做主题配置文件。在基本配置文件中可以进行一些基本的配置</p>
+<pre><code># Site
+title: 我的家
+subtitle: 另起炉灶
+description: 欢迎光临
+keywords: 
+author: author
+email: 
+language: zh-Hans
+timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br><code>hexo ghexo s</code><br>启动server，如果命令不存在，就执行：<br><code>npm install hexo-server --save</code><br>安装server，然后命令就有了。<br>执行完后项目就启动了，在浏览器中输入地址<a href="http://localhost:4000就可以看到已启动的博客网站的雏形。">http://localhost:4000就可以看到已启动的博客网站的雏形。</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/tx.jpg"
+                alt="Prov" />
+            
+              <p class="site-author-name" itemprop="name">Prov</p>
+              <p class="site-description motion-element" itemprop="description">风雪追击的技术分享空间</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Prov</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共4.7k字</span>
+</div>
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'iCJSAh8IawYpf0NkgI0b0ygM-gzGzoHsz',
+        appKey: 'vD4Dn6tDqgUdJ05v0gqQJcKa',
+        placeholder: '有朋自远方来，不亦乐乎',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
