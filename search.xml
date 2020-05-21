@@ -62,37 +62,6 @@ $ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新
       </tags>
   </entry>
   <entry>
-    <title>hexo博客搭建与使用：搭建篇</title>
-    <url>/2020/05/09/hexo1/</url>
-    <content><![CDATA[<blockquote>
-<p>&emsp;一个好的开始。。。<br>&emsp;花了一天的时间终于搭建好了自己的个人博客，从今天开始，我会在这个新的home中记录并分享自己的学习和生活。往事如风，吾欲乘风破浪。与诸君共勉。</p>
-</blockquote>
-<hr>
-<p><a href="https://provence965437.github.io/" target="_blank" rel="noopener"><strong>主页地址</strong></a></p>
-<hr>
-<h2 id="nodejs和npm安装"><a href="#nodejs和npm安装" class="headerlink" title="nodejs和npm安装"></a>nodejs和npm安装</h2><p> 这个比较简单，我以win10为例介绍。去<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载最新的稳定版windows安装包下载、点击安装，一路next即可。<br>之后打开cmd，输入下面命令查看是否安装成功<br> <code>node -v</code><br> <code>npm -v</code></p>
-<h2 id="git安装和部署"><a href="#git安装和部署" class="headerlink" title="git安装和部署"></a>git安装和部署</h2><p>还是<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网</a>下载windows安装包，点击安装，选项很多，一般直接next到底。</p>
-<h2 id="hexo安装与部署"><a href="#hexo安装与部署" class="headerlink" title="hexo安装与部署"></a>hexo安装与部署</h2><p>进入cmd，安装<strong>hexo-cli</strong><br> <code>npm install -g hexo-cli</code>  全局安装<br>不想全局安装，就cd到一个目录，直接安装在这个目录下<br>  <code>npm install hexo-cli</code><br>另外npm可以用<code>--prefix</code>指定安装路径。<br>如果不是全局安装，需要添加环境变量，在Path中添加hexo的安装路径即可<br>在hexo的安装路径下新建一个文件夹，这个文件夹就是你的<strong>博客根目录</strong>，例如名字叫做 blog。那么根目录就是XXX/blog/</p>
-<h2 id="博客安装"><a href="#博客安装" class="headerlink" title="博客安装"></a>博客安装</h2><p>进入刚才创建的blog目录，输入命令：<br><code>hexo init blog</code><br><code>npm install</code><br>这样网站根目录就部署完成了。<br>在网站根目录下，需要注意的是Theme文件夹和 _config.yml文件。theme文件夹下存放的是hexo主题配置，我们可以在这个文件夹下导入我们下载的主题。<br>其中默认有一个landscape主题。而_config.yml是博客的基本配置文件，这个要和后面提到的，主题文件夹中的_config.yml相区分，主题文件夹中的_config.yml叫做主题配置文件。在基本配置文件中可以进行一些基本的配置</p>
-<pre><code># Site
-title: 我的家
-subtitle: 另起炉灶
-description: 欢迎光临
-keywords: 
-author: author
-email: 
-language: zh-Hans
-timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br><code>hexo ghexo s</code><br>启动server，如果命令不存在，就执行：<br><code>npm install hexo-server --save</code><br>安装server，然后命令就有了。<br>执行完后项目就启动了，在浏览器中输入地址<a href="http://localhost:4000就可以看到已启动的博客网站的雏形。">http://localhost:4000就可以看到已启动的博客网站的雏形。</a></p>
-]]></content>
-      <categories>
-        <category>blog管理技巧</category>
-        <category>hexo博客搭建与使用</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>fabric2.1简单网络手动网络搭建-1</title>
     <url>/2020/05/20/fabric-mynetwork1/</url>
     <content><![CDATA[<blockquote>
@@ -396,6 +365,37 @@ CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/m
       </categories>
       <tags>
         <tag>hyperledger,fabric,docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>hexo博客搭建与使用：搭建篇</title>
+    <url>/2020/05/09/hexo1/</url>
+    <content><![CDATA[<blockquote>
+<p>&emsp;一个好的开始。。。<br>&emsp;花了一天的时间终于搭建好了自己的个人博客，从今天开始，我会在这个新的home中记录并分享自己的学习和生活。往事如风，吾欲乘风破浪。与诸君共勉。</p>
+</blockquote>
+<hr>
+<p><a href="https://provence965437.github.io/" target="_blank" rel="noopener"><strong>主页地址</strong></a></p>
+<hr>
+<h2 id="nodejs和npm安装"><a href="#nodejs和npm安装" class="headerlink" title="nodejs和npm安装"></a>nodejs和npm安装</h2><p> 这个比较简单，我以win10为例介绍。去<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载最新的稳定版windows安装包下载、点击安装，一路next即可。<br>之后打开cmd，输入下面命令查看是否安装成功<br> <code>node -v</code><br> <code>npm -v</code></p>
+<h2 id="git安装和部署"><a href="#git安装和部署" class="headerlink" title="git安装和部署"></a>git安装和部署</h2><p>还是<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网</a>下载windows安装包，点击安装，选项很多，一般直接next到底。</p>
+<h2 id="hexo安装与部署"><a href="#hexo安装与部署" class="headerlink" title="hexo安装与部署"></a>hexo安装与部署</h2><p>进入cmd，安装<strong>hexo-cli</strong><br> <code>npm install -g hexo-cli</code>  全局安装<br>不想全局安装，就cd到一个目录，直接安装在这个目录下<br>  <code>npm install hexo-cli</code><br>另外npm可以用<code>--prefix</code>指定安装路径。<br>如果不是全局安装，需要添加环境变量，在Path中添加hexo的安装路径即可<br>在hexo的安装路径下新建一个文件夹，这个文件夹就是你的<strong>博客根目录</strong>，例如名字叫做 blog。那么根目录就是XXX/blog/</p>
+<h2 id="博客安装"><a href="#博客安装" class="headerlink" title="博客安装"></a>博客安装</h2><p>进入刚才创建的blog目录，输入命令：<br><code>hexo init blog</code><br><code>npm install</code><br>这样网站根目录就部署完成了。<br>在网站根目录下，需要注意的是Theme文件夹和 _config.yml文件。theme文件夹下存放的是hexo主题配置，我们可以在这个文件夹下导入我们下载的主题。<br>其中默认有一个landscape主题。而_config.yml是博客的基本配置文件，这个要和后面提到的，主题文件夹中的_config.yml相区分，主题文件夹中的_config.yml叫做主题配置文件。在基本配置文件中可以进行一些基本的配置</p>
+<pre><code># Site
+title: 我的家
+subtitle: 另起炉灶
+description: 欢迎光临
+keywords: 
+author: author
+email: 
+language: zh-Hans
+timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br><code>hexo ghexo s</code><br>启动server，如果命令不存在，就执行：<br><code>npm install hexo-server --save</code><br>安装server，然后命令就有了。<br>执行完后项目就启动了，在浏览器中输入地址<a href="http://localhost:4000就可以看到已启动的博客网站的雏形。">http://localhost:4000就可以看到已启动的博客网站的雏形。</a></p>
+]]></content>
+      <categories>
+        <category>blog管理技巧</category>
+        <category>hexo博客搭建与使用</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
       </tags>
   </entry>
   <entry>
