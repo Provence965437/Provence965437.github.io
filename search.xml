@@ -41,6 +41,27 @@
       </tags>
   </entry>
   <entry>
+    <title>docker权限设置</title>
+    <url>/2020/05/14/docker-sudo/</url>
+    <content><![CDATA[<blockquote>
+<p>在使用测试fabric-sample时几乎每个脚本或者命令执行都会调用docker，对于sudo可以调用的命令直接加上sudo执行还好，但是对于一些命令，比如peer，sudo默认调用的环境变量里没有有这条命令，所以调用peer的当前用户无法为peer获得docker的使用权限。这篇工具文主要为解决该问题。<br>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">这篇博客</a>，内容基本一致。<br>没错，其实就是抄过来的。</p>
+</blockquote>
+<h4 id="1-添加-docker-group"><a href="#1-添加-docker-group" class="headerlink" title="1.添加 docker group"></a>1.添加 docker group</h4><pre><code>$ sudo groupadd docker</code></pre><h4 id="2-将用户加入该-group-内"><a href="#2-将用户加入该-group-内" class="headerlink" title="2.将用户加入该 group 内"></a>2.将用户加入该 group 内</h4><p><code>sudo apt-get update</code></p>
+<pre><code>$ sudo usermod -aG docker $USER
+# 或者使用下面命令
+$ sudo gpasswd -a ${USER} docker</code></pre><h4 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="3.重启服务"></a>3.重启服务</h4><pre><code>$ sudo service docker restart
+# 或者
+$ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新-group-或者重启-X-会话"><a href="#4-切换当前会话到新-group-或者重启-X-会话" class="headerlink" title="4.切换当前会话到新 group 或者重启 X 会话"></a>4.切换当前会话到新 group 或者重启 X 会话</h4><pre><code>$ newgrp - docker</code></pre><p>这样基本上每次打开新终端都要先执行一下第四步的命令。</p>
+]]></content>
+      <categories>
+        <category>各种工具的安装配置</category>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>hexo博客搭建与使用：搭建篇</title>
     <url>/2020/05/09/hexo1/</url>
     <content><![CDATA[<blockquote>
@@ -375,27 +396,6 @@ CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/m
       </categories>
       <tags>
         <tag>hyperledger,fabric,docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>docker权限设置</title>
-    <url>/2020/05/14/docker-sudo/</url>
-    <content><![CDATA[<blockquote>
-<p>在使用测试fabric-sample时几乎每个脚本或者命令执行都会调用docker，对于sudo可以调用的命令直接加上sudo执行还好，但是对于一些命令，比如peer，sudo默认调用的环境变量里没有有这条命令，所以调用peer的当前用户无法为peer获得docker的使用权限。这篇工具文主要为解决该问题。<br>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">这篇博客</a>，内容基本一致。<br>没错，其实就是抄过来的。</p>
-</blockquote>
-<h4 id="1-添加-docker-group"><a href="#1-添加-docker-group" class="headerlink" title="1.添加 docker group"></a>1.添加 docker group</h4><pre><code>$ sudo groupadd docker</code></pre><h4 id="2-将用户加入该-group-内"><a href="#2-将用户加入该-group-内" class="headerlink" title="2.将用户加入该 group 内"></a>2.将用户加入该 group 内</h4><p><code>sudo apt-get update</code></p>
-<pre><code>$ sudo usermod -aG docker $USER
-# 或者使用下面命令
-$ sudo gpasswd -a ${USER} docker</code></pre><h4 id="3-重启服务"><a href="#3-重启服务" class="headerlink" title="3.重启服务"></a>3.重启服务</h4><pre><code>$ sudo service docker restart
-# 或者
-$ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新-group-或者重启-X-会话"><a href="#4-切换当前会话到新-group-或者重启-X-会话" class="headerlink" title="4.切换当前会话到新 group 或者重启 X 会话"></a>4.切换当前会话到新 group 或者重启 X 会话</h4><pre><code>$ newgrp - docker</code></pre><p>这样基本上每次打开新终端都要先执行一下第四步的命令。</p>
-]]></content>
-      <categories>
-        <category>各种工具的安装配置</category>
-        <category>docker</category>
-      </categories>
-      <tags>
-        <tag>docker</tag>
       </tags>
   </entry>
   <entry>
