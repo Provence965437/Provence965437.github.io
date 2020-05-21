@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+
+
+<script type="text/javascript"
+color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="hyperledger,fabric,docker," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="有将近一周没有更新博客。目前的任务主要在研究fabric上，上周的时候搭建好了fabric的测试环境，并成功运行了network-test的测试网络。但因为这个sample都是执行的脚本，每个脚本实际上执行了很多步骤，还不能完全看清fabric网络搭建的过程。所以只能硬着头皮照着老书本再去搭建一下。、   本以为会是轻松的事情，但因为版本差异，以及外文啃着吃力的原因，遇到了很多问题花了一个星期才">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fabric2.1简单网络手动网络搭建-1">
+<meta property="og:url" content="http://yoursite.com/2020/05/20/fabric-mynetwork1/index.html">
+<meta property="og:site_name" content="风雪追击5437">
+<meta property="og:description" content="有将近一周没有更新博客。目前的任务主要在研究fabric上，上周的时候搭建好了fabric的测试环境，并成功运行了network-test的测试网络。但因为这个sample都是执行的脚本，每个脚本实际上执行了很多步骤，还不能完全看清fabric网络搭建的过程。所以只能硬着头皮照着老书本再去搭建一下。、   本以为会是轻松的事情，但因为版本差异，以及外文啃着吃力的原因，遇到了很多问题花了一个星期才">
+<meta property="article:published_time" content="2020-05-20T13:32:42.000Z">
+<meta property="article:modified_time" content="2020-05-20T13:36:25.671Z">
+<meta property="article:author" content="Prov">
+<meta property="article:tag" content="hyperledger,fabric,docker">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/20/fabric-mynetwork1/"/>
+
+
+
+
+
+  <title>fabric2.1简单网络手动网络搭建-1 | 风雪追击5437</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">风雪追击5437</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">空</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/20/fabric-mynetwork1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">fabric2.1简单网络手动网络搭建-1</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-20T21:32:42+08:00">
+                2020-05-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/" itemprop="url" rel="index">
+                    <span itemprop="name">hyperledger</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/fabric/" itemprop="url" rel="index">
+                    <span itemprop="name">fabric</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/20/fabric-mynetwork1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/20/fabric-mynetwork1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/05/20/fabric-mynetwork1/" class="leancloud_visitors" data-flag-title="fabric2.1简单网络手动网络搭建-1">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>有将近一周没有更新博客。目前的任务主要在研究fabric上，上周的时候搭建好了fabric的测试环境，并成功运行了network-test的测试网络。但因为这个sample都是执行的脚本，每个脚本实际上执行了很多步骤，还不能完全看清fabric网络搭建的过程。所以只能硬着头皮照着老书本再去搭建一下。、</p>
+</blockquote>
+<blockquote>
+<p>本以为会是轻松的事情，但因为版本差异，以及外文啃着吃力的原因，遇到了很多问题花了一个星期才解决。不管怎么说，幸运的是，我解决了。</p>
+<p>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">官方文档</a>以及《区块链开发实战》<br>本文不再涉及环境搭建，请参照<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
+</blockquote>
+<hr>
+<h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>手动搭建fabric网路主要包含两部分内容：<br><strong>1.fabric网络的手动搭建</strong><br>本文以一个orderer节点，两个peer节点的网络模型为例<br><strong>2.链码的安装和测试</strong><br>链码使用fabcar<br>本文主要记录第一部分内容</p>
+<h3 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2.准备工作"></a>2.准备工作</h3><p>搭建好fabric2.1·的运行环境，详情请见<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
+<h3 id="3-简单网络的搭建"><a href="#3-简单网络的搭建" class="headerlink" title="3.简单网络的搭建"></a>3.简单网络的搭建</h3><h4 id="3-1主要流程"><a href="#3-1主要流程" class="headerlink" title="3.1主要流程"></a>3.1主要流程</h4><p>搭建一个fabric的建议网络的主要流程是：</p>
+<pre><code>1.创建证书文件
+2.创建创世区块、通道区块、锚点文件
+3.启动orderer节点和peer节点
+4.创建通道和加入节点加入</code></pre><p>另外列出创建网络至关重要的几个配置文件：<br><strong>cryto-config.yaml</strong>，<strong>configtx.yaml</strong>，<strong>core.yaml</strong>，<strong>orderer.yaml</strong><br>这几个文件的配置要格外小心，错误往往出自这里。</p>
+<h4 id="3-2-创建证书文件"><a href="#3-2-创建证书文件" class="headerlink" title="3.2.创建证书文件"></a>3.2.创建证书文件</h4><p>在进行一切之前首先建议将fabric-sample/bin/目录加入到path环境变量，因为后面要每一步使用的命令的可执行文件都在这个文件夹中或者，每当开始一个新的终端时，执行:</p>
+<pre><code>export PATH= \$PATH:\$fabric-sample\bin</code></pre><p>这里创建的是fabric网络的证书文件。主要依据配置文件<strong>cryto-config.yaml</strong><br>这个文件的内容末班可以通过执行：</p>
+<pre><code>cryptogen showtemplate</code></pre><p>得到。这里给出样例。</p>
+<pre><code>  - Name: Orderer
+    Domain: mynetwork.com
+    EnableNodeOUs: false
+
+    Specs:
+      - Hostname: orderer
+
+
+PeerOrgs:
+
+  - Name: Org1
+    Domain: org1.mynetwork.com
+    EnableNodeOUs: false
+
+    Template:
+      Count: 2
+    Users:
+      Count: 3
+
+  - Name: Org2
+    Domain: org2.mynetwork.com
+    EnableNodeOUs: false
+    Template:
+      Count: 2
+    Users:
+      Count: 2</code></pre><p>这个文件的内容较少，也不复杂。<br>为了便于介绍，我们创建一个自网络的文件夹名字叫<strong>mynetwork</strong>，在这个文件夹下创建<strong>cryto-config.yaml</strong>并写入以上内容。<br>之后进入<strong>mynetwork</strong>文件夹执行命令</p>
+<pre><code>cryptogen generate --config=crypto-config.yaml --output ./crypto-config</code></pre><p>然后在这个目录下就生成了<strong>crypto-config</strong>文件夹，这个里面就是我们需要的各种证书文件。</p>
+<h4 id="3-3-创建创世区块、通道区块、锚点文件"><a href="#3-3-创建创世区块、通道区块、锚点文件" class="headerlink" title="3.3.创建创世区块、通道区块、锚点文件"></a>3.3.创建创世区块、通道区块、锚点文件</h4><h5 id="3-3-1创建创世区块"><a href="#3-3-1创建创世区块" class="headerlink" title="3.3.1创建创世区块"></a>3.3.1创建创世区块</h5><p>首先填写配置文件<strong>configtx.yaml</strong>，这个文件的模版在fabric-sample/config/文件夹下<br>，复制到我们的<strong>mynetwork</strong>文件下来修改。因为篇幅很长，我列出重要部分：</p>
+<pre><code>Organizations:
+
+- &amp;OrderOrg
+
+    # Name can include alphanumeric characters as well as dots and dashes.
+    Name: OrderOrg
+
+    SkipAsForeign: false
+
+    ID: OrdererMSP   #id比较重要，要和后面配置文件一致，下同
+
+    #这个目录按照你的目录去修改即可，下同
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/msp
+
+    #  策略很重要，容易出错，不知道怎么填写的话就直接填写成xx.member吧
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;OrdererMSP.member&apos;)&quot;
+
+    # orderer的地址，重要
+        - &quot;127.0.0.1:7050
+
+    #组织1相关配置
+- &amp;Org1
+
+    Name: Org1MSP
+    ID: Org1MSP
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/msp
+    AdminPrincipal: Role.ADMIN
+    AnchorPeers:
+        - Host: peer0.org1.mynetwork.com
+          Port: 7051
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org1MSP.member&apos;)&quot;
+
+- &amp;Org2
+    Name: Org2MSP
+    ID: Org2MSP
+    MSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org2.mynetwork.com/msp
+    AdminPrincipal: Role.ADMIN
+    AnchorPeers:
+        - Host: peer0.org2.mynetwork.com
+          Port: 9051                                 #注意这个理地址和1不同因为是两个节点
+    Policies:
+        Readers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+        Writers:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+        Admins:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.admin&apos;)&quot;
+        Endorsement:
+            Type: Signature
+            Rule: &quot;OR(&apos;Org2MSP.member&apos;)&quot;
+            aaa</code></pre><p>手动分割0.0</p>
+<pre><code>Orderer: &amp;OrdererDefaults
+
+
+OrdererType: solo
+
+# 域名加端口和crypto-config.yaml一致
+Addresses:
+     - orderer.mynetwork.com:7050
+
+BatchTimeout: 2s
+
+BatchSize:
+
+    MaxMessageCount: 500
+
+    AbsoluteMaxBytes: 10 MB
+
+    PreferredMaxBytes: 2 MB
+
+MaxChannels: 0
+
+Kafka:
+
+    Brokers:
+        - 127.0.0.1:9092
+        - kafka0:9092
+        - kafka1:9092
+        - kafka2:9092</code></pre><p>手动分割=_=</p>
+<pre><code>    #这部分尤其重要，是后续步骤的启动文件
+Profiles:
+    TwoOrgsOrdererGenesis:
+        &lt;&lt;: *ChannelDefaults   #这句话在每个字段里都要有
+        Orderer:
+            &lt;&lt;: *OrdererDefaults
+            Organizations:
+                - *OrderOrg
+
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+    TwoOrgsChannel:
+        &lt;&lt;: *ChannelDefaults
+        Consortium: SampleConsortium
+        Application:
+            &lt;&lt;: *ApplicationDefaults
+            Organizations:
+
+                - *Org1
+                - *Org2</code></pre><p>以上内容只是配置文件模版改动的部分，因为yaml文件对格式的要求很严格，最好不要直接复制粘贴，在原文件基础上修改。<br>执行命令前要么通过设置<strong>FABRIC_CFG_PATH</strong>环境变量来指定配置文件读取路径，要么应在配置文件所在目录执行命令。</p>
+<p>修改好配置文件后，创建文件夹<strong>mynetwork/order</strong>,执行：</p>
+<pre><code>configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./order/mynetworkgenesis.block --channel cha1</code></pre><p>会在<strong>mynetwork/order</strong>文件夹下产生创世快文件<strong>mynetworkgenesis.block</strong></p>
+<h5 id="3-3-2创建通道区块文件"><a href="#3-3-2创建通道区块文件" class="headerlink" title="3.3.2创建通道区块文件"></a>3.3.2创建通道区块文件</h5><p>该文件用于创建通道时使用，在<strong>mynetwork</strong>下直接执行命令：</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./order/mynetworkchannel.tx -channelID cha2</code></pre><p>这里注意<strong>-channelID</strong>标记的通道id不要和上一步相同，不然会报错。<br>成功后会在<strong>mynetwork/order</strong>文件夹下产生<strong>mynetworkchannel.tx</strong>文件</p>
+<h5 id="3-3-3创建锚点文件"><a href="#3-3-3创建锚点文件" class="headerlink" title="3.3.3创建锚点文件"></a>3.3.3创建锚点文件</h5><p>执行命令：</p>
+<pre><code>configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./order/Org1MSPanchors.tx -channelID cha2 -asOrg Org1MSP
+
+
+configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./order/Org2MSPanchors.tx -channelID cha2 -asOrg Org2MSP</code></pre><p>成功后会在<strong>mynetwork/orderer</strong>文件下产生<strong>Org1MSPanchors.tx</strong>和<strong>Org2MSPanchors.tx</strong></p>
+<h4 id="3-4启动orderer节点"><a href="#3-4启动orderer节点" class="headerlink" title="3.4启动orderer节点"></a>3.4启动orderer节点</h4><p>首先在<strong>mynetwork</strong>文件夹下1个文件夹<strong>orderer</strong><br>同样在<strong>fabric-sample/config/</strong>目录下找到<strong>orderer.yaml</strong>文件复制到<strong>mynetwork/</strong>目录下，这是<strong>orderer</strong>启动所需要的配置文件。</p>
+<pre><code>General:
+    ListenAddress: 127.0.0.1
+    ListenPort: 7050
+    TLS:
+        Enabled: false
+        PrivateKey: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/server.key
+        Certificate: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/server.crt
+        RootCAs:
+          - /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/tls/ca.crt
+        ClientAuthRequired: false
+        ClientRootCAs:</code></pre><p>分割</p>
+<pre><code>BootstrapMethod: file
+
+BootstrapFile: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/order/mynetworkgenesis.block
+
+LocalMSPDir: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/ordererOrganizations/mynetwork.com/orderers/orderer.mynetwork.com/msp
+
+LocalMSPID: OrdererMSP</code></pre><p>分割</p>
+<pre><code>FileLedger:
+
+    Location: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/orderer</code></pre><p>修改好配置文件后执行</p>
+<pre><code>orderer start</code></pre><p><strong>orderer</strong>节点启动。</p>
+<h4 id="3-4启动peer节点"><a href="#3-4启动peer节点" class="headerlink" title="3.4启动peer节点"></a>3.4启动peer节点</h4><p>首先在<strong>mynetwork</strong>文件夹下创建两个文件夹org1和org2<br>同样从<strong>fabric-sample/config/</strong>目录下找到<strong>core.yaml</strong>文件复制到<strong>mynetwork/org1</strong>目录下，这是peer启动所需要的配置文件。<br>打开<strong>core.yaml</strong>文件进行修改<br>修改部分如下：</p>
+<pre><code>peer:
+
+    id: peer0.org1.mynetwork.com
+
+    networkId: dev
+
+    # 这是org1的地址对于org2，统一改成90xx以区分
+    listenAddress: 0.0.0.0:7051
+
+    chaincodeListenAddress: 0.0.0.0:7052
+
+    # chaincodeAddress: 0.0.0.0:7052
+
+    address: peer0.org1.mynetwork.com:7051</code></pre><p>分割</p>
+<pre><code>gossip:
+    bootstrap: 127.0.0.1:7051</code></pre><p>分割</p>
+<pre><code># TLS Settings
+tls:
+    enabled:  false
+    clientAuthRequired: false
+    cert:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/server.crt
+
+    key:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/server.key
+
+    rootcert:
+        file: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/ca.crt
+
+    clientRootCAs:
+        files:
+          - /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/tls/ca.crt
+    clientKey:
+        file:
+    clientCert:
+        file:
+
+authentication:
+
+    timewindow: 15m
+
+fileSystemPath: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/org1/peer0</code></pre><p>分割</p>
+<pre><code>    mspConfigPath: /home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/peers/peer0.org1.mynetwork.com/msp
+
+    localMspId: Org1MSP
+
+vm:
+
+    endpoint: unix:///var/run/docker.sock
+    docker:
+        tls:
+            enabled: false
+            ca:
+                file: docker/ca.crt
+            cert:
+                file: docker/tls.crt
+            key:
+                file: docker/tls.key
+
+        attachStdout: false
+
+        hostConfig:
+            NetworkMode: host
+            Dns:
+                - 172.17.0.1                #**这个地方改成你的docker地址**
+            LogConfig:
+                Type: json-file
+                Config:
+                    max-size: &quot;50m&quot;
+                    max-file: &quot;5&quot;
+            Memory: 2147483648</code></pre><p>修改好后在<strong>mynetwork/org1</strong>目录下执行</p>
+<pre><code>peer node start </code></pre><p>值得一提的是，<strong>172.17.0.1</strong>这个地址是你的docker服务的地址，使用ifconfig查看并填入，如果不修改这里，后面可能会报奇怪的的错误，连接不上docker的容器。<br>之后peer.org1启动<br>对于org2的配置文件需要注意的地方主要是所有端口号尽量不要和org1重复，不然可能会有冲突。<br>同样的方法启动peer0.org2</p>
+<h4 id="3-5-创建通道和加入节点加入"><a href="#3-5-创建通道和加入节点加入" class="headerlink" title="3.5 创建通道和加入节点加入"></a>3.5 创建通道和加入节点加入</h4><h5 id="3-5-1创建通道"><a href="#3-5-1创建通道" class="headerlink" title="3.5.1创建通道"></a>3.5.1创建通道</h5><p>在<strong>mynetwork\org1</strong>下执行以下命令来预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel create -t 50s -o orderer.mynetwork.com:7050 -c cha2 -f ../order/mynetworkchannel.tx</code></pre><p>此时会在当前目录下创建出通道块文件<strong>cha2.block</strong>。将这个文件移动到<strong>mynetwork/order</strong>目录下。</p>
+<h5 id="3-5-2节点加入"><a href="#3-5-2节点加入" class="headerlink" title="3.5.2节点加入"></a>3.5.2节点加入</h5><p>预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel join -b ./order/cha2.block</code></pre><p>同样的方法来将另一个节点加入</p>
+<h5 id="3-5-3锚点更新"><a href="#3-5-3锚点更新" class="headerlink" title="3.5.3锚点更新"></a>3.5.3锚点更新</h5><p>预设环境变量：</p>
+<pre><code>export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_ADDRESS=localhost:7051
+CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/mynetwork/crypto-config/peerOrganizations/org1.mynetwork.com/users/Admin@org1.mynetwork.com/msp</code></pre><p>执行命令：</p>
+<pre><code>peer channel update -o orderer.mynetwork.com:7050 -c cha2 -f ./Org1MSPanchors.tx</code></pre><p>同样的方法来将另一个节锚点更新。<br>至此网络搭建部分基本完成。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hyperledger-fabric-docker/" rel="tag"><i class="fa fa-tag"></i> hyperledger,fabric,docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/14/docker-sudo/" rel="next" title="docker权限设置">
+                <i class="fa fa-chevron-left"></i> docker权限设置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/tx.jpg"
+                alt="Prov" />
+            
+              <p class="site-author-name" itemprop="name">Prov</p>
+              <p class="site-description motion-element" itemprop="description">风雪追击的技术分享空间</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-概述"><span class="nav-number">1.</span> <span class="nav-text">1.概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-准备工作"><span class="nav-number">2.</span> <span class="nav-text">2.准备工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-简单网络的搭建"><span class="nav-number">3.</span> <span class="nav-text">3.简单网络的搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1主要流程"><span class="nav-number">3.1.</span> <span class="nav-text">3.1主要流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-创建证书文件"><span class="nav-number">3.2.</span> <span class="nav-text">3.2.创建证书文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-创建创世区块、通道区块、锚点文件"><span class="nav-number">3.3.</span> <span class="nav-text">3.3.创建创世区块、通道区块、锚点文件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-1创建创世区块"><span class="nav-number">3.3.1.</span> <span class="nav-text">3.3.1创建创世区块</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-2创建通道区块文件"><span class="nav-number">3.3.2.</span> <span class="nav-text">3.3.2创建通道区块文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-3-3创建锚点文件"><span class="nav-number">3.3.3.</span> <span class="nav-text">3.3.3创建锚点文件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4启动orderer节点"><span class="nav-number">3.4.</span> <span class="nav-text">3.4启动orderer节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4启动peer节点"><span class="nav-number">3.5.</span> <span class="nav-text">3.4启动peer节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-创建通道和加入节点加入"><span class="nav-number">3.6.</span> <span class="nav-text">3.5 创建通道和加入节点加入</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-1创建通道"><span class="nav-number">3.6.1.</span> <span class="nav-text">3.5.1创建通道</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-2节点加入"><span class="nav-number">3.6.2.</span> <span class="nav-text">3.5.2节点加入</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-5-3锚点更新"><span class="nav-number">3.6.3.</span> <span class="nav-text">3.5.3锚点更新</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Prov</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共4.7k字</span>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 访问总量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'iCJSAh8IawYpf0NkgI0b0ygM-gzGzoHsz',
+        appKey: 'vD4Dn6tDqgUdJ05v0gqQJcKa',
+        placeholder: '有朋自远方来，不亦乐乎',
+        avatar:'wavatar',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("iCJSAh8IawYpf0NkgI0b0ygM-gzGzoHsz", "vD4Dn6tDqgUdJ05v0gqQJcKa");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
