@@ -293,6 +293,257 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/01/fabric-mynetwork2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/01/fabric-mynetwork2/" itemprop="url">fabric2.1简单网络手动网络搭建-2</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-01T16:24:50+08:00">
+                2020-06-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/" itemprop="url" rel="index">
+                    <span itemprop="name">hyperledger</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hyperledger/fabric/" itemprop="url" rel="index">
+                    <span itemprop="name">fabric</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/06/01/fabric-mynetwork2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/06/01/fabric-mynetwork2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/06/01/fabric-mynetwork2/" class="leancloud_visitors" data-flag-title="fabric2.1简单网络手动网络搭建-2">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1.7k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>十多天没有更新博客啊，我实在太懒了。除了忙老师布置的项目，就是在偷懒。。。<br>这次更新一下fabric网络手动搭建的的第二部分，链码的安装调用<br>本文依旧主要参考<a href="https://hyperledger-fabric.readthedocs.io/en/master/deploy_chaincode.html" target="_blank" rel="noopener">官方文档</a></p>
+</blockquote>
+<hr>
+<h3 id="链码的安装"><a href="#链码的安装" class="headerlink" title="链码的安装"></a>链码的安装</h3><h4 id="链码依赖下载"><a href="#链码依赖下载" class="headerlink" title="链码依赖下载"></a>链码依赖下载</h4><p>链码的编写支持，go,js,java多种语言。本文以go为例。官方提供了一个简单的记录车子信息的链码demo。在fabric的chaincode文件夹下可以找到。</p>
+<p>首先只有go写的链码是不够的。链码所调用的api所在的包文件需要进行拉取。<br>过程也很简单。<br>找到go目录下的fabric.go文件，打开可以看到其依赖的包，这两个是最常用的fabric包。</p>
+<pre><code>&quot;github.com/hyperledger/fabric-chaincode-go/shim&quot;
+&quot;github.com/hyperledger/fabric-protos-go/peer&quot;</code></pre><p>首先在链码fabcar.go同级目录下使用命令：</p>
+<pre><code>go init</code></pre><p>这样会在该文件夹下得到一个go.mod文件<br>然后执行：</p>
+<pre><code>sudo GO111MODULE=on go mod vendor</code></pre><p>这样fabcar.go所依赖的包就会被下载到vendor文件夹下。</p>
+<h4 id="链码打包"><a href="#链码打包" class="headerlink" title="链码打包"></a>链码打包</h4><p>在拉取好依赖后，需要将链码打包才能安装在peer节点上。<br>打包命令是：</p>
+<pre><code>peer lifecycle chaincode package fabcar.tar.gz --path ../chaincode/fabcar/go/ --lang golang --label fabcar_1</code></pre><p>打包的过程会进行一些语法性检查。<br>这里面的几个参数。<code>--lang golang</code>代表使用的语言是go，<code>--path</code>代表go文件所在的文件夹。</p>
+<h4 id="链码的安装-1"><a href="#链码的安装-1" class="headerlink" title="链码的安装"></a>链码的安装</h4><p>链码需要根据背书策略安装在所有需要安装的节点上。我们这里是peer.org1和peer0.org2。首先需要预置环境变量，例如：</p>
+<pre><code>export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=localhost:7051</code></pre><p>其中<code>CORE_PEER_TLS_ROOTCERT_FILE</code>如果没有开启tsl则不需要预置。<br>然后又执行安装命令：</p>
+<pre><code>peer lifecycle chaincode install fabcar.tar.gz</code></pre><h4 id="链码批准和提交"><a href="#链码批准和提交" class="headerlink" title="链码批准和提交"></a>链码批准和提交</h4><p>链码在被安装后，需要先被所有背书借点批准后，再由一个节点提交，才能被正常调用。</p>
+<p>同样需要的预置环境变量，和上面的相同，不再重复。<br>查看已安装的链码：</p>
+<pre><code>peer lifecycle chaincode queryinstalled</code></pre><p>返回内容：</p>
+<pre><code>Installed chaincodes on peer:
+Package ID: fabcar_1:69de748301770f6ef64b42aa6bb6cb291df20aa39542c3ef94008615704007f3, Label: fabcar_1</code></pre><p>将包id存成预置环境变量：</p>
+<pre><code>export CC_PACKAGE_ID=fabcar_1:69de748301770f6ef64b42aa6bb6cb291df20aa39542c3ef94008615704007f3</code></pre><p>执行批准命令：</p>
+<pre><code>peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name fabcar --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem</code></pre><p>其中，如果未开启tsl，则不需要<code>--ordererTLSHostnameOverride</code>和<code>--tls</code>两个选项。<code>--package-id</code>选项为刚才预置的环境变量。<code>name</code>就是链码的名称。<br>每个背书节点都需要对链码进行批准。<br>可以通过下面的命令，查看背书借点批准状态:</p>
+<pre><code>peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name fabcar --version 1.0 --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --output json</code></pre><p>在所有背书节点都批准后，由一个节点提交该链码，命令：</p>
+<pre><code>peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name fabcar --version 1.0 --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt</code></pre><p>提交之后，可以查看提交状态：</p>
+<pre><code>peer lifecycle chaincode querycommitted --channelID mychannel --name fabcar --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem</code></pre><p>如果如下，则代表提交成功：</p>
+<pre><code>Committed chaincode definition for chaincode &apos;fabcar&apos; on channel &apos;mychannel&apos;:
+Version: 1, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]</code></pre><h3 id="链码的调用和更新"><a href="#链码的调用和更新" class="headerlink" title="链码的调用和更新"></a>链码的调用和更新</h3><h4 id="链码调用"><a href="#链码调用" class="headerlink" title="链码调用"></a>链码调用</h4><p>初始化账本：</p>
+<pre><code>peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n fabcar --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c &apos;{&quot;function&quot;:&quot;initLedger&quot;,&quot;Args&quot;:[]}&apos;</code></pre><p>前面的各个参数根据自己情况灵活修改。最后的json串则代表要执行的命令。可以带自己打开fabric.go文件查看一下初始化进行了什么操作，基本上就是注入和一些预置的条目。</p>
+<p>执行命令查询条目：</p>
+<pre><code>peer chaincode query -C mychannel -n fabcar -c &apos;{&quot;Args&quot;:[&quot;queryAllCars&quot;]}&apos;</code></pre><p>返回：</p>
+<pre><code>[{&quot;Key&quot;:&quot;CAR0&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Toyota&quot;,&quot;model&quot;:&quot;Prius&quot;,&quot;colour&quot;:&quot;blue&quot;,&quot;owner&quot;:&quot;Tomoko&quot;}},
+{&quot;Key&quot;:&quot;CAR1&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Ford&quot;,&quot;model&quot;:&quot;Mustang&quot;,&quot;colour&quot;:&quot;red&quot;,&quot;owner&quot;:&quot;Brad&quot;}},
+{&quot;Key&quot;:&quot;CAR2&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Hyundai&quot;,&quot;model&quot;:&quot;Tucson&quot;,&quot;colour&quot;:&quot;green&quot;,&quot;owner&quot;:&quot;Jin Soo&quot;}},
+{&quot;Key&quot;:&quot;CAR3&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Volkswagen&quot;,&quot;model&quot;:&quot;Passat&quot;,&quot;colour&quot;:&quot;yellow&quot;,&quot;owner&quot;:&quot;Max&quot;}},
+{&quot;Key&quot;:&quot;CAR4&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Tesla&quot;,&quot;model&quot;:&quot;S&quot;,&quot;colour&quot;:&quot;black&quot;,&quot;owner&quot;:&quot;Adriana&quot;}},
+{&quot;Key&quot;:&quot;CAR5&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Peugeot&quot;,&quot;model&quot;:&quot;205&quot;,&quot;colour&quot;:&quot;purple&quot;,&quot;owner&quot;:&quot;Michel&quot;}},
+{&quot;Key&quot;:&quot;CAR6&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Chery&quot;,&quot;model&quot;:&quot;S22L&quot;,&quot;colour&quot;:&quot;white&quot;,&quot;owner&quot;:&quot;Aarav&quot;}},
+{&quot;Key&quot;:&quot;CAR7&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Fiat&quot;,&quot;model&quot;:&quot;Punto&quot;,&quot;colour&quot;:&quot;violet&quot;,&quot;owner&quot;:&quot;Pari&quot;}},
+{&quot;Key&quot;:&quot;CAR8&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Tata&quot;,&quot;model&quot;:&quot;Nano&quot;,&quot;colour&quot;:&quot;indigo&quot;,&quot;owner&quot;:&quot;Valeria&quot;}},
+{&quot;Key&quot;:&quot;CAR9&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Holden&quot;,&quot;model&quot;:&quot;Barina&quot;,&quot;colour&quot;:&quot;brown&quot;,&quot;owner&quot;:&quot;Shotaro&quot;}}]</code></pre><h4 id="链码升级"><a href="#链码升级" class="headerlink" title="链码升级"></a>链码升级</h4><p>当对链码进行bug修复或者更新时需要进行链码升级，其实和安装过程基本一致</p>
+<p>首先打包好新的安装包<br>然后安装，批准，提交<br>需要注意更新预置环境变量–package-id的值<br>同时批准和提交时的选项<code>--version</code>变成2.0，<code>--sequence</code>变成2.其他的不变。<br>执行新的链码命令来添加一个条目：</p>
+<pre><code>peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n fabcar --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c &apos;{&quot;function&quot;:&quot;createCar&quot;,&quot;Args&quot;:[&quot;CAR11&quot;,&quot;Honda&quot;,&quot;Accord&quot;,&quot;Black&quot;,&quot;Tom&quot;]}&apos;</code></pre><p>再次查询：</p>
+<pre><code>peer chaincode query -C mychannel -n fabcar -c &apos;{&quot;Args&quot;:[&quot;queryAllCars&quot;]}&apos;</code></pre><p>可以成功查询到刚刚添加的条目。</p>
+<p>后续会更新一下刚刚做的一个简单的食品溯源项目</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/20/fabric-mynetwork1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -454,7 +705,7 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 </blockquote>
 <blockquote>
 <p>本以为会是轻松的事情，但因为版本差异，以及外文啃着吃力的原因，遇到了很多问题花了一个星期才解决。不管怎么说，幸运的是，我解决了。</p>
-<p>本文主要参考<a href="https://blog.csdn.net/lynnyq/article/details/79080405" target="_blank" rel="noopener">官方文档</a>以及《区块链开发实战》<br>本文不再涉及环境搭建，请参照<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
+<p>本文主要参考<a href="https://hyperledger-fabric.readthedocs.io/en/master/deploy_chaincode.html" target="_blank" rel="noopener">官方文档</a>以及《区块链开发实战》<br>本文不再涉及环境搭建，请参照<a href="https://provence965437.github.io/" target="_blank" rel="noopener">ubuntu-fabric2.1环境搭建</a></p>
 </blockquote>
 <hr>
 <h3 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h3><p>手动搭建fabric网路主要包含两部分内容：<br><strong>1.fabric网络的手动搭建</strong><br>本文以一个orderer节点，两个peer节点的网络模型为例<br><strong>2.链码的安装和测试</strong><br>链码使用fabcar<br>本文主要记录第一部分内容</p>
@@ -1711,7 +1962,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1733,7 +1984,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1790,7 +2041,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共4.7k字</span>
+  <span class="post-count">博客全站共6.5k字</span>
 </div>
 
 
