@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ubuntu-fabric2.1环境搭建</title>
+    <url>/2020/05/12/fabric-build/</url>
+    <content><![CDATA[<blockquote>
+<p>为了导师的项目要研究超级账本，fabric是hyperledger的核心项目，于是花了两天时间搭建hyperledger fabric的环境。涉及的东西挺多挺杂的，这里记录一下吧。<br>本文主要参考<a href="https://blog.csdn.net/MARK4993885/article/details/105409596/" target="_blank" rel="noopener">这篇博客</a>，内容基本一致，一些不同点是我出现的问题和解决方案，可以先按照链接文档去做，如果有问题，再来看我这篇文档有没有解决方案。</p>
+</blockquote>
+<h3 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h3><p>如果安装过老版的docker，需要先卸载：<br><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></p>
+<h4 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h4><p><code>sudo apt-get update</code></p>
+<p><code>sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common</code></p>
+<p>加入Docker官方GPG key：<br><code>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</code></p>
+<p>验证：<br><code>sudo apt-key fingerprint 0EBFCD88</code></p>
+<p>设置稳定版仓库：<br><code>sudo add-apt-repository \
+   &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable&quot;</code></p>
+<h4 id="安装DOCKER-ENGINE："><a href="#安装DOCKER-ENGINE：" class="headerlink" title="安装DOCKER ENGINE："></a>安装DOCKER ENGINE：</h4><p><code>sudo apt-get update</code><br><code>docker-ce-cli containerd.io</code></p>
+<p>没有出现问题。</p>
+<h4 id="安装Docker-Compose"><a href="#安装Docker-Compose" class="headerlink" title="安装Docker Compose"></a>安装Docker Compose</h4><p><code>sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code></p>
+<p>这一步可能会非常慢，最好是换国内镜像网站下载下载，使用下面的命令代替：<br><code>sudo curl -L &quot;https://get.daocloud.io/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code><br>get.daocloud.io是国内的一家镜像网站。</p>
+<p>设置权限<br><code>sudo chmod +x /usr/local/bin/docker-compose</code><br><code>docker-compose --version</code></p>
+<h3 id="Go环境安装"><a href="#Go环境安装" class="headerlink" title="Go环境安装"></a>Go环境安装</h3><p>建议是使用go1.4以上的版本<br>去<a href="https://studygolang.com/dl" target="_blank" rel="noopener">go语言中文网</a>下载最新版本<br>我下载的是<strong>go1.14.2.linux-amd64.tar.gz</strong>。<br>解压并复制到相应目录：<br><code>tar -zxvf  go1.14.2.linux-amd64.tar.gz -C /usr/local</code><br>配置环境变量，打开配置文件/etc/profile<br><code>sudo vim /etc/profile</code><br>写入：<br><code>export PATH=$PATH:/usr/local/go/bin</code><br><code>export GOPATH=/opt/gopath</code><br>然后执行：<br><code>source /etc/profile</code><br>使配置生效。<br><strong>另外我出现了关闭终端，配置失效，需要重新source的情况，我的解决方法是改为将内容写入到~/.bashrc</strong><br><code>sudo vim ~/.bashrc</code><br>使配置执行：<br><code>source ~/.bashrc</code></p>
+<p>然后创建文件夹：<br><code>mkdir -p /opt/gopath/src/github.com/hyperledger</code><br>这个文件夹和前面设置的$GOPATH的路径一致</p>
+<h3 id="fabric安装"><a href="#fabric安装" class="headerlink" title="fabric安装"></a>fabric安装</h3><h4 id="源码下载"><a href="#源码下载" class="headerlink" title="源码下载"></a>源码下载</h4><p>首先为了保证搭建环境的时效性，应该用git进行安装<br><a href="https://provence965437.github.io/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/git/" target="_blank" rel="noopener">git的安装与配置</a><br>然后执行下面的命令：<br><code>cd /opt/gopath/src/github.com/hyperledger</code><br><code>git clone https://github.com/hyperledger/fabric.git</code><br>这前提是你的git速度可以，并且下载之后没有什么问题。我开始时用git下载，下了30分钟，好不容易下下来，关掉终端，git下载的文件又会自动删除。真是无语了。<br>如果你的git不好用，那就直接去github上下载好再解压到相应目录。</p>
+<h4 id="执行拉取镜像镜像脚本"><a href="#执行拉取镜像镜像脚本" class="headerlink" title="执行拉取镜像镜像脚本"></a>执行拉取镜像镜像脚本</h4><p>进入到<strong>/fabric/scripts/</strong><br>先给当前用docker权限，执行：<br><code>sudo groupadd docker</code>   &emsp;&emsp; 添加docker用户组<br><code>sudo gpasswd -a $USER docker</code>&emsp;&emsp;将当前用户加如docker用户组<br><code>newgrp docker</code> &emsp;&emsp;&emsp;    #更新用户组<br>执行：<br><code>sudo ./bootstrap.sh</code><br>切换到/<strong>fabric</strong>根目录<br>再执行：<br><code>sudo curl -sSL https://bit.ly/2ysbOFE | bash -s</code><br>然后目录下会出现fabric-sample文件，另外原文提到还有<strong>hyperledger-fabric-linux-amd64-2.0.0</strong>这个文件夹，我的脚本执行时倒是有下载，但是我结束之后发现目录下并没有这个。确保万无一失，去github自己下过来解压，记得下载2.1版本的。</p>
+<h4 id="执行sample"><a href="#执行sample" class="headerlink" title="执行sample"></a>执行sample</h4><p>进入到<strong>/fabric-sample</strong>目录<br>执行:<br><code>sudo ./bysn.sh up</code><br>不知道为什么，总是会提示go:command not found ，我明明装了go的，版本也是1.14+。就很怪。应该是因为什么原因bash获得不了go命令的执行路径。后来我想了想，我把go解压在<strong>/usr/local</strong>下面，但是很多命令是在<strong>usr/bin</strong>下的。<br>于是我尝试在<strong>/usr/bin</strong>建立软链接：<br><code>ln -s \usr\local\go\bin\go \usr\bin\go</code><br>就可以了。<br>手动执行命令后执行关闭脚本：<br><code>sudo ./bysn.sh down</code><br>再次执行<br><code>sudo ./bysn.sh up</code><br>当界面上出现一个大大的<strong><strong>END</strong></strong>时，代表运行成功。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>搭建的过程充满曲折，主要问题出在git和go的安装上。这只是开始，后续还要尝试去使用fabric，继续加油吧。</p>
+]]></content>
+      <categories>
+        <category>hyperledger</category>
+        <category>fabric</category>
+      </categories>
+      <tags>
+        <tag>hyperledger,fabric,go,docker</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>docker权限设置</title>
     <url>/2020/05/14/docker-sudo/</url>
     <content><![CDATA[<blockquote>
@@ -19,6 +59,65 @@ $ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新
       </categories>
       <tags>
         <tag>docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>fabric2.1简单网络手动网络搭建-2</title>
+    <url>/2020/06/01/fabric-mynetwork2/</url>
+    <content><![CDATA[<blockquote>
+<p>十多天没有更新博客啊，我实在太懒了。除了忙老师布置的项目，就是在偷懒。。。<br>这次更新一下fabric网络手动搭建的的第二部分，链码的安装调用<br>本文依旧主要参考<a href="https://hyperledger-fabric.readthedocs.io/en/master/deploy_chaincode.html" target="_blank" rel="noopener">官方文档</a></p>
+</blockquote>
+<hr>
+<h3 id="链码的安装"><a href="#链码的安装" class="headerlink" title="链码的安装"></a>链码的安装</h3><h4 id="链码依赖下载"><a href="#链码依赖下载" class="headerlink" title="链码依赖下载"></a>链码依赖下载</h4><p>链码的编写支持，go,js,java多种语言。本文以go为例。官方提供了一个简单的记录车子信息的链码demo。在fabric的chaincode文件夹下可以找到。</p>
+<p>首先只有go写的链码是不够的。链码所调用的api所在的包文件需要进行拉取。<br>过程也很简单。<br>找到go目录下的fabric.go文件，打开可以看到其依赖的包，这两个是最常用的fabric包。</p>
+<pre><code>&quot;github.com/hyperledger/fabric-chaincode-go/shim&quot;
+&quot;github.com/hyperledger/fabric-protos-go/peer&quot;</code></pre><p>首先在链码fabcar.go同级目录下使用命令：</p>
+<pre><code>go init</code></pre><p>这样会在该文件夹下得到一个go.mod文件<br>然后执行：</p>
+<pre><code>sudo GO111MODULE=on go mod vendor</code></pre><p>这样fabcar.go所依赖的包就会被下载到vendor文件夹下。</p>
+<h4 id="链码打包"><a href="#链码打包" class="headerlink" title="链码打包"></a>链码打包</h4><p>在拉取好依赖后，需要将链码打包才能安装在peer节点上。<br>打包命令是：</p>
+<pre><code>peer lifecycle chaincode package fabcar.tar.gz --path ../chaincode/fabcar/go/ --lang golang --label fabcar_1</code></pre><p>打包的过程会进行一些语法性检查。<br>这里面的几个参数。<code>--lang golang</code>代表使用的语言是go，<code>--path</code>代表go文件所在的文件夹。</p>
+<h4 id="链码的安装-1"><a href="#链码的安装-1" class="headerlink" title="链码的安装"></a>链码的安装</h4><p>链码需要根据背书策略安装在所有需要安装的节点上。我们这里是peer.org1和peer0.org2。首先需要预置环境变量，例如：</p>
+<pre><code>export CORE_PEER_TLS_ENABLED=true
+export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
+export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+export CORE_PEER_ADDRESS=localhost:7051</code></pre><p>其中<code>CORE_PEER_TLS_ROOTCERT_FILE</code>如果没有开启tsl则不需要预置。<br>然后又执行安装命令：</p>
+<pre><code>peer lifecycle chaincode install fabcar.tar.gz</code></pre><h4 id="链码批准和提交"><a href="#链码批准和提交" class="headerlink" title="链码批准和提交"></a>链码批准和提交</h4><p>链码在被安装后，需要先被所有背书借点批准后，再由一个节点提交，才能被正常调用。</p>
+<p>同样需要的预置环境变量，和上面的相同，不再重复。<br>查看已安装的链码：</p>
+<pre><code>peer lifecycle chaincode queryinstalled</code></pre><p>返回内容：</p>
+<pre><code>Installed chaincodes on peer:
+Package ID: fabcar_1:69de748301770f6ef64b42aa6bb6cb291df20aa39542c3ef94008615704007f3, Label: fabcar_1</code></pre><p>将包id存成预置环境变量：</p>
+<pre><code>export CC_PACKAGE_ID=fabcar_1:69de748301770f6ef64b42aa6bb6cb291df20aa39542c3ef94008615704007f3</code></pre><p>执行批准命令：</p>
+<pre><code>peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name fabcar --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem</code></pre><p>其中，如果未开启tsl，则不需要<code>--ordererTLSHostnameOverride</code>和<code>--tls</code>两个选项。<code>--package-id</code>选项为刚才预置的环境变量。<code>name</code>就是链码的名称。<br>每个背书节点都需要对链码进行批准。<br>可以通过下面的命令，查看背书借点批准状态:</p>
+<pre><code>peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name fabcar --version 1.0 --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --output json</code></pre><p>在所有背书节点都批准后，由一个节点提交该链码，命令：</p>
+<pre><code>peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name fabcar --version 1.0 --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt</code></pre><p>提交之后，可以查看提交状态：</p>
+<pre><code>peer lifecycle chaincode querycommitted --channelID mychannel --name fabcar --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem</code></pre><p>如果如下，则代表提交成功：</p>
+<pre><code>Committed chaincode definition for chaincode &apos;fabcar&apos; on channel &apos;mychannel&apos;:
+Version: 1, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]</code></pre><h3 id="链码的调用和更新"><a href="#链码的调用和更新" class="headerlink" title="链码的调用和更新"></a>链码的调用和更新</h3><h4 id="链码调用"><a href="#链码调用" class="headerlink" title="链码调用"></a>链码调用</h4><p>初始化账本：</p>
+<pre><code>peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n fabcar --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c &apos;{&quot;function&quot;:&quot;initLedger&quot;,&quot;Args&quot;:[]}&apos;</code></pre><p>前面的各个参数根据自己情况灵活修改。最后的json串则代表要执行的命令。可以带自己打开fabric.go文件查看一下初始化进行了什么操作，基本上就是注入和一些预置的条目。</p>
+<p>执行命令查询条目：</p>
+<pre><code>peer chaincode query -C mychannel -n fabcar -c &apos;{&quot;Args&quot;:[&quot;queryAllCars&quot;]}&apos;</code></pre><p>返回：</p>
+<pre><code>[{&quot;Key&quot;:&quot;CAR0&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Toyota&quot;,&quot;model&quot;:&quot;Prius&quot;,&quot;colour&quot;:&quot;blue&quot;,&quot;owner&quot;:&quot;Tomoko&quot;}},
+{&quot;Key&quot;:&quot;CAR1&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Ford&quot;,&quot;model&quot;:&quot;Mustang&quot;,&quot;colour&quot;:&quot;red&quot;,&quot;owner&quot;:&quot;Brad&quot;}},
+{&quot;Key&quot;:&quot;CAR2&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Hyundai&quot;,&quot;model&quot;:&quot;Tucson&quot;,&quot;colour&quot;:&quot;green&quot;,&quot;owner&quot;:&quot;Jin Soo&quot;}},
+{&quot;Key&quot;:&quot;CAR3&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Volkswagen&quot;,&quot;model&quot;:&quot;Passat&quot;,&quot;colour&quot;:&quot;yellow&quot;,&quot;owner&quot;:&quot;Max&quot;}},
+{&quot;Key&quot;:&quot;CAR4&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Tesla&quot;,&quot;model&quot;:&quot;S&quot;,&quot;colour&quot;:&quot;black&quot;,&quot;owner&quot;:&quot;Adriana&quot;}},
+{&quot;Key&quot;:&quot;CAR5&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Peugeot&quot;,&quot;model&quot;:&quot;205&quot;,&quot;colour&quot;:&quot;purple&quot;,&quot;owner&quot;:&quot;Michel&quot;}},
+{&quot;Key&quot;:&quot;CAR6&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Chery&quot;,&quot;model&quot;:&quot;S22L&quot;,&quot;colour&quot;:&quot;white&quot;,&quot;owner&quot;:&quot;Aarav&quot;}},
+{&quot;Key&quot;:&quot;CAR7&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Fiat&quot;,&quot;model&quot;:&quot;Punto&quot;,&quot;colour&quot;:&quot;violet&quot;,&quot;owner&quot;:&quot;Pari&quot;}},
+{&quot;Key&quot;:&quot;CAR8&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Tata&quot;,&quot;model&quot;:&quot;Nano&quot;,&quot;colour&quot;:&quot;indigo&quot;,&quot;owner&quot;:&quot;Valeria&quot;}},
+{&quot;Key&quot;:&quot;CAR9&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Holden&quot;,&quot;model&quot;:&quot;Barina&quot;,&quot;colour&quot;:&quot;brown&quot;,&quot;owner&quot;:&quot;Shotaro&quot;}}]</code></pre><h4 id="链码升级"><a href="#链码升级" class="headerlink" title="链码升级"></a>链码升级</h4><p>当对链码进行bug修复或者更新时需要进行链码升级，其实和安装过程基本一致</p>
+<p>首先打包好新的安装包<br>然后安装，批准，提交<br>需要注意更新预置环境变量–package-id的值<br>同时批准和提交时的选项<code>--version</code>变成2.0，<code>--sequence</code>变成2.其他的不变。<br>执行新的链码命令来添加一个条目：</p>
+<pre><code>peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n fabcar --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c &apos;{&quot;function&quot;:&quot;createCar&quot;,&quot;Args&quot;:[&quot;CAR11&quot;,&quot;Honda&quot;,&quot;Accord&quot;,&quot;Black&quot;,&quot;Tom&quot;]}&apos;</code></pre><p>再次查询：</p>
+<pre><code>peer chaincode query -C mychannel -n fabcar -c &apos;{&quot;Args&quot;:[&quot;queryAllCars&quot;]}&apos;</code></pre><p>可以成功查询到刚刚添加的条目。</p>
+<p>后续会更新一下刚刚做的一个简单的食品溯源项目</p>
+]]></content>
+      <categories>
+        <category>hyperledger</category>
+        <category>fabric</category>
+      </categories>
+      <tags>
+        <tag>hyperledger,fabric,go</tag>
       </tags>
   </entry>
   <entry>
@@ -325,105 +424,6 @@ CORE_PEER_MSPCONFIGPATH=/home/gopath/src/github.com/hyperledger/fabric-samples/m
       </categories>
       <tags>
         <tag>hyperledger,fabric,docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>ubuntu-fabric2.1环境搭建</title>
-    <url>/2020/05/12/fabric-build/</url>
-    <content><![CDATA[<blockquote>
-<p>为了导师的项目要研究超级账本，fabric是hyperledger的核心项目，于是花了两天时间搭建hyperledger fabric的环境。涉及的东西挺多挺杂的，这里记录一下吧。<br>本文主要参考<a href="https://blog.csdn.net/MARK4993885/article/details/105409596/" target="_blank" rel="noopener">这篇博客</a>，内容基本一致，一些不同点是我出现的问题和解决方案，可以先按照链接文档去做，如果有问题，再来看我这篇文档有没有解决方案。</p>
-</blockquote>
-<h3 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h3><p>如果安装过老版的docker，需要先卸载：<br><code>sudo apt-get remove docker docker-engine docker.io containerd runc</code></p>
-<h4 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h4><p><code>sudo apt-get update</code></p>
-<p><code>sudo apt-get install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common</code></p>
-<p>加入Docker官方GPG key：<br><code>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -</code></p>
-<p>验证：<br><code>sudo apt-key fingerprint 0EBFCD88</code></p>
-<p>设置稳定版仓库：<br><code>sudo add-apt-repository \
-   &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable&quot;</code></p>
-<h4 id="安装DOCKER-ENGINE："><a href="#安装DOCKER-ENGINE：" class="headerlink" title="安装DOCKER ENGINE："></a>安装DOCKER ENGINE：</h4><p><code>sudo apt-get update</code><br><code>docker-ce-cli containerd.io</code></p>
-<p>没有出现问题。</p>
-<h4 id="安装Docker-Compose"><a href="#安装Docker-Compose" class="headerlink" title="安装Docker Compose"></a>安装Docker Compose</h4><p><code>sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code></p>
-<p>这一步可能会非常慢，最好是换国内镜像网站下载下载，使用下面的命令代替：<br><code>sudo curl -L &quot;https://get.daocloud.io/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code><br>get.daocloud.io是国内的一家镜像网站。</p>
-<p>设置权限<br><code>sudo chmod +x /usr/local/bin/docker-compose</code><br><code>docker-compose --version</code></p>
-<h3 id="Go环境安装"><a href="#Go环境安装" class="headerlink" title="Go环境安装"></a>Go环境安装</h3><p>建议是使用go1.4以上的版本<br>去<a href="https://studygolang.com/dl" target="_blank" rel="noopener">go语言中文网</a>下载最新版本<br>我下载的是<strong>go1.14.2.linux-amd64.tar.gz</strong>。<br>解压并复制到相应目录：<br><code>tar -zxvf  go1.14.2.linux-amd64.tar.gz -C /usr/local</code><br>配置环境变量，打开配置文件/etc/profile<br><code>sudo vim /etc/profile</code><br>写入：<br><code>export PATH=$PATH:/usr/local/go/bin</code><br><code>export GOPATH=/opt/gopath</code><br>然后执行：<br><code>source /etc/profile</code><br>使配置生效。<br><strong>另外我出现了关闭终端，配置失效，需要重新source的情况，我的解决方法是改为将内容写入到~/.bashrc</strong><br><code>sudo vim ~/.bashrc</code><br>使配置执行：<br><code>source ~/.bashrc</code></p>
-<p>然后创建文件夹：<br><code>mkdir -p /opt/gopath/src/github.com/hyperledger</code><br>这个文件夹和前面设置的$GOPATH的路径一致</p>
-<h3 id="fabric安装"><a href="#fabric安装" class="headerlink" title="fabric安装"></a>fabric安装</h3><h4 id="源码下载"><a href="#源码下载" class="headerlink" title="源码下载"></a>源码下载</h4><p>首先为了保证搭建环境的时效性，应该用git进行安装<br><a href="https://provence965437.github.io/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/git/" target="_blank" rel="noopener">git的安装与配置</a><br>然后执行下面的命令：<br><code>cd /opt/gopath/src/github.com/hyperledger</code><br><code>git clone https://github.com/hyperledger/fabric.git</code><br>这前提是你的git速度可以，并且下载之后没有什么问题。我开始时用git下载，下了30分钟，好不容易下下来，关掉终端，git下载的文件又会自动删除。真是无语了。<br>如果你的git不好用，那就直接去github上下载好再解压到相应目录。</p>
-<h4 id="执行拉取镜像镜像脚本"><a href="#执行拉取镜像镜像脚本" class="headerlink" title="执行拉取镜像镜像脚本"></a>执行拉取镜像镜像脚本</h4><p>进入到<strong>/fabric/scripts/</strong><br>先给当前用docker权限，执行：<br><code>sudo groupadd docker</code>   &emsp;&emsp; 添加docker用户组<br><code>sudo gpasswd -a $USER docker</code>&emsp;&emsp;将当前用户加如docker用户组<br><code>newgrp docker</code> &emsp;&emsp;&emsp;    #更新用户组<br>执行：<br><code>sudo ./bootstrap.sh</code><br>切换到/<strong>fabric</strong>根目录<br>再执行：<br><code>sudo curl -sSL https://bit.ly/2ysbOFE | bash -s</code><br>然后目录下会出现fabric-sample文件，另外原文提到还有<strong>hyperledger-fabric-linux-amd64-2.0.0</strong>这个文件夹，我的脚本执行时倒是有下载，但是我结束之后发现目录下并没有这个。确保万无一失，去github自己下过来解压，记得下载2.1版本的。</p>
-<h4 id="执行sample"><a href="#执行sample" class="headerlink" title="执行sample"></a>执行sample</h4><p>进入到<strong>/fabric-sample</strong>目录<br>执行:<br><code>sudo ./bysn.sh up</code><br>不知道为什么，总是会提示go:command not found ，我明明装了go的，版本也是1.14+。就很怪。应该是因为什么原因bash获得不了go命令的执行路径。后来我想了想，我把go解压在<strong>/usr/local</strong>下面，但是很多命令是在<strong>usr/bin</strong>下的。<br>于是我尝试在<strong>/usr/bin</strong>建立软链接：<br><code>ln -s \usr\local\go\bin\go \usr\bin\go</code><br>就可以了。<br>手动执行命令后执行关闭脚本：<br><code>sudo ./bysn.sh down</code><br>再次执行<br><code>sudo ./bysn.sh up</code><br>当界面上出现一个大大的<strong><strong>END</strong></strong>时，代表运行成功。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>搭建的过程充满曲折，主要问题出在git和go的安装上。这只是开始，后续还要尝试去使用fabric，继续加油吧。</p>
-]]></content>
-      <categories>
-        <category>hyperledger</category>
-        <category>fabric</category>
-      </categories>
-      <tags>
-        <tag>hyperledger,fabric,go,docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>fabric2.1简单网络手动网络搭建-2</title>
-    <url>/2020/06/01/fabric-mynetwork2/</url>
-    <content><![CDATA[<blockquote>
-<p>十多天没有更新博客啊，我实在太懒了。除了忙老师布置的项目，就是在偷懒。。。<br>这次更新一下fabric网络手动搭建的的第二部分，链码的安装调用<br>本文依旧主要参考<a href="https://hyperledger-fabric.readthedocs.io/en/master/deploy_chaincode.html" target="_blank" rel="noopener">官方文档</a></p>
-</blockquote>
-<hr>
-<h3 id="链码的安装"><a href="#链码的安装" class="headerlink" title="链码的安装"></a>链码的安装</h3><h4 id="链码依赖下载"><a href="#链码依赖下载" class="headerlink" title="链码依赖下载"></a>链码依赖下载</h4><p>链码的编写支持，go,js,java多种语言。本文以go为例。官方提供了一个简单的记录车子信息的链码demo。在fabric的chaincode文件夹下可以找到。</p>
-<p>首先只有go写的链码是不够的。链码所调用的api所在的包文件需要进行拉取。<br>过程也很简单。<br>找到go目录下的fabric.go文件，打开可以看到其依赖的包，这两个是最常用的fabric包。</p>
-<pre><code>&quot;github.com/hyperledger/fabric-chaincode-go/shim&quot;
-&quot;github.com/hyperledger/fabric-protos-go/peer&quot;</code></pre><p>首先在链码fabcar.go同级目录下使用命令：</p>
-<pre><code>go init</code></pre><p>这样会在该文件夹下得到一个go.mod文件<br>然后执行：</p>
-<pre><code>sudo GO111MODULE=on go mod vendor</code></pre><p>这样fabcar.go所依赖的包就会被下载到vendor文件夹下。</p>
-<h4 id="链码打包"><a href="#链码打包" class="headerlink" title="链码打包"></a>链码打包</h4><p>在拉取好依赖后，需要将链码打包才能安装在peer节点上。<br>打包命令是：</p>
-<pre><code>peer lifecycle chaincode package fabcar.tar.gz --path ../chaincode/fabcar/go/ --lang golang --label fabcar_1</code></pre><p>打包的过程会进行一些语法性检查。<br>这里面的几个参数。<code>--lang golang</code>代表使用的语言是go，<code>--path</code>代表go文件所在的文件夹。</p>
-<h4 id="链码的安装-1"><a href="#链码的安装-1" class="headerlink" title="链码的安装"></a>链码的安装</h4><p>链码需要根据背书策略安装在所有需要安装的节点上。我们这里是peer.org1和peer0.org2。首先需要预置环境变量，例如：</p>
-<pre><code>export CORE_PEER_TLS_ENABLED=true
-export CORE_PEER_LOCALMSPID=&quot;Org1MSP&quot;
-export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
-export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
-export CORE_PEER_ADDRESS=localhost:7051</code></pre><p>其中<code>CORE_PEER_TLS_ROOTCERT_FILE</code>如果没有开启tsl则不需要预置。<br>然后又执行安装命令：</p>
-<pre><code>peer lifecycle chaincode install fabcar.tar.gz</code></pre><h4 id="链码批准和提交"><a href="#链码批准和提交" class="headerlink" title="链码批准和提交"></a>链码批准和提交</h4><p>链码在被安装后，需要先被所有背书借点批准后，再由一个节点提交，才能被正常调用。</p>
-<p>同样需要的预置环境变量，和上面的相同，不再重复。<br>查看已安装的链码：</p>
-<pre><code>peer lifecycle chaincode queryinstalled</code></pre><p>返回内容：</p>
-<pre><code>Installed chaincodes on peer:
-Package ID: fabcar_1:69de748301770f6ef64b42aa6bb6cb291df20aa39542c3ef94008615704007f3, Label: fabcar_1</code></pre><p>将包id存成预置环境变量：</p>
-<pre><code>export CC_PACKAGE_ID=fabcar_1:69de748301770f6ef64b42aa6bb6cb291df20aa39542c3ef94008615704007f3</code></pre><p>执行批准命令：</p>
-<pre><code>peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name fabcar --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem</code></pre><p>其中，如果未开启tsl，则不需要<code>--ordererTLSHostnameOverride</code>和<code>--tls</code>两个选项。<code>--package-id</code>选项为刚才预置的环境变量。<code>name</code>就是链码的名称。<br>每个背书节点都需要对链码进行批准。<br>可以通过下面的命令，查看背书借点批准状态:</p>
-<pre><code>peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name fabcar --version 1.0 --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --output json</code></pre><p>在所有背书节点都批准后，由一个节点提交该链码，命令：</p>
-<pre><code>peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID mychannel --name fabcar --version 1.0 --sequence 1 --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt</code></pre><p>提交之后，可以查看提交状态：</p>
-<pre><code>peer lifecycle chaincode querycommitted --channelID mychannel --name fabcar --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem</code></pre><p>如果如下，则代表提交成功：</p>
-<pre><code>Committed chaincode definition for chaincode &apos;fabcar&apos; on channel &apos;mychannel&apos;:
-Version: 1, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Approvals: [Org1MSP: true, Org2MSP: true]</code></pre><h3 id="链码的调用和更新"><a href="#链码的调用和更新" class="headerlink" title="链码的调用和更新"></a>链码的调用和更新</h3><h4 id="链码调用"><a href="#链码调用" class="headerlink" title="链码调用"></a>链码调用</h4><p>初始化账本：</p>
-<pre><code>peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n fabcar --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c &apos;{&quot;function&quot;:&quot;initLedger&quot;,&quot;Args&quot;:[]}&apos;</code></pre><p>前面的各个参数根据自己情况灵活修改。最后的json串则代表要执行的命令。可以带自己打开fabric.go文件查看一下初始化进行了什么操作，基本上就是注入和一些预置的条目。</p>
-<p>执行命令查询条目：</p>
-<pre><code>peer chaincode query -C mychannel -n fabcar -c &apos;{&quot;Args&quot;:[&quot;queryAllCars&quot;]}&apos;</code></pre><p>返回：</p>
-<pre><code>[{&quot;Key&quot;:&quot;CAR0&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Toyota&quot;,&quot;model&quot;:&quot;Prius&quot;,&quot;colour&quot;:&quot;blue&quot;,&quot;owner&quot;:&quot;Tomoko&quot;}},
-{&quot;Key&quot;:&quot;CAR1&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Ford&quot;,&quot;model&quot;:&quot;Mustang&quot;,&quot;colour&quot;:&quot;red&quot;,&quot;owner&quot;:&quot;Brad&quot;}},
-{&quot;Key&quot;:&quot;CAR2&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Hyundai&quot;,&quot;model&quot;:&quot;Tucson&quot;,&quot;colour&quot;:&quot;green&quot;,&quot;owner&quot;:&quot;Jin Soo&quot;}},
-{&quot;Key&quot;:&quot;CAR3&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Volkswagen&quot;,&quot;model&quot;:&quot;Passat&quot;,&quot;colour&quot;:&quot;yellow&quot;,&quot;owner&quot;:&quot;Max&quot;}},
-{&quot;Key&quot;:&quot;CAR4&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Tesla&quot;,&quot;model&quot;:&quot;S&quot;,&quot;colour&quot;:&quot;black&quot;,&quot;owner&quot;:&quot;Adriana&quot;}},
-{&quot;Key&quot;:&quot;CAR5&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Peugeot&quot;,&quot;model&quot;:&quot;205&quot;,&quot;colour&quot;:&quot;purple&quot;,&quot;owner&quot;:&quot;Michel&quot;}},
-{&quot;Key&quot;:&quot;CAR6&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Chery&quot;,&quot;model&quot;:&quot;S22L&quot;,&quot;colour&quot;:&quot;white&quot;,&quot;owner&quot;:&quot;Aarav&quot;}},
-{&quot;Key&quot;:&quot;CAR7&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Fiat&quot;,&quot;model&quot;:&quot;Punto&quot;,&quot;colour&quot;:&quot;violet&quot;,&quot;owner&quot;:&quot;Pari&quot;}},
-{&quot;Key&quot;:&quot;CAR8&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Tata&quot;,&quot;model&quot;:&quot;Nano&quot;,&quot;colour&quot;:&quot;indigo&quot;,&quot;owner&quot;:&quot;Valeria&quot;}},
-{&quot;Key&quot;:&quot;CAR9&quot;,&quot;Record&quot;:{&quot;make&quot;:&quot;Holden&quot;,&quot;model&quot;:&quot;Barina&quot;,&quot;colour&quot;:&quot;brown&quot;,&quot;owner&quot;:&quot;Shotaro&quot;}}]</code></pre><h4 id="链码升级"><a href="#链码升级" class="headerlink" title="链码升级"></a>链码升级</h4><p>当对链码进行bug修复或者更新时需要进行链码升级，其实和安装过程基本一致</p>
-<p>首先打包好新的安装包<br>然后安装，批准，提交<br>需要注意更新预置环境变量–package-id的值<br>同时批准和提交时的选项<code>--version</code>变成2.0，<code>--sequence</code>变成2.其他的不变。<br>执行新的链码命令来添加一个条目：</p>
-<pre><code>peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls true --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n fabcar --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c &apos;{&quot;function&quot;:&quot;createCar&quot;,&quot;Args&quot;:[&quot;CAR11&quot;,&quot;Honda&quot;,&quot;Accord&quot;,&quot;Black&quot;,&quot;Tom&quot;]}&apos;</code></pre><p>再次查询：</p>
-<pre><code>peer chaincode query -C mychannel -n fabcar -c &apos;{&quot;Args&quot;:[&quot;queryAllCars&quot;]}&apos;</code></pre><p>可以成功查询到刚刚添加的条目。</p>
-<p>后续会更新一下刚刚做的一个简单的食品溯源项目</p>
-]]></content>
-      <categories>
-        <category>hyperledger</category>
-        <category>fabric</category>
-      </categories>
-      <tags>
-        <tag>hyperledger,fabric,go</tag>
       </tags>
   </entry>
   <entry>
