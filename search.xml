@@ -519,4 +519,37 @@ Version: 1, Sequence: 1, Endorsement Plugin: escc, Validation Plugin: vscc, Appr
         <tag>git</tag>
       </tags>
   </entry>
+  <entry>
+    <title>C++制作扫雷（基于esayX）</title>
+    <url>/2020/06/20/sweeplei/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://github.com/Provence965437/sweeplei" target="_blank" rel="noopener">源码地址</a></p>
+</blockquote>
+<hr>
+<h4 id="EasyX"><a href="#EasyX" class="headerlink" title="EasyX"></a>EasyX</h4><p>easyX是一个轻量级C++图形库，针对windows平台的。可以用来做一些简单的2d小游戏和快速进行一些绘图。总之优点就是小巧方便，当然相应的功能比较有限，如果需要UI还要自己去写。</p>
+<h4 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h4><p>扫雷的逻辑挺简单的，好好想想就能想出来。无非是对二维数组进行操作。<br>这里简单介绍用到的几个函数</p>
+<h5 id="随机数"><a href="#随机数" class="headerlink" title="随机数"></a>随机数</h5><pre><code>srand((unsigned int)time(NULL) );
+rand();</code></pre><p>srand根据时间函数产生种子，rand根据种子产生随机序列，实现所谓随机。</p>
+<h5 id="初始化图形"><a href="#初始化图形" class="headerlink" title="初始化图形"></a>初始化图形</h5><pre><code>HWND initgraph(w,h)  //w,h为宽高</code></pre><p>初始化一个图形窗口返回窗口句柄。</p>
+<h5 id="贴图三部曲"><a href="#贴图三部曲" class="headerlink" title="贴图三部曲"></a>贴图三部曲</h5><pre><code>IMAGE img;   //创建图像实例
+loadimage(&amp;img, &quot;path&quot;,w, h);   //加载图像
+putimage(posx, poxy, &amp;img);  //贴图</code></pre><h5 id="弹窗"><a href="#弹窗" class="headerlink" title="弹窗"></a>弹窗</h5><pre><code>MessageBox(hwnd, &quot;你踩到雷了&quot;, &quot;BOOM&quot;, MB_OK);</code></pre><p>MB_OK为窗口类型，hwnd为父窗口句柄</p>
+<h5 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h5><pre><code>MOUSEMSG m;  //定义鼠标事件
+。。。。。。
+m = GetMouseMsg();   //获得鼠标鼠标事件信息
+。。。。。。
+switch (m.uMsg)            //匹配列表
+{
+case WM_LBUTTONDOWN:
+。。。。。。
+}</code></pre>]]></content>
+      <categories>
+        <category>C++</category>
+        <category>游戏</category>
+        <category>easyX</category>
+      </categories>
+      <tags>
+        <tag>C++,游戏开发,easyx</tag>
+      </tags>
+  </entry>
 </search>
