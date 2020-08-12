@@ -1721,6 +1721,270 @@ $ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/unity-charactercontroller/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/12/unity-charactercontroller/" itemprop="url">「unity」UnityController实现主角控制移动</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-12T16:59:43+08:00">
+                2020-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unity/" itemprop="url" rel="index">
+                    <span itemprop="name">unity</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/unity/%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index">
+                    <span itemprop="name">学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/05/12/unity-charactercontroller/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/12/unity-charactercontroller/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2020/05/12/unity-charactercontroller/" class="leancloud_visitors" data-flag-title="「unity」UnityController实现主角控制移动">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  541
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+</blockquote>
+<hr>
+<p>糟糕的暑假，我有些迷失自我了，想做的却不是有意义的，这几乎成了懒惰的借口</p>
+<hr>
+<h3 id="CharacterController"><a href="#CharacterController" class="headerlink" title="CharacterController"></a>CharacterController</h3><p>首先看一下CharacterController的官方定义：<br><code>A CharacterController allows you to easily do movement constrained by collisions without having to deal with a rigidbody.</code><br><code>A CharacterController is not affected by forces and will only move when you call the Move funtion. It will then carry out the movement but be constrained by collisions.</code></p>
+<p>大概的意思就是角色控制器可以使我们控制物体的移动而不必使用刚体，只有在调用move函数时，物体才会移动，而不受任何其他力的影响(包括重力)</p>
+<h3 id="位移控制"><a href="#位移控制" class="headerlink" title="位移控制"></a>位移控制</h3><p>定义一些预设变量</p>
+<pre><code>public Transform m_transform;  
+CharacterController m_ch;      //角色控制器
+public float m_movSpeed=5.0f;  //移动速度
+float m_gravity = 9.8f;        //重力
+public float m_jumpSpeed = 10.0f;    //跳跃初始速度
+float move_y = 0;              //y方向位移值(配合重力和跳跃
+Transform m_camTransform;      //摄像机
+Vector3 m_camRot;              //摄像机角度
+public float m_camHeigth = 3.0f;   //摄像机高度偏移</code></pre><p>监听WASD用户输入实现角色移动控制</p>
+<pre><code>        void Control()
+{
+    float xm = 0,zm = 0;
+
+    if (Input.GetKey(KeyCode.W))
+    {
+        zm += m_movSpeed * Time.deltaTime;
+    }
+    else if (Input.GetKey(KeyCode.S))
+    {
+        zm -= m_movSpeed * Time.deltaTime;
+    }
+    else if(Input.GetKey(KeyCode.A))
+    {
+        xm -= m_movSpeed * Time.deltaTime;
+    }
+    else if (Input.GetKey(KeyCode.D))
+    {
+        xm += m_movSpeed * Time.deltaTime;
+    }
+}</code></pre><h3 id="重力与跳跃"><a href="#重力与跳跃" class="headerlink" title="重力与跳跃"></a>重力与跳跃</h3><pre><code> if (m_ch.isGrounded == true)//角色控制自带触底检测api
+{
+    move_y = 0;
+    if (Input.GetKeyDown(KeyCode.Space))
+    {
+        move_y = m_jumpSpeed;   //给予一个向上的速度
+
+    }
+}
+/*下落速度，这里注意必须每个循环都有这个而不是落地之后就不加了，因为charactercontroller的碰撞检测取决于其移动状态是否发生碰撞，如果不在移动，判定为不碰撞，那么输入如跳跃指令就无效了*/
+    move_y -= m_gravity * Time.deltaTime;
+
+ m_ch.Move(m_transform.TransformDirection(new Vector3(xm, move_y * Time.deltaTime, zm)));//charactercontroller移动函数，无视力的作用</code></pre><h3 id="摄像机跟随"><a href="#摄像机跟随" class="headerlink" title="摄像机跟随"></a>摄像机跟随</h3><pre><code>float rh = Input.GetAxis(&quot;Mouse X&quot;);//根据鼠标移动距离获得旋转角度
+float rv = Input.GetAxis(&quot;Mouse Y&quot;);
+m_camRot.x -= rv;
+m_camRot.y += rh;
+m_camTransform.eulerAngles = m_camRot;//改变摄像机角度
+
+Vector3 camRot = m_camTransform.eulerAngles;
+camRot.x = 0; camRot.z = 0;
+m_transform.eulerAngles = camRot;  //玩家变化，注意玩家指挥沿着y粥转，所以xz置零
+Vector3 pos = m_transform.position;
+pos.y += m_camHeigth;//设置相机高度
+m_camTransform.position = pos;</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/12/fabric-build/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2428,7 +2692,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2439,7 +2703,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2450,7 +2714,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2507,7 +2771,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共7.7k字</span>
+  <span class="post-count">博客全站共8.3k字</span>
 </div>
 
 

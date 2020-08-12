@@ -552,4 +552,76 @@ case WM_LBUTTONDOWN:
         <tag>C++,游戏开发,easyx</tag>
       </tags>
   </entry>
+  <entry>
+    <title>「unity」UnityController实现主角控制移动</title>
+    <url>/2020/05/12/unity-charactercontroller/</url>
+    <content><![CDATA[<blockquote>
+</blockquote>
+<hr>
+<p>糟糕的暑假，我有些迷失自我了，想做的却不是有意义的，这几乎成了懒惰的借口</p>
+<hr>
+<h3 id="CharacterController"><a href="#CharacterController" class="headerlink" title="CharacterController"></a>CharacterController</h3><p>首先看一下CharacterController的官方定义：<br><code>A CharacterController allows you to easily do movement constrained by collisions without having to deal with a rigidbody.</code><br><code>A CharacterController is not affected by forces and will only move when you call the Move funtion. It will then carry out the movement but be constrained by collisions.</code></p>
+<p>大概的意思就是角色控制器可以使我们控制物体的移动而不必使用刚体，只有在调用move函数时，物体才会移动，而不受任何其他力的影响(包括重力)</p>
+<h3 id="位移控制"><a href="#位移控制" class="headerlink" title="位移控制"></a>位移控制</h3><p>定义一些预设变量</p>
+<pre><code>public Transform m_transform;  
+CharacterController m_ch;      //角色控制器
+public float m_movSpeed=5.0f;  //移动速度
+float m_gravity = 9.8f;        //重力
+public float m_jumpSpeed = 10.0f;    //跳跃初始速度
+float move_y = 0;              //y方向位移值(配合重力和跳跃
+Transform m_camTransform;      //摄像机
+Vector3 m_camRot;              //摄像机角度
+public float m_camHeigth = 3.0f;   //摄像机高度偏移</code></pre><p>监听WASD用户输入实现角色移动控制</p>
+<pre><code>        void Control()
+{
+    float xm = 0,zm = 0;
+
+    if (Input.GetKey(KeyCode.W))
+    {
+        zm += m_movSpeed * Time.deltaTime;
+    }
+    else if (Input.GetKey(KeyCode.S))
+    {
+        zm -= m_movSpeed * Time.deltaTime;
+    }
+    else if(Input.GetKey(KeyCode.A))
+    {
+        xm -= m_movSpeed * Time.deltaTime;
+    }
+    else if (Input.GetKey(KeyCode.D))
+    {
+        xm += m_movSpeed * Time.deltaTime;
+    }
+}</code></pre><h3 id="重力与跳跃"><a href="#重力与跳跃" class="headerlink" title="重力与跳跃"></a>重力与跳跃</h3><pre><code> if (m_ch.isGrounded == true)//角色控制自带触底检测api
+{
+    move_y = 0;
+    if (Input.GetKeyDown(KeyCode.Space))
+    {
+        move_y = m_jumpSpeed;   //给予一个向上的速度
+
+    }
+}
+/*下落速度，这里注意必须每个循环都有这个而不是落地之后就不加了，因为charactercontroller的碰撞检测取决于其移动状态是否发生碰撞，如果不在移动，判定为不碰撞，那么输入如跳跃指令就无效了*/
+    move_y -= m_gravity * Time.deltaTime;
+
+ m_ch.Move(m_transform.TransformDirection(new Vector3(xm, move_y * Time.deltaTime, zm)));//charactercontroller移动函数，无视力的作用</code></pre><h3 id="摄像机跟随"><a href="#摄像机跟随" class="headerlink" title="摄像机跟随"></a>摄像机跟随</h3><pre><code>float rh = Input.GetAxis(&quot;Mouse X&quot;);//根据鼠标移动距离获得旋转角度
+float rv = Input.GetAxis(&quot;Mouse Y&quot;);
+m_camRot.x -= rv;
+m_camRot.y += rh;
+m_camTransform.eulerAngles = m_camRot;//改变摄像机角度
+
+Vector3 camRot = m_camTransform.eulerAngles;
+camRot.x = 0; camRot.z = 0;
+m_transform.eulerAngles = camRot;  //玩家变化，注意玩家指挥沿着y粥转，所以xz置零
+Vector3 pos = m_transform.position;
+pos.y += m_camHeigth;//设置相机高度
+m_camTransform.position = pos;</code></pre>]]></content>
+      <categories>
+        <category>unity</category>
+        <category>学习</category>
+      </categories>
+      <tags>
+        <tag>unity,游戏开发,C#</tag>
+      </tags>
+  </entry>
 </search>
