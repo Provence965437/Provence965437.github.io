@@ -22,6 +22,45 @@ $ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新
       </tags>
   </entry>
   <entry>
+    <title>fabric搭建一个牛奶溯源系统</title>
+    <url>/2020/06/05/fabric-milktracer/</url>
+    <content><![CDATA[<blockquote>
+<p>食品溯源是区块链的一个不错的应用点，通过将食品的整个生产流程记录在链上，能够很好的治理食品安全问题。<br>这次更新一下fabric网络手动搭建的的第二部分，链码的安装调用<br>本文依旧主要参考《区块链开发实战》第12章内容<br><a href="https://github.com/Provence965437/fabric_milk_tracer" target="_blank" rel="noopener">该博客所引用代码地址</a></p>
+</blockquote>
+<hr>
+<h3 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h3><p>整过牛奶的生产过程被简化为三个步骤，奶牛场养殖，加工厂加工，销售终端出售。<br><img src="https://wx4.sinaimg.cn/mw1024/005FVEhggy1gfhjeanftdj30jj0gd3yr.jpg" alt="系统结构"><br>所以我们的区块链网络架构就是由三个组织构成的。<br>分别是dairyfarm，machine和salesterminal。<br>另外每个组织要上链自己的信息，销售终端还应该可以查看牛奶的溯源信息。<br>所以应该有三个chaincode(智能合约)来实现各种功能。<br>另外还需要一个终端来输入各种调用命令。因为仅仅是输入fabric的命令，非常的繁琐。</p>
+<h3 id="网络搭建"><a href="#网络搭建" class="headerlink" title="网络搭建"></a>网络搭建</h3><p>前面已经介绍了整个系统的基本构成。为了模拟出这个环境，我们需要搭建一个有三个组织的区块链网络。并且每个组织分配至少一个节点。<br>如何搭建网络环境这里不做解释，请参考我的<a href="https://provence965437.github.io/2020/05/20/fabric-mynetwork1/" target="_blank" rel="noopener">另一篇博客</a></p>
+<h3 id="链码的编写和安装"><a href="#链码的编写和安装" class="headerlink" title="链码的编写和安装"></a>链码的编写和安装</h3><p>需要编写三个链码，origin_dairyfarm用来上链奶牛的一些信息；origin_machining用来上链工厂的加工分配信息；origin_salesterminal用来上链销售信息和查询溯源信息。<br>最终的目的就是对于特定的一瓶牛奶，能够查询出其从奶牛到奶瓶的整个过程。<br>书上的链码是用go语言写的，没有找到电子版，我码了一份，其中有一些名称的修改。代码地址请看开头链接。<br>链码编写好后需要打包并安装在三个组织peer节点，因为他们都是背书节点。<br>关于如何打包和安装请参考<a href="https://provence965437.github.io/2020/06/01/fabric-mynetwork2/" target="_blank" rel="noopener">另一篇博客</a></p>
+<h3 id="nodejs客户端的编写"><a href="#nodejs客户端的编写" class="headerlink" title="nodejs客户端的编写"></a>nodejs客户端的编写</h3><p>为了方便开发者编写fabric的应用，他们提供响应架构的sdk。本文采用nodejs搭建客户端。</p>
+<h4 id="下载fabric-sdk-node"><a href="#下载fabric-sdk-node" class="headerlink" title="下载fabric-sdk-node"></a>下载fabric-sdk-node</h4><p>去github上下载fabric-sdk-node到本地<br>在解压后的文件中执行</p>
+<pre><code>npm install</code></pre><p>安装依赖。</p>
+<p>nodejs客户端调用链吗的主要逻辑就是</p>
+<pre><code>1.启动服务等待命令
+2.接收命令
+3.加载帐号访问fabric接口
+4.发送调用提案请求
+5.发送调用求情
+6.返回调用结果</code></pre><p>其中第3部需要用的cryptogen生成的帐号。此外还可以通过部署fabric-ca-server服务器来生成帐号。</p>
+<p>将编写好的fabricservice.js(接口的封装)和mainorigin.js(主逻辑)放入fabric-sdk-node文件夹中，然后执行:</p>
+<pre><code>http://localhost:3000/init</code></pre><p>开启服务。</p>
+<p>奶牛场上链操作举例:</p>
+<pre><code>http://localhost:3000/diaryfarm?parms=food //奶牛喂食</code></pre><p>加工场上链操作举例:</p>
+<pre><code>http://localhost:3000/machining?parms=canned //机器灌装</code></pre><p>销售终端上链操作举例：</p>
+<pre><code>http://localhost:3000/salesterminal?parms=distribution_time //机器灌装</code></pre><p>溯源查询举例：</p>
+<pre><code>http://localhost:3000/getmilkhistory</code></pre><p>执行效果截图：</p>
+<p><img src="https://wxt.sinaimg.cn/mw1024/005FVEhggy1gfhlmiqbmcj30ty05igmq.jpg?tags=%5B%5D" alt="enter image description here"></p>
+<p>可以看到cow_002由machining_002生产出来，生产改奶得奶牛有很多喂食操作。</p>
+<h3 id="问题与总结"><a href="#问题与总结" class="headerlink" title="问题与总结"></a>问题与总结</h3><p>在执行链码时，如果命令参数给的不够，会导致链码镜像崩溃关闭，查看日志原因是越界导致。所以应在编写链码时所处一定的判断，并给出一定的返回提示，防止链码镜像崩溃。<br>另外链码逻辑和客户端的编写为了做出简单的效果演示，逻辑十分不严密，很多地方是写死的，比如客户端默认就是查询cow_001（我改了下）的溯源信息，且上链时信息必须匹配，不然无法溯源。总之就是链码逻辑只考虑简单的演示，并没有任何容错可言。</p>
+]]></content>
+      <categories>
+        <category>hyperledger</category>
+        <category>fabric</category>
+      </categories>
+      <tags>
+        <tag>hyperledger,fabric,go</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ubuntu-fabric2.1环境搭建</title>
     <url>/2020/05/12/fabric-build/</url>
     <content><![CDATA[<blockquote>
@@ -59,45 +98,6 @@ $ sudo /etc/init.d/docker restart</code></pre><h4 id="4-切换当前会话到新
       </categories>
       <tags>
         <tag>hyperledger,fabric,go,docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>fabric搭建一个牛奶溯源系统</title>
-    <url>/2020/06/05/fabric-milktracer/</url>
-    <content><![CDATA[<blockquote>
-<p>食品溯源是区块链的一个不错的应用点，通过将食品的整个生产流程记录在链上，能够很好的治理食品安全问题。<br>这次更新一下fabric网络手动搭建的的第二部分，链码的安装调用<br>本文依旧主要参考《区块链开发实战》第12章内容<br><a href="https://github.com/Provence965437/fabric_milk_tracer" target="_blank" rel="noopener">该博客所引用代码地址</a></p>
-</blockquote>
-<hr>
-<h3 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h3><p>整过牛奶的生产过程被简化为三个步骤，奶牛场养殖，加工厂加工，销售终端出售。<br><img src="https://wx4.sinaimg.cn/mw1024/005FVEhggy1gfhjeanftdj30jj0gd3yr.jpg" alt="系统结构"><br>所以我们的区块链网络架构就是由三个组织构成的。<br>分别是dairyfarm，machine和salesterminal。<br>另外每个组织要上链自己的信息，销售终端还应该可以查看牛奶的溯源信息。<br>所以应该有三个chaincode(智能合约)来实现各种功能。<br>另外还需要一个终端来输入各种调用命令。因为仅仅是输入fabric的命令，非常的繁琐。</p>
-<h3 id="网络搭建"><a href="#网络搭建" class="headerlink" title="网络搭建"></a>网络搭建</h3><p>前面已经介绍了整个系统的基本构成。为了模拟出这个环境，我们需要搭建一个有三个组织的区块链网络。并且每个组织分配至少一个节点。<br>如何搭建网络环境这里不做解释，请参考我的<a href="https://provence965437.github.io/2020/05/20/fabric-mynetwork1/" target="_blank" rel="noopener">另一篇博客</a></p>
-<h3 id="链码的编写和安装"><a href="#链码的编写和安装" class="headerlink" title="链码的编写和安装"></a>链码的编写和安装</h3><p>需要编写三个链码，origin_dairyfarm用来上链奶牛的一些信息；origin_machining用来上链工厂的加工分配信息；origin_salesterminal用来上链销售信息和查询溯源信息。<br>最终的目的就是对于特定的一瓶牛奶，能够查询出其从奶牛到奶瓶的整个过程。<br>书上的链码是用go语言写的，没有找到电子版，我码了一份，其中有一些名称的修改。代码地址请看开头链接。<br>链码编写好后需要打包并安装在三个组织peer节点，因为他们都是背书节点。<br>关于如何打包和安装请参考<a href="https://provence965437.github.io/2020/06/01/fabric-mynetwork2/" target="_blank" rel="noopener">另一篇博客</a></p>
-<h3 id="nodejs客户端的编写"><a href="#nodejs客户端的编写" class="headerlink" title="nodejs客户端的编写"></a>nodejs客户端的编写</h3><p>为了方便开发者编写fabric的应用，他们提供响应架构的sdk。本文采用nodejs搭建客户端。</p>
-<h4 id="下载fabric-sdk-node"><a href="#下载fabric-sdk-node" class="headerlink" title="下载fabric-sdk-node"></a>下载fabric-sdk-node</h4><p>去github上下载fabric-sdk-node到本地<br>在解压后的文件中执行</p>
-<pre><code>npm install</code></pre><p>安装依赖。</p>
-<p>nodejs客户端调用链吗的主要逻辑就是</p>
-<pre><code>1.启动服务等待命令
-2.接收命令
-3.加载帐号访问fabric接口
-4.发送调用提案请求
-5.发送调用求情
-6.返回调用结果</code></pre><p>其中第3部需要用的cryptogen生成的帐号。此外还可以通过部署fabric-ca-server服务器来生成帐号。</p>
-<p>将编写好的fabricservice.js(接口的封装)和mainorigin.js(主逻辑)放入fabric-sdk-node文件夹中，然后执行:</p>
-<pre><code>http://localhost:3000/init</code></pre><p>开启服务。</p>
-<p>奶牛场上链操作举例:</p>
-<pre><code>http://localhost:3000/diaryfarm?parms=food //奶牛喂食</code></pre><p>加工场上链操作举例:</p>
-<pre><code>http://localhost:3000/machining?parms=canned //机器灌装</code></pre><p>销售终端上链操作举例：</p>
-<pre><code>http://localhost:3000/salesterminal?parms=distribution_time //机器灌装</code></pre><p>溯源查询举例：</p>
-<pre><code>http://localhost:3000/getmilkhistory</code></pre><p>执行效果截图：</p>
-<p><img src="https://wxt.sinaimg.cn/mw1024/005FVEhggy1gfhlmiqbmcj30ty05igmq.jpg?tags=%5B%5D" alt="enter image description here"></p>
-<p>可以看到cow_002由machining_002生产出来，生产改奶得奶牛有很多喂食操作。</p>
-<h3 id="问题与总结"><a href="#问题与总结" class="headerlink" title="问题与总结"></a>问题与总结</h3><p>在执行链码时，如果命令参数给的不够，会导致链码镜像崩溃关闭，查看日志原因是越界导致。所以应在编写链码时所处一定的判断，并给出一定的返回提示，防止链码镜像崩溃。<br>另外链码逻辑和客户端的编写为了做出简单的效果演示，逻辑十分不严密，很多地方是写死的，比如客户端默认就是查询cow_001（我改了下）的溯源信息，且上链时信息必须匹配，不然无法溯源。总之就是链码逻辑只考虑简单的演示，并没有任何容错可言。</p>
-]]></content>
-      <categories>
-        <category>hyperledger</category>
-        <category>fabric</category>
-      </categories>
-      <tags>
-        <tag>hyperledger,fabric,go</tag>
       </tags>
   </entry>
   <entry>
