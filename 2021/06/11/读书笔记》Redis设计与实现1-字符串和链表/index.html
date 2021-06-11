@@ -85,12 +85,14 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 
 
 
-<meta name="description" content="风雪追击的技术分享空间">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风雪追击5437">
-<meta property="og:url" content="http://yoursite.com/categories/C/index.html">
+<meta name="description" content="##读书笔记》Redis设计与实现1-字符串和链表 ###1. 简单动态字符串SDSredis没有直接使用c语言传统的字符串表示（以空字符结尾的字符数组）而是自己构建了一种名为简单动态字符串的抽象类型（SDS）SDS除了被用来保存数据库的字符串，还被用作缓冲区。buffer####1.1 SDS的定义 12345struct sdshdr &amp;#123;      int  len;  &#x2F;&#x2F;记录bu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读书笔记》Redis设计与实现1-字符串和链表">
+<meta property="og:url" content="http://yoursite.com/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/index.html">
 <meta property="og:site_name" content="风雪追击5437">
-<meta property="og:description" content="风雪追击的技术分享空间">
+<meta property="og:description" content="##读书笔记》Redis设计与实现1-字符串和链表 ###1. 简单动态字符串SDSredis没有直接使用c语言传统的字符串表示（以空字符结尾的字符数组）而是自己构建了一种名为简单动态字符串的抽象类型（SDS）SDS除了被用来保存数据库的字符串，还被用作缓冲区。buffer####1.1 SDS的定义 12345struct sdshdr &amp;#123;      int  len;  &#x2F;&#x2F;记录bu">
+<meta property="article:published_time" content="2021-06-11T02:18:41.937Z">
+<meta property="article:modified_time" content="2021-06-11T02:18:42.445Z">
 <meta property="article:author" content="Prov">
 <meta property="article:tag" content="blockchain fabic">
 <meta name="twitter:card" content="summary">
@@ -123,13 +125,13 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/C/"/>
+  <link rel="canonical" href="http://yoursite.com/2021/06/11/读书笔记》Redis设计与实现1-字符串和链表/"/>
 
 
 
 
 
-  <title>分类: C++ | 风雪追击5437</title>
+  <title>读书笔记》Redis设计与实现1-字符串和链表 | 风雪追击5437</title>
   
 
 
@@ -150,7 +152,7 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -278,55 +280,218 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>C++<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/06/20/sweeplei/" itemprop="url">
-              
-                <span itemprop="name">C++制作扫雷（基于esayX）</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">读书笔记》Redis设计与实现1-字符串和链表</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-06-20T10:20:35+08:00"
-              content="2020-06-20" >
-          06-20
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-11T10:18:41+08:00">
+                2021-06-11
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/" class="leancloud_visitors" data-flag-title="读书笔记》Redis设计与实现1-字符串和链表">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  756
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>##读书笔记》Redis设计与实现1-字符串和链表</p>
+<p>###1. 简单动态字符串SDS<br>redis没有直接使用c语言传统的字符串表示（以空字符结尾的字符数组）<br>而是自己构建了一种名为简单动态字符串的抽象类型（SDS）<br>SDS除了被用来保存数据库的字符串，还被用作缓冲区。buffer<br>####1.1 SDS的定义</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></span><br><span class="line">      <span class="keyword">int</span>  len;  <span class="comment">//记录buf数组中已使用的字节的数量</span></span><br><span class="line">      <span class="keyword">int</span> <span class="built_in">free</span>;   <span class="comment">//buf中未使用的字节的数量</span></span><br><span class="line">      <span class="keyword">char</span> buf[]   <span class="comment">//字节数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置len字段保证了将获取字符串长度的工作从O(N)降低到O(1)。<br>因此获取字符串长度不会成为性能瓶颈</p>
+<p>另外不记录长度在c中容易造成缓冲区溢出。<br>这中问题在SDL中不存在，当对SDS进行修改时，首先会检查控制键是否充足，不充足的情况下将会进行buf扩展。<br>内存的分配策略（预留空间）也减少了内存进行分配的次数，减少了额外的消耗。<br>空间分配策略是积极的：<br>修改后len  &lt; 1MB    则分配修改后总长度的额外空间<br>修改后len &gt; 1MB     分配1MB额外空间<br>若修改后 &lt; buf总长度    不增加buf长度<br>空间释放策略惰性的：当移出SDS中的字符串时，不对buf进行截断操作，而是增加free。SDS有专门的API真正的释放SDS未使用的空间w.</p>
+<p>C++中的容器也都是用的这种方式吧。（vector似乎是这种分配策略）</p>
+<p>####1.2 SDS二进制安全<br>c字符串所使用的函数不能处理包含额外空字符（’’/0’）的字符串。<br>SDS是二进制安全的，SDS API会以<strong>二进制</strong>的方式处理存放在buf中的数据，不会对其中的数据做任何限制过滤。<strong>数据写入时什么样，读取时就什么样</strong></p>
+<p>尽管如此，SDS的buf依然遵循C空字符结尾的惯例。这是为了让SDS可以重用一部分string.h库定义的函数。</p>
+<p>###2 链表和链表节点</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> &#123;</span></span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span>* <span class="title">prev</span>;</span></span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span>* <span class="title">next</span>;</span></span><br><span class="line">   <span class="keyword">void</span> *value;</span><br><span class="line">&#125;ListNode</span><br></pre></td></tr></table></figure>
+<p>很明显这是一个双向链表。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">list</span> &#123;</span></span><br><span class="line">   listNode* head;</span><br><span class="line">   listNode* tail;</span><br><span class="line">   <span class="keyword">unsigned</span> <span class="keyword">long</span> len;</span><br><span class="line">   <span class="keyword">void</span> *(dup)(<span class="keyword">void</span> *ptr);</span><br><span class="line">   <span class="keyword">void</span> (*<span class="built_in">free</span>)(<span class="keyword">void</span> *ptr);</span><br><span class="line">   <span class="keyword">int</span> (*match) (<span class="keyword">void</span> *ptr, <span class="keyword">void</span> *key);</span><br><span class="line">&#125;ListNode</span><br></pre></td></tr></table></figure>
+<p>list结构用来惯例listnode，<br>dup用来复制链表节点的值<br>free用来释放链表节点的值<br>match则用比对两个链表节点的值是否相等。<br><strong>c语言使用函数指针的方式实现面向对象</strong></p>
+<p>redis链表的特性如下：</p>
+<blockquote>
+<p>1.双端:list的两边的获取时间复杂度都是O(1)<br>2.无环:表头的pre和表尾的next都是NULL<br>3.list双端：list两边获取时间福在读O(1)<br>4.自带链表长度计数器：获取长度时间为O(1)<br>5.多态：listNode的value值为void*，因此可以保存任何类型的值</p>
+</blockquote>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/20/sweeplei/" rel="next" title="C++制作扫雷（基于esayX）">
+                <i class="fa fa-chevron-left"></i> C++制作扫雷（基于esayX）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/06/11/note-redissjyss-1/" rel="prev" title="读书笔记》Redis设计与实现1-字符串和链表">
+                读书笔记》Redis设计与实现1-字符串和链表 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -334,6 +499,13 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -582,6 +754,10 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

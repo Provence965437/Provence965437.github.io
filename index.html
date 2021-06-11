@@ -293,6 +293,414 @@ color="0,0,255" opacity='0.7' zIndex="-2" count="99" src="//cdn.bootcss.com/canv
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/11/note-redissjyss-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/06/11/note-redissjyss-1/" itemprop="url">读书笔记》Redis设计与实现1-字符串和链表</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-11T10:20:50+08:00">
+                2021-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+                  >
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/06/11/note-redissjyss-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/06/11/note-redissjyss-1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2021/06/11/note-redissjyss-1/" class="leancloud_visitors" data-flag-title="读书笔记》Redis设计与实现1-字符串和链表">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  740
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###1. 简单动态字符串SDS<br>redis没有直接使用c语言传统的字符串表示（以空字符结尾的字符数组）<br>而是自己构建了一种名为简单动态字符串的抽象类型（SDS）<br>SDS除了被用来保存数据库的字符串，还被用作缓冲区。buffer<br>####1.1 SDS的定义</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></span><br><span class="line">      <span class="keyword">int</span>  len;  <span class="comment">//记录buf数组中已使用的字节的数量</span></span><br><span class="line">      <span class="keyword">int</span> <span class="built_in">free</span>;   <span class="comment">//buf中未使用的字节的数量</span></span><br><span class="line">      <span class="keyword">char</span> buf[]   <span class="comment">//字节数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置len字段保证了将获取字符串长度的工作从O(N)降低到O(1)。<br>因此获取字符串长度不会成为性能瓶颈</p>
+<p>另外不记录长度在c中容易造成缓冲区溢出。<br>这中问题在SDL中不存在，当对SDS进行修改时，首先会检查控制键是否充足，不充足的情况下将会进行buf扩展。<br>内存的分配策略（预留空间）也减少了内存进行分配的次数，减少了额外的消耗。<br>空间分配策略是积极的：<br>修改后len  &lt; 1MB    则分配修改后总长度的额外空间<br>修改后len &gt; 1MB     分配1MB额外空间<br>若修改后 &lt; buf总长度    不增加buf长度<br>空间释放策略惰性的：当移出SDS中的字符串时，不对buf进行截断操作，而是增加free。SDS有专门的API真正的释放SDS未使用的空间w.</p>
+<p>C++中的容器也都是用的这种方式吧。（vector似乎是这种分配策略）</p>
+<p>####1.2 SDS二进制安全<br>c字符串所使用的函数不能处理包含额外空字符（’’/0’）的字符串。<br>SDS是二进制安全的，SDS API会以<strong>二进制</strong>的方式处理存放在buf中的数据，不会对其中的数据做任何限制过滤。<strong>数据写入时什么样，读取时就什么样</strong></p>
+<p>尽管如此，SDS的buf依然遵循C空字符结尾的惯例。这是为了让SDS可以重用一部分string.h库定义的函数。</p>
+<p>###2 链表和链表节点</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> &#123;</span></span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span>* <span class="title">prev</span>;</span></span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span>* <span class="title">next</span>;</span></span><br><span class="line">   <span class="keyword">void</span> *value;</span><br><span class="line">&#125;ListNode</span><br></pre></td></tr></table></figure>
+<p>很明显这是一个双向链表。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">list</span> &#123;</span></span><br><span class="line">   listNode* head;</span><br><span class="line">   listNode* tail;</span><br><span class="line">   <span class="keyword">unsigned</span> <span class="keyword">long</span> len;</span><br><span class="line">   <span class="keyword">void</span> *(dup)(<span class="keyword">void</span> *ptr);</span><br><span class="line">   <span class="keyword">void</span> (*<span class="built_in">free</span>)(<span class="keyword">void</span> *ptr);</span><br><span class="line">   <span class="keyword">int</span> (*match) (<span class="keyword">void</span> *ptr, <span class="keyword">void</span> *key);</span><br><span class="line">&#125;ListNode</span><br></pre></td></tr></table></figure>
+<p>list结构用来惯例listnode，<br>dup用来复制链表节点的值<br>free用来释放链表节点的值<br>match则用比对两个链表节点的值是否相等。<br><strong>c语言使用函数指针的方式实现面向对象</strong></p>
+<p>redis链表的特性如下：</p>
+<blockquote>
+<p>1.双端:list的两边的获取时间复杂度都是O(1)<br>2.无环:表头的pre和表尾的next都是NULL<br>3.list双端：list两边获取时间福在读O(1)<br>4.自带链表长度计数器：获取长度时间为O(1)<br>5.多态：listNode的value值为void*，因此可以保存任何类型的值</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Prov">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/tx.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风雪追击5437">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/" itemprop="url">读书笔记》Redis设计与实现1-字符串和链表</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-06-11T10:18:41+08:00">
+                2021-06-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2021/06/11/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E3%80%8BRedis%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E9%93%BE%E8%A1%A8/" class="leancloud_visitors" data-flag-title="读书笔记》Redis设计与实现1-字符串和链表">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  756
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  2
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##读书笔记》Redis设计与实现1-字符串和链表</p>
+<p>###1. 简单动态字符串SDS<br>redis没有直接使用c语言传统的字符串表示（以空字符结尾的字符数组）<br>而是自己构建了一种名为简单动态字符串的抽象类型（SDS）<br>SDS除了被用来保存数据库的字符串，还被用作缓冲区。buffer<br>####1.1 SDS的定义</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sdshdr</span> &#123;</span></span><br><span class="line">      <span class="keyword">int</span>  len;  <span class="comment">//记录buf数组中已使用的字节的数量</span></span><br><span class="line">      <span class="keyword">int</span> <span class="built_in">free</span>;   <span class="comment">//buf中未使用的字节的数量</span></span><br><span class="line">      <span class="keyword">char</span> buf[]   <span class="comment">//字节数组</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置len字段保证了将获取字符串长度的工作从O(N)降低到O(1)。<br>因此获取字符串长度不会成为性能瓶颈</p>
+<p>另外不记录长度在c中容易造成缓冲区溢出。<br>这中问题在SDL中不存在，当对SDS进行修改时，首先会检查控制键是否充足，不充足的情况下将会进行buf扩展。<br>内存的分配策略（预留空间）也减少了内存进行分配的次数，减少了额外的消耗。<br>空间分配策略是积极的：<br>修改后len  &lt; 1MB    则分配修改后总长度的额外空间<br>修改后len &gt; 1MB     分配1MB额外空间<br>若修改后 &lt; buf总长度    不增加buf长度<br>空间释放策略惰性的：当移出SDS中的字符串时，不对buf进行截断操作，而是增加free。SDS有专门的API真正的释放SDS未使用的空间w.</p>
+<p>C++中的容器也都是用的这种方式吧。（vector似乎是这种分配策略）</p>
+<p>####1.2 SDS二进制安全<br>c字符串所使用的函数不能处理包含额外空字符（’’/0’）的字符串。<br>SDS是二进制安全的，SDS API会以<strong>二进制</strong>的方式处理存放在buf中的数据，不会对其中的数据做任何限制过滤。<strong>数据写入时什么样，读取时就什么样</strong></p>
+<p>尽管如此，SDS的buf依然遵循C空字符结尾的惯例。这是为了让SDS可以重用一部分string.h库定义的函数。</p>
+<p>###2 链表和链表节点</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span> &#123;</span></span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span>* <span class="title">prev</span>;</span></span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">listNode</span>* <span class="title">next</span>;</span></span><br><span class="line">   <span class="keyword">void</span> *value;</span><br><span class="line">&#125;ListNode</span><br></pre></td></tr></table></figure>
+<p>很明显这是一个双向链表。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">list</span> &#123;</span></span><br><span class="line">   listNode* head;</span><br><span class="line">   listNode* tail;</span><br><span class="line">   <span class="keyword">unsigned</span> <span class="keyword">long</span> len;</span><br><span class="line">   <span class="keyword">void</span> *(dup)(<span class="keyword">void</span> *ptr);</span><br><span class="line">   <span class="keyword">void</span> (*<span class="built_in">free</span>)(<span class="keyword">void</span> *ptr);</span><br><span class="line">   <span class="keyword">int</span> (*match) (<span class="keyword">void</span> *ptr, <span class="keyword">void</span> *key);</span><br><span class="line">&#125;ListNode</span><br></pre></td></tr></table></figure>
+<p>list结构用来惯例listnode，<br>dup用来复制链表节点的值<br>free用来释放链表节点的值<br>match则用比对两个链表节点的值是否相等。<br><strong>c语言使用函数指针的方式实现面向对象</strong></p>
+<p>redis链表的特性如下：</p>
+<blockquote>
+<p>1.双端:list的两边的获取时间复杂度都是O(1)<br>2.无环:表头的pre和表尾的next都是NULL<br>3.list双端：list两边获取时间福在读O(1)<br>4.自带链表长度计数器：获取长度时间为O(1)<br>5.多态：listNode的value值为void*，因此可以保存任何类型的值</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/20/sweeplei/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2163,8 +2571,7 @@ m_camTransform.position = pos;</code></pre>
 <h4 id="安装Docker-Compose"><a href="#安装Docker-Compose" class="headerlink" title="安装Docker Compose"></a>安装Docker Compose</h4><p><code>sudo curl -L &quot;https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code></p>
 <p>这一步可能会非常慢，最好是换国内镜像网站下载下载，使用下面的命令代替：<br><code>sudo curl -L &quot;https://get.daocloud.io/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)&quot; -o /usr/local/bin/docker-compose</code><br>get.daocloud.io是国内的一家镜像网站。</p>
 <p>设置权限<br><code>sudo chmod +x /usr/local/bin/docker-compose</code><br><code>docker-compose --version</code></p>
-<h3 id="Go环境安装"><a href="#Go环境安装" class="headerlink" title="Go环境安装"></a>Go环境安装</h3><p>建议是使用go1.4以上的版本<br>去<a href="https://studygolang.com/dl" target="_blank" rel="noopener">go语言中文网</a>下载最新版本<br>我下载的是<strong>go1.14.2.linux-amd64.tar.gz</strong>。<br>解压并复制到相应目录：<br><code>tar -zxvf  go1.14.2.linux-amd64.tar.gz -C /usr/local</code><br>配置环境变量，打开配置文件/etc/profile<br><code>sudo vim /etc/profile</code><br>写入：<br><code>export PATH=$PATH:/usr/local/go/bin</code><br><code>export GOPATH=/opt/gopath</code><br>然后执行：<br><code>source /etc/profile</code><br>使配置生效。<br><strong>另外我出现了关闭终端，配置失效，需要重新source的情况，我的解决方法是改为将内容写入到~/.bashrc</strong><br><code>sudo vim ~/.bashrc</code><br>使配置执行：<br><code>source ~/.bashrc</code></p>
-<p>然后创建文件夹：<br><code>mkdir -p /opt/gopath/src/github.com/hyperledger</code><br>这个文件夹和前面设置的$GOPATH的路径一致</p>
+<h3 id="Go环境安装"><a href="#Go环境安装" class="headerlink" title="Go环境安装"></a>Go环境安装</h3><p>建议是使用go1.4以上的版本<br>去<a href="https://studygolang.com/dl" target="_blank" rel="noopener">go语言中文网</a>下载最新版本<br>我下载的是<strong>go1.14.2.linux-amd64.tar.gz</strong>。<br>解压并复制到相应目录：<br><code>tar -zxvf  go1.14.2.linux-amd64.tar.gz -C /usr/local</code><br>配置环境变量，打开配置文件/etc/profile<br><code>sudo vim /etc/profile</code><br>写入：<br><code>export PATH=$PATH:/usr/local/go/bin</code><br><code>export GOPATH=/opt/gopath</code><br>然后执行：<br><code>source /etc/profile</code><br>使配置生效。<br><strong>另外我出现了关闭终端，配置失效，需要重新source的情况，我的解决方法是改为将内容写入到~/.bashrc</strong><br><code>sudo vim ~/.bashrc</code><br>使配置执行：<br><code>source ~/.bashrc</code><br>更换go为国内代理：<br><code>go env -w GOPROXY=https://goproxy.cn</code><br><code>export GOPROXY=https://goproxy.cn</code><br>然后创建文件夹：<br><code>mkdir -p /opt/gopath/src/github.com/hyperledger</code><br>这个文件夹和前面设置的$GOPATH的路径一致</p>
 <h3 id="fabric安装"><a href="#fabric安装" class="headerlink" title="fabric安装"></a>fabric安装</h3><h4 id="源码下载"><a href="#源码下载" class="headerlink" title="源码下载"></a>源码下载</h4><p>首先为了保证搭建环境的时效性，应该用git进行安装<br><a href="https://provence965437.github.io/categories/%E5%90%84%E7%A7%8D%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/git/" target="_blank" rel="noopener">git的安装与配置</a><br>然后执行下面的命令：<br><code>cd /opt/gopath/src/github.com/hyperledger</code><br><code>git clone https://github.com/hyperledger/fabric.git</code><br>这前提是你的git速度可以，并且下载之后没有什么问题。我开始时用git下载，下了30分钟，好不容易下下来，关掉终端，git下载的文件又会自动删除。真是无语了。<br>如果你的git不好用，那就直接去github上下载好再解压到相应目录。</p>
 <h4 id="执行拉取镜像镜像脚本"><a href="#执行拉取镜像镜像脚本" class="headerlink" title="执行拉取镜像镜像脚本"></a>执行拉取镜像镜像脚本</h4><p>进入到<strong>/fabric/scripts/</strong><br>先给当前用docker权限，执行：<br><code>sudo groupadd docker</code>   &emsp;&emsp; 添加docker用户组<br><code>sudo gpasswd -a $USER docker</code>&emsp;&emsp;将当前用户加如docker用户组<br><code>newgrp docker</code> &emsp;&emsp;&emsp;    #更新用户组<br>执行：<br><code>sudo ./bootstrap.sh</code><br>切换到/<strong>fabric</strong>根目录<br>再执行：<br><code>sudo curl -sSL https://bit.ly/2ysbOFE | bash -s</code><br>然后目录下会出现fabric-sample文件，另外原文提到还有<strong>hyperledger-fabric-linux-amd64-2.0.0</strong>这个文件夹，我的脚本执行时倒是有下载，但是我结束之后发现目录下并没有这个。确保万无一失，去github自己下过来解压，记得下载2.1版本的。</p>
 <h4 id="执行sample"><a href="#执行sample" class="headerlink" title="执行sample"></a>执行sample</h4><p>进入到<strong>/fabric-sample</strong>目录<br>执行:<br><code>sudo ./bysn.sh up</code><br>不知道为什么，总是会提示go:command not found ，我明明装了go的，版本也是1.14+。就很怪。应该是因为什么原因bash获得不了go命令的执行路径。后来我想了想，我把go解压在<strong>/usr/local</strong>下面，但是很多命令是在<strong>usr/bin</strong>下的。<br>于是我尝试在<strong>/usr/bin</strong>建立软链接：<br><code>ln -s \usr\local\go\bin\go \usr\bin\go</code><br>就可以了。<br>手动执行命令后执行关闭脚本：<br><code>sudo ./bysn.sh down</code><br>再次执行<br><code>sudo ./bysn.sh up</code><br>当界面上出现一个大大的<strong><strong>END</strong></strong>时，代表运行成功。</p>
@@ -2419,232 +2826,13 @@ m_camTransform.position = pos;</code></pre>
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/09/hexo1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Prov">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/tx.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="风雪追击5437">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/09/hexo1/" itemprop="url">hexo博客搭建与使用：搭建篇</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-09T14:35:11+08:00">
-                2020-05-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/blog%E7%AE%A1%E7%90%86%E6%8A%80%E5%B7%A7/" itemprop="url" rel="index">
-                    <span itemprop="name">blog管理技巧</span>
-                  </a>
-                </span>
-
-                
-                
-                  >
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/blog%E7%AE%A1%E7%90%86%E6%8A%80%E5%B7%A7/hexo%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA%E4%B8%8E%E4%BD%BF%E7%94%A8/" itemprop="url" rel="index">
-                    <span itemprop="name">hexo博客搭建与使用</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/05/09/hexo1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/05/09/hexo1/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-             <span id="/2020/05/09/hexo1/" class="leancloud_visitors" data-flag-title="hexo博客搭建与使用：搭建篇">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  573
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
-                
-                <span title="阅读时长">
-                  2
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>&emsp;一个好的开始。。。<br>&emsp;花了一天的时间终于搭建好了自己的个人博客，从今天开始，我会在这个新的home中记录并分享自己的学习和生活。往事如风，吾欲乘风破浪。与诸君共勉。</p>
-</blockquote>
-<hr>
-<p><a href="https://provence965437.github.io/" target="_blank" rel="noopener"><strong>主页地址</strong></a></p>
-<hr>
-<h2 id="nodejs和npm安装"><a href="#nodejs和npm安装" class="headerlink" title="nodejs和npm安装"></a>nodejs和npm安装</h2><p> 这个比较简单，我以win10为例介绍。去<a href="https://nodejs.org/en/" target="_blank" rel="noopener">官网</a>下载最新的稳定版windows安装包下载、点击安装，一路next即可。<br>之后打开cmd，输入下面命令查看是否安装成功<br> <code>node -v</code><br> <code>npm -v</code></p>
-<h2 id="git安装和部署"><a href="#git安装和部署" class="headerlink" title="git安装和部署"></a>git安装和部署</h2><p>还是<a href="https://git-scm.com/downloads" target="_blank" rel="noopener">官网</a>下载windows安装包，点击安装，选项很多，一般直接next到底。</p>
-<h2 id="hexo安装与部署"><a href="#hexo安装与部署" class="headerlink" title="hexo安装与部署"></a>hexo安装与部署</h2><p>进入cmd，安装<strong>hexo-cli</strong><br> <code>npm install -g hexo-cli</code>  全局安装<br>不想全局安装，就cd到一个目录，直接安装在这个目录下<br>  <code>npm install hexo-cli</code><br>另外npm可以用<code>--prefix</code>指定安装路径。<br>如果不是全局安装，需要添加环境变量，在Path中添加hexo的安装路径即可<br>在hexo的安装路径下新建一个文件夹，这个文件夹就是你的<strong>博客根目录</strong>，例如名字叫做 blog。那么根目录就是XXX/blog/</p>
-<h2 id="博客安装"><a href="#博客安装" class="headerlink" title="博客安装"></a>博客安装</h2><p>进入刚才创建的blog目录，输入命令：<br><code>hexo init blog</code><br><code>npm install</code><br>这样网站根目录就部署完成了。<br>在网站根目录下，需要注意的是Theme文件夹和 _config.yml文件。theme文件夹下存放的是hexo主题配置，我们可以在这个文件夹下导入我们下载的主题。<br>其中默认有一个landscape主题。而_config.yml是博客的基本配置文件，这个要和后面提到的，主题文件夹中的_config.yml相区分，主题文件夹中的_config.yml叫做主题配置文件。在基本配置文件中可以进行一些基本的配置</p>
-<pre><code># Site
-title: 我的家
-subtitle: 另起炉灶
-description: 欢迎光临
-keywords: 
-author: author
-email: 
-language: zh-Hans
-timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br><code>hexo ghexo s</code><br>启动server，如果命令不存在，就执行：<br><code>npm install hexo-server --save</code><br>安装server，然后命令就有了。<br>执行完后项目就启动了，在浏览器中输入地址<a href="http://localhost:4000就可以看到已启动的博客网站的雏形。">http://localhost:4000就可以看到已启动的博客网站的雏形。</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+  </nav>
+
 
 
           </div>
@@ -2692,7 +2880,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2703,7 +2891,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -2714,7 +2902,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2751,7 +2939,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
@@ -2771,7 +2959,7 @@ timezone: Asia/Shanghai</code></pre><p>&amp;nbsp<br>根目录下输入命令<br>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共8.3k字</span>
+  <span class="post-count">博客全站共9.8k字</span>
 </div>
 
 
