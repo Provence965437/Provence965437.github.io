@@ -1,0 +1,92 @@
+# Theme Github link: https://github.com/argvchs/hexo-theme-particlex
+# Developer: argvchs
+
+# avatar image url
+head_img: https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fhbimg.huabanimg.com%2F32cadd8903b41c95a34c8da88c7c056d5355ba812d9a0-ctCvjH_fw658&refer=http%3A%2F%2Fhbimg.huabanimg.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664854089&t=5df933fc55693b259f127e6434ab2750
+
+# home page head info block
+head_block_enable: true
+
+# home page head background style
+home_background: https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg13.51tietu.net%2Fpic%2F20200130%2Fjl2eyptmhy1jl2eyptmhy1.jpg&refer=http%3A%2F%2Fimg13.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1664853554&t=4853a79803f4137c69d151c90cd27ce1
+
+# WARNING! vf_fonts (variable fonts) feature is EXPERIMENTAL
+# MDN: https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Fonts/Variable_Fonts_Guide
+vf_fonts_enable: true
+
+
+# ParticleX theme icon is adopts the font awesome 6
+# Link: https://fontawesome.com/search/
+
+# main menu navigation
+menu:
+    home:
+        name: house
+        theme: solid
+        src: /
+    about:
+        name: id-card
+        theme: solid
+        src: /about
+    archives:
+        name: box-archive
+        theme: solid
+        src: /archives
+    categories:
+        name: bookmark
+        theme: solid
+        src: /categories
+    tags:
+        name: tags
+        theme: solid
+        src: /tags
+    # Example:
+    # <name>:
+    #     name: <icon-name>
+    #     theme: <icon-theme>
+    #     src: <link-url>
+
+# side info card
+card:
+    enable: true
+    description: ["养成好习惯，不做寒号鸟"] # You can add more
+    icon_links:
+        github:
+            name: github
+            theme: brands
+            link: 614884674@qq.com
+        # Example:
+        # <name>:
+        #    name: <icon-name>
+        #    theme: <icon-theme>
+        #    link: <link-url>
+    friend_links:
+        []
+        # Example:
+        # <name>: <link-url>
+
+# footer info
+footer:
+    since: 20xx
+    # Customize the server domain name ICP
+    ICP:
+        enable: false
+        code:
+
+# Gitalk
+# https://github.com/gitalk/gitalk
+gitalk:
+    enable: false
+    clientID: # Default ClientID
+    clientSecret: # Default ClientSecret
+    repo: # The name of repository of store comments
+    owner: # GitHub repo owner
+    admin: # GitHub repo owner and collaborators, only these guys can initialize github issues
+    language: zh-CN # en, zh-CN, zh-TW, es-ES, fr, ru, de, pl and ko are currently available.
+    proxy: # CORS proxy
+    sites: # Sites
+        []
+        # Example:
+        # <www.example.com>:
+        #    clientID: <client-id>
+        #    clientSecret: <client-secret>
