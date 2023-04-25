@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>风雪追击</title>
+        <subtitle>一缕春风走向你</subtitle>
+        <icon>http://example.com/images/favicon.ico</icon>
+        <link>http://example.com</link>
+        <author>
+          <name>风雪追击</name>
+        </author>
+        <description>记录博客，从事驱动开发，unity业余爱好</description>
+        <language>cn</language>
+        <pubDate>Tue, 25 Apr 2023 13:36:35 +0800</pubDate>
+        <lastBuildDate>Tue, 25 Apr 2023 13:36:35 +0800</lastBuildDate>
+        <category term="unity dpdk unity" />
+        <item>
+            <guid isPermalink="true">http://example.com/2023/04/25/dpdk-log/</guid>
+            <title>log代码解读</title>
+            <link>http://example.com/2023/04/25/dpdk-log/</link>
+            <category term="dpdk代码解读" scheme="http://example.com/categories/dpdk%E4%BB%A3%E7%A0%81%E8%A7%A3%E8%AF%BB/" />
+            <category term="dpdk" scheme="http://example.com/tags/dpdk/" />
+            <pubDate>Tue, 25 Apr 2023 13:36:35 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;dpdk 的日志系统并不复杂。dpdk 使用 type 和 level 划分日志，除了预设的日志类型，用户也可自行注册日志类型，dpdk 日志系统的初始化在 main 函数之前。&lt;/p&gt;
+&lt;h3 id=&#34;1初始化&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1初始化&#34;&gt;#&lt;/a&gt; 1. 初始化&lt;/h3&gt;
+&lt;p&gt;dpdk 的日志初始化函数为 rte_log_init，执行再 main 函数之前，定义在:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;RTE_INIT_PRIO(rte_log_init, LOG)
+&amp;#123;
+	uint32_t i;
+
+	rte_log_set_global_level(RTE_LOG_DEBUG);//设置默认log登记为debug
+
+	rte_logs.dynamic_types = calloc(RTE_LOGTYPE_FIRST_EXT_ID,
+		sizeof(struct rte_log_dynamic_type));//申请32个动态日志类型的空间
+	if (rte_logs.dynamic_types == NULL)
+		return;
+
+	/* register legacy log types */
+	for (i = 0; i &amp;lt; RTE_DIM(logtype_strings); i++)//预制几种日志类型
+		__rte_log_register(logtype_strings[i].logtype,
+				logtype_strings[i].log_id);
+
+	rte_logs.dynamic_types_len = RTE_LOGTYPE_FIRST_EXT_ID;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;该函数由宏 &lt;code&gt;RTE_INIT_PRIO&lt;/code&gt;  定义&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;#define RTE_INIT_PRIO(func, prio) \
+static void __attribute__((constructor(RTE_PRIO(prio)), used)) func(void)
+#endif
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这里 &lt;code&gt;__attribute__((constructor&lt;/code&gt;  是用来修饰函数的，代表这个函数是在 main 函数执行之前执行&lt;/p&gt;
+&lt;p&gt;同时一个程序可以有多个 &lt;code&gt;__attribute__((constructor&lt;/code&gt; ，那么就需要有优先级概念，优先级数字越小，优先级越高&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;#define RTE_PRIORITY_LOG 101
+
+#define RTE_PRIO(prio) \
+	RTE_PRIORITY_ ## prio
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;优先级还是很高的～&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;rte_log_init&lt;/code&gt;  的内容就是设置默认日志等级为 debug，然后注册几种基本的日志类型 &lt;code&gt;__rte_log_register&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;log 类型具有两个成员，一个是名字，一个是 log 等级。 &lt;code&gt;__rte_log_register&lt;/code&gt;  将所有日志类型的等级注册为 info&lt;/p&gt;
+&lt;h3 id=&#34;2日志类型注册&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2日志类型注册&#34;&gt;#&lt;/a&gt; 2. 日志类型注册&lt;/h3&gt;
+&lt;p&gt;用户可以自定义注册日志类型，默认注册类型也为 info，默认系统日志等级为 debug，所以 info 类型的日志也会被打印&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;int
+rte_log_register(const char *name)
+&amp;#123;
+	struct rte_log_dynamic_type *new_dynamic_types;
+	int id, ret;
+
+	id = rte_log_lookup(name);
+	if (id &amp;gt;= 0)
+		return id;
+
+	new_dynamic_types = realloc(rte_logs.dynamic_types,
+		sizeof(struct rte_log_dynamic_type) *
+		(rte_logs.dynamic_types_len + 1));
+	if (new_dynamic_types == NULL)
+		return -ENOMEM;
+	rte_logs.dynamic_types = new_dynamic_types;
+
+	ret = __rte_log_register(name, rte_logs.dynamic_types_len);
+	if (ret &amp;lt; 0)
+		return ret;
+
+	rte_logs.dynamic_types_len++;
+
+	return ret;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;3输出日志&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3输出日志&#34;&gt;#&lt;/a&gt; 3. 输出日志&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;rte_log(uint32_t level, uint32_t logtype, const char *format, ...)
+&amp;#123;
+	va_list ap;
+	int ret;
+
+	va_start(ap, format);
+	ret = rte_vlog(level, logtype, format, ap);
+	va_end(ap);
+	return ret;
+&amp;#125;
+
+int
+rte_vlog(uint32_t level, uint32_t logtype, const char *format, va_list ap)
+&amp;#123;
+	FILE *f = rte_log_get_stream();
+	int ret;
+
+	if (logtype &amp;gt;= rte_logs.dynamic_types_len)
+		return -1;
+	if (!rte_log_can_log(logtype, level))
+		return 0;
+
+	/* save loglevel and logtype in a global per-lcore variable */
+	RTE_PER_LCORE(log_cur_msg).loglevel = level;
+	RTE_PER_LCORE(log_cur_msg).logtype = logtype;
+
+	ret = vfprintf(f, format, ap);
+	fflush(f);
+	return ret;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;rte_vlog 首先获取到目前系统设置的文件流，然后判断等级参数是否合理，如果等级大于系统设置的默认等级，不进行打印，之后调用 vprintf 日志数据打入到流文件中。&lt;br /&gt;
+另外可以设置日志输入流&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;rte_openlog_stream(FILE *f)
+&amp;#123;
+	rte_logs.file = f;
+	return 0;
+&amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+ ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">http://example.com/2023/04/24/hello-world/</guid>
+            <title>Hello World</title>
+            <link>http://example.com/2023/04/24/hello-world/</link>
+            <pubDate>Mon, 24 Apr 2023 12:22:57 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;Welcome to &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvLw==&#34;&gt;Hexo&lt;/span&gt;! This is your very first post. Check &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3Mv&#34;&gt;documentation&lt;/span&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3MvdHJvdWJsZXNob290aW5nLmh0bWw=&#34;&gt;troubleshooting&lt;/span&gt; or you can ask me on &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL2hleG9qcy9oZXhvL2lzc3Vlcw==&#34;&gt;GitHub&lt;/span&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;quick-start&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#quick-start&#34;&gt;#&lt;/a&gt; Quick Start&lt;/h2&gt;
+&lt;h3 id=&#34;create-a-new-post&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#create-a-new-post&#34;&gt;#&lt;/a&gt; Create a new post&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;span&gt;h&lt;/span&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;$ hexo new &lt;span class=&#34;token string&#34;&gt;&#34;My New Post&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;More info: &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3Mvd3JpdGluZy5odG1s&#34;&gt;Writing&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=&#34;run-server&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#run-server&#34;&gt;#&lt;/a&gt; Run server&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;span&gt;h&lt;/span&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;$ hexo server&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;More info: &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3Mvc2VydmVyLmh0bWw=&#34;&gt;Server&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=&#34;generate-static-files&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#generate-static-files&#34;&gt;#&lt;/a&gt; Generate static files&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;span&gt;h&lt;/span&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;$ hexo generate&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;More info: &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3MvZ2VuZXJhdGluZy5odG1s&#34;&gt;Generating&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=&#34;deploy-to-remote-sites&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#deploy-to-remote-sites&#34;&gt;#&lt;/a&gt; Deploy to remote sites&lt;/h3&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;span&gt;h&lt;/span&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;$ hexo deploy&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;More info: &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9oZXhvLmlvL2RvY3Mvb25lLWNvbW1hbmQtZGVwbG95bWVudC5odG1s&#34;&gt;Deployment&lt;/span&gt;&lt;/p&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>
