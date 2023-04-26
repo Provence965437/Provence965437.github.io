@@ -4,7 +4,7 @@
     
     <entry>
       <title><![CDATA[log代码解读]]></title>
-      <url>/2023/04/25/dpdk-log/</url>
+      <url>/Provence965437/2023/04/25/dpdk-log/</url>
       <content type="html"><![CDATA[<p>dpdk 的日志系统并不复杂。dpdk 使用 type 和 level 划分日志，除了预设的日志类型，用户也可自行注册日志类型，dpdk 日志系统的初始化在 main 函数之前。</p>
 <h3 id="1初始化"><a class="anchor" href="#1初始化">#</a> 1. 初始化</h3>
 <p>dpdk 的日志初始化函数为 rte_log_init，执行再 main 函数之前，定义在:</p>
@@ -129,7 +129,7 @@ rte_vlog(uint32_t level, uint32_t logtype, const char *format, va_list ap)
     
     <entry>
       <title><![CDATA[Hello World]]></title>
-      <url>/2023/04/24/hello-world/</url>
+      <url>/Provence965437/2023/04/24/hello-world/</url>
       <content type="html"><![CDATA[<p>Welcome to <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlvLw==">Hexo</span>! This is your very first post. Check <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlvL2RvY3Mv">documentation</span> for more info. If you get any problems when using Hexo, you can find the answer in <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlvL2RvY3MvdHJvdWJsZXNob290aW5nLmh0bWw=">troubleshooting</span> or you can ask me on <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2hleG9qcy9oZXhvL2lzc3Vlcw==">GitHub</span>.</p>
 <h2 id="quick-start"><a class="anchor" href="#quick-start">#</a> Quick Start</h2>
 <h3 id="create-a-new-post"><a class="anchor" href="#create-a-new-post">#</a> Create a new post</h3>
