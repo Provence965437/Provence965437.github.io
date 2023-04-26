@@ -10,9 +10,21 @@
         </author>
         <description>记录博客，从事驱动开发，unity业余爱好</description>
         <language>cn</language>
-        <pubDate>Tue, 25 Apr 2023 13:36:35 +0800</pubDate>
-        <lastBuildDate>Tue, 25 Apr 2023 13:36:35 +0800</lastBuildDate>
+        <pubDate>Wed, 26 Apr 2023 23:03:32 +0800</pubDate>
+        <lastBuildDate>Wed, 26 Apr 2023 23:03:32 +0800</lastBuildDate>
         <category term="unity dpdk unity" />
+        <item>
+            <guid isPermalink="true">http://example.com/2023/04/26/video_web-1/</guid>
+            <title>uniapp+express+mysql制作视频网站</title>
+            <link>http://example.com/2023/04/26/video_web-1/</link>
+            <category term="视频网站" scheme="http://example.com/categories/%E8%A7%86%E9%A2%91%E7%BD%91%E7%AB%99/" />
+            <category term="uniapp" scheme="http://example.com/tags/uniapp/" />
+            <category term="express" scheme="http://example.com/tags/express/" />
+            <category term="web" scheme="http://example.com/tags/web/" />
+            <pubDate>Wed, 26 Apr 2023 23:03:32 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;主人还没有任何更新&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#主人还没有任何更新&#34;&gt;#&lt;/a&gt; 主人还没有任何更新&lt;/h2&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">http://example.com/2023/04/25/dpdk-log/</guid>
             <title>log代码解读</title>
@@ -23,31 +35,8 @@
             <description><![CDATA[ &lt;p&gt;dpdk 的日志系统并不复杂。dpdk 使用 type 和 level 划分日志，除了预设的日志类型，用户也可自行注册日志类型，dpdk 日志系统的初始化在 main 函数之前。&lt;/p&gt;
 &lt;h3 id=&#34;1初始化&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1初始化&#34;&gt;#&lt;/a&gt; 1. 初始化&lt;/h3&gt;
 &lt;p&gt;dpdk 的日志初始化函数为 rte_log_init，执行再 main 函数之前，定义在:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;RTE_INIT_PRIO(rte_log_init, LOG)
-&amp;#123;
-	uint32_t i;
-
-	rte_log_set_global_level(RTE_LOG_DEBUG);//设置默认log登记为debug
-
-	rte_logs.dynamic_types = calloc(RTE_LOGTYPE_FIRST_EXT_ID,
-		sizeof(struct rte_log_dynamic_type));//申请32个动态日志类型的空间
-	if (rte_logs.dynamic_types == NULL)
-		return;
-
-	/* register legacy log types */
-	for (i = 0; i &amp;lt; RTE_DIM(logtype_strings); i++)//预制几种日志类型
-		__rte_log_register(logtype_strings[i].logtype,
-				logtype_strings[i].log_id);
-
-	rte_logs.dynamic_types_len = RTE_LOGTYPE_FIRST_EXT_ID;
-&amp;#125;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;该函数由宏 &lt;code&gt;RTE_INIT_PRIO&lt;/code&gt;  定义&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;#define RTE_INIT_PRIO(func, prio) \
-static void __attribute__((constructor(RTE_PRIO(prio)), used)) func(void)
-#endif
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里 &lt;code&gt;__attribute__((constructor&lt;/code&gt;  是用来修饰函数的，代表这个函数是在 main 函数执行之前执行&lt;/p&gt;
+&lt;figure class=&#34;highlight c&#34;&gt;&lt;figcaption data-lang=&#34;c&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;RTE_INIT_PRIO&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;rte_log_init&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; LOG&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token class-name&#34;&gt;uint32_t&lt;/span&gt; i&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token function&#34;&gt;rte_log_set_global_level&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;RTE_LOG_DEBUG&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 设置默认 log 登记为 debug&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	rte_logs&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;dynamic_types &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;calloc&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;RTE_LOGTYPE_FIRST_EXT_ID&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;		&lt;span class=&#34;token keyword&#34;&gt;sizeof&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token keyword&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;token class-name&#34;&gt;rte_log_dynamic_type&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 申请 32 个动态日志类型的空间&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;rte_logs&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;dynamic_types &lt;span class=&#34;token operator&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;token constant&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;		&lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token comment&#34;&gt;/* register legacy log types */&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	&lt;span class=&#34;token keyword&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;i &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; i &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;RTE_DIM&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;logtype_strings&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt; i&lt;span class=&#34;token operator&#34;&gt;++&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token comment&#34;&gt;// 预制几种日志类型&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;		&lt;span class=&#34;token function&#34;&gt;__rte_log_register&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;logtype_strings&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;logtype&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;				logtype_strings&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;i&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;log_id&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;	rte_logs&lt;span class=&#34;token punctuation&#34;&gt;.&lt;/span&gt;dynamic_types_len &lt;span class=&#34;token operator&#34;&gt;=&lt;/span&gt; RTE_LOGTYPE_FIRST_EXT_ID&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;该函数由宏 &lt;code&gt;RTE_INIT_PRIO&lt;/code&gt;  定义&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#define RTE_INIT_PRIO(func, prio) \&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;static void __attribute__&lt;span class=&#34;token variable&#34;&gt;&lt;span class=&#34;token punctuation&#34;&gt;((&lt;/span&gt;constructor&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;RTE_PRIO&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;prio&lt;span class=&#34;token punctuation&#34;&gt;))&lt;/span&gt;&lt;/span&gt;, used&lt;span class=&#34;token punctuation&#34;&gt;))&lt;/span&gt; func&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;void&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token comment&#34;&gt;#endif&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;这里 &lt;code&gt;__attribute__((constructor&lt;/code&gt;  是用来修饰函数的，代表这个函数是在 main 函数执行之前执行&lt;/p&gt;
 &lt;p&gt;同时一个程序可以有多个 &lt;code&gt;__attribute__((constructor&lt;/code&gt; ，那么就需要有优先级概念，优先级数字越小，优先级越高&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&#34;language-C&#34;&gt;#define RTE_PRIORITY_LOG 101
 

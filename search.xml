@@ -3,36 +3,38 @@
   
     
     <entry>
+      <title><![CDATA[uniapp+express+mysql制作视频网站]]></title>
+      <url>/2023/04/26/video_web-1/</url>
+      <content type="html"><![CDATA[<h2 id="主人还没有任何更新"><a class="anchor" href="#主人还没有任何更新">#</a> 主人还没有任何更新</h2>
+]]></content>
+      
+        <categories>
+            
+            <category> 视频网站 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> uniapp </tag>
+            
+            <tag> express </tag>
+            
+            <tag> web </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[log代码解读]]></title>
       <url>/2023/04/25/dpdk-log/</url>
       <content type="html"><![CDATA[<p>dpdk 的日志系统并不复杂。dpdk 使用 type 和 level 划分日志，除了预设的日志类型，用户也可自行注册日志类型，dpdk 日志系统的初始化在 main 函数之前。</p>
 <h3 id="1初始化"><a class="anchor" href="#1初始化">#</a> 1. 初始化</h3>
 <p>dpdk 的日志初始化函数为 rte_log_init，执行再 main 函数之前，定义在:</p>
-<pre><code class="language-C">RTE_INIT_PRIO(rte_log_init, LOG)
-&#123;
-	uint32_t i;
-
-	rte_log_set_global_level(RTE_LOG_DEBUG);//设置默认log登记为debug
-
-	rte_logs.dynamic_types = calloc(RTE_LOGTYPE_FIRST_EXT_ID,
-		sizeof(struct rte_log_dynamic_type));//申请32个动态日志类型的空间
-	if (rte_logs.dynamic_types == NULL)
-		return;
-
-	/* register legacy log types */
-	for (i = 0; i &lt; RTE_DIM(logtype_strings); i++)//预制几种日志类型
-		__rte_log_register(logtype_strings[i].logtype,
-				logtype_strings[i].log_id);
-
-	rte_logs.dynamic_types_len = RTE_LOGTYPE_FIRST_EXT_ID;
-&#125;
-</code></pre>
-<p>该函数由宏 <code>RTE_INIT_PRIO</code>  定义</p>
-<pre><code class="language-C">#define RTE_INIT_PRIO(func, prio) \
-static void __attribute__((constructor(RTE_PRIO(prio)), used)) func(void)
-#endif
-</code></pre>
-<p>这里 <code>__attribute__((constructor</code>  是用来修饰函数的，代表这个函数是在 main 函数执行之前执行</p>
+<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">RTE_INIT_PRIO</span><span class="token punctuation">(</span>rte_log_init<span class="token punctuation">,</span> LOG<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>	<span class="token class-name">uint32_t</span> i<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre></pre></td></tr><tr><td data-num="5"></td><td><pre>	<span class="token function">rte_log_set_global_level</span><span class="token punctuation">(</span>RTE_LOG_DEBUG<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 设置默认 log 登记为 debug</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>	rte_logs<span class="token punctuation">.</span>dynamic_types <span class="token operator">=</span> <span class="token function">calloc</span><span class="token punctuation">(</span>RTE_LOGTYPE_FIRST_EXT_ID<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="8"></td><td><pre>		<span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">rte_log_dynamic_type</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">// 申请 32 个动态日志类型的空间</span></pre></td></tr><tr><td data-num="9"></td><td><pre>	<span class="token keyword">if</span> <span class="token punctuation">(</span>rte_logs<span class="token punctuation">.</span>dynamic_types <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="10"></td><td><pre>		<span class="token keyword">return</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre>	<span class="token comment">/* register legacy log types */</span></pre></td></tr><tr><td data-num="13"></td><td><pre>	<span class="token keyword">for</span> <span class="token punctuation">(</span>i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token function">RTE_DIM</span><span class="token punctuation">(</span>logtype_strings<span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token comment">// 预制几种日志类型</span></pre></td></tr><tr><td data-num="14"></td><td><pre>		<span class="token function">__rte_log_register</span><span class="token punctuation">(</span>logtype_strings<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>logtype<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="15"></td><td><pre>				logtype_strings<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>log_id<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre></pre></td></tr><tr><td data-num="17"></td><td><pre>	rte_logs<span class="token punctuation">.</span>dynamic_types_len <span class="token operator">=</span> RTE_LOGTYPE_FIRST_EXT_ID<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>该函数由宏 <code>RTE_INIT_PRIO</code>  定义</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">#define RTE_INIT_PRIO(func, prio) \</span></pre></td></tr><tr><td data-num="2"></td><td><pre>static void __attribute__<span class="token variable"><span class="token punctuation">((</span>constructor<span class="token punctuation">(</span>RTE_PRIO<span class="token punctuation">(</span>prio<span class="token punctuation">))</span></span>, used<span class="token punctuation">))</span> func<span class="token punctuation">(</span>void<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">#endif</span></pre></td></tr></table></figure><p>这里 <code>__attribute__((constructor</code>  是用来修饰函数的，代表这个函数是在 main 函数执行之前执行</p>
 <p>同时一个程序可以有多个 <code>__attribute__((constructor</code> ，那么就需要有优先级概念，优先级数字越小，优先级越高</p>
 <pre><code class="language-C">#define RTE_PRIORITY_LOG 101
 
