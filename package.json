@@ -25,7 +25,7 @@
     "hexo-generator-topindex": "^0.3.0",
     "hexo-helper-qrcode": "^1.0.2",
     "hexo-renderer-ejs": "^2.0.0",
-    "hexo-renderer-less": "^0.2.0",
+    "hexo-renderer-less": "^4.0.0",
     "hexo-renderer-multi-markdown-it": "^0.1.5",
     "hexo-renderer-pug": "^3.0.0",
     "hexo-renderer-stylus": "^2.1.0",
