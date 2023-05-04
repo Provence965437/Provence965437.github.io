@@ -3,9 +3,215 @@
   
     
     <entry>
-      <title><![CDATA[uniapp+express+mysql制作视频网站]]></title>
+      <title><![CDATA[【内核追踪】Centos7，BCC安装使用]]></title>
+      <url>/2023/04/28/bcc-1/</url>
+      <content type="html"><![CDATA[<h2 id="1内核升级"><a class="anchor" href="#1内核升级">#</a> 1. 内核升级</h2>
+<p>BCC 使用需要内核版本大于 4.1，我的环境是 centos7.9，内核版本是 3.10，因此需要首先进行内核升级。</p>
+<h3 id="11更新yum源仓库"><a class="anchor" href="#11更新yum源仓库">#</a> 1.1 更新 yum 源仓库</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>$ yum <span class="token parameter variable">-y</span> update</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token variable">$rpm</span> <span class="token parameter variable">--import</span> https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token variable">$rpm</span> <span class="token parameter variable">-Uvh</span> http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm</pre></td></tr></table></figure><p>查看可用内核包</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token variable">$yum</span> <span class="token parameter variable">--disablerepo</span><span class="token operator">=</span><span class="token string">"*"</span> <span class="token parameter variable">--enablerepo</span><span class="token operator">=</span><span class="token string">"elrepo-kernel"</span> list available</pre></td></tr></table></figure><h3 id="12安装新内核"><a class="anchor" href="#12安装新内核">#</a> 1.2 安装新内核</h3>
+<p>查看旧内核相关项</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token variable">$rpm</span> <span class="token parameter variable">-qa</span> <span class="token operator">|</span><span class="token function">grep</span> kernel</pre></td></tr></table></figure><p>先卸载旧的 kernel-headers，kernel-tools, kernel-tools-libs，只保留内核。<br />
+之后安装新内核及相关库</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token variable">$yum</span> <span class="token parameter variable">--enablerepo</span><span class="token operator">=</span>elrepo-kernel <span class="token function">install</span> kernel-ml</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token variable">$yum</span> <span class="token parameter variable">--enablerepo</span><span class="token operator">=</span>elrepo-kernel <span class="token function">install</span>  kernel-ml-headers kernel-ml-tools kernel-ml-tools-libs kernel-ml-devel</pre></td></tr></table></figure><p>设置启动项</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token comment">## 生成启动项配置文件</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token variable">$grub2</span>-mkconfig  <span class="token parameter variable">-o</span> /boot/grub2/grub.cfg</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token comment">#查看当前设置</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token variable">$grub2</span>-editenv list</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token assign-left variable">saved_entry</span><span class="token operator">=</span><span class="token number">0</span></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token variable">$grub2</span>-set-default <span class="token number">0</span></pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token comment">## 重启</span></pre></td></tr><tr><td data-num="8"></td><td><pre><span class="token variable">$reboot</span></pre></td></tr></table></figure><p><code>重启可能会报错，此时进入设备bios，关闭安全模式再次尝试</code></p>
+<h3 id="13安装网卡驱动"><a class="anchor" href="#13安装网卡驱动">#</a> 1.3 安装网卡驱动</h3>
+<p>重启进入新内核后可能存在网络不通，网卡不识别情况，应该是网卡驱动与内核版本不匹配，需要去官网下载网卡驱动并安装。<br />
+首先查看网卡驱动版本</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token variable">$lspci</span> <span class="token parameter variable">-v</span></pre></td></tr><tr><td data-num="2"></td><td><pre>        Subsystem: Dell Device 09a8</pre></td></tr><tr><td data-num="3"></td><td><pre>        Flags: bus master, fast devsel, latency <span class="token number">0</span>, IRQ <span class="token number">16</span></pre></td></tr><tr><td data-num="4"></td><td><pre>        I/O ports at <span class="token number">3000</span> <span class="token punctuation">[</span>size<span class="token operator">=</span><span class="token number">256</span><span class="token punctuation">]</span></pre></td></tr><tr><td data-num="5"></td><td><pre>        Memory at d1004000 <span class="token punctuation">(</span><span class="token number">64</span>-bit, non-prefetchable<span class="token punctuation">)</span> <span class="token punctuation">[</span>size<span class="token operator">=</span>4K<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="6"></td><td><pre>        Memory at d1000000 <span class="token punctuation">(</span><span class="token number">64</span>-bit, non-prefetchable<span class="token punctuation">)</span> <span class="token punctuation">[</span>size<span class="token operator">=</span>16K<span class="token punctuation">]</span></pre></td></tr><tr><td data-num="7"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">40</span><span class="token punctuation">]</span> Power Management version <span class="token number">3</span></pre></td></tr><tr><td data-num="8"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">]</span> MSI: Enable- <span class="token assign-left variable">Count</span><span class="token operator">=</span><span class="token number">1</span>/1 Maskable- 64bit+</pre></td></tr><tr><td data-num="9"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">70</span><span class="token punctuation">]</span> Express Endpoint, MSI 01</pre></td></tr><tr><td data-num="10"></td><td><pre>        Capabilities: <span class="token punctuation">[</span>b0<span class="token punctuation">]</span> MSI-X: Enable+ <span class="token assign-left variable">Count</span><span class="token operator">=</span><span class="token number">4</span> Masked-</pre></td></tr><tr><td data-num="11"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span> Advanced Error Reporting</pre></td></tr><tr><td data-num="12"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">140</span><span class="token punctuation">]</span> Virtual Channel</pre></td></tr><tr><td data-num="13"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">160</span><span class="token punctuation">]</span> Device Serial Number 01-00-00-00-68-4c-e0-00</pre></td></tr><tr><td data-num="14"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">170</span><span class="token punctuation">]</span> Latency Tolerance Reporting</pre></td></tr><tr><td data-num="15"></td><td><pre>        Capabilities: <span class="token punctuation">[</span><span class="token number">178</span><span class="token punctuation">]</span> L1 PM Substates</pre></td></tr><tr><td data-num="16"></td><td><pre>        Kernel driver <span class="token keyword">in</span> use: r8169</pre></td></tr><tr><td data-num="17"></td><td><pre>        Kernel modules: r8169</pre></td></tr></table></figure><p>就看 Kernel modules: r8169 这一行，说明需要 r8169 这个驱动<br />
+<span class="exturl" data-url="aHR0cHM6Ly93d3cucmVhbHRlay5jb20vemgtdHcvY29tcG9uZW50L3pvby9jYXRlZ29yeS9wY2ktODE2OS04MTEw">下载地址</span><br />
+下载后进入目录依次执行</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token variable">$rmmod</span> r8169</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token variable">$make</span> clean module</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token variable">$make</span> <span class="token function">install</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token variable">$depmod</span> <span class="token parameter variable">-a</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token variable">$modprobe</span> r8169</pre></td></tr></table></figure><p>这之后网卡应该就可以正常识别了</p>
+<h2 id="2安装bcc"><a class="anchor" href="#2安装bcc">#</a> 2 安装 BCC</h2>
+<h3 id="21安装各种编译依赖"><a class="anchor" href="#21安装各种编译依赖">#</a> 2.1 安装各种编译依赖</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">sudo</span> yum <span class="token function">install</span> <span class="token parameter variable">-y</span> epel-release</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">sudo</span> yum update <span class="token parameter variable">-y</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">sudo</span> yum groupinstall <span class="token parameter variable">-y</span> <span class="token string">"Development tools"</span></pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">sudo</span> yum <span class="token function">install</span> <span class="token parameter variable">-y</span> elfutils-libelf-devel cmake3 <span class="token function">git</span> bison flex ncurses-devel</pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token function">sudo</span> yum <span class="token function">install</span> <span class="token parameter variable">-y</span> luajit luajit-devel  <span class="token comment"># for Lua support</span></pre></td></tr></table></figure><h3 id="安装编译llvm"><a class="anchor" href="#安装编译llvm">#</a> 安装编译 llvm</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">curl</span>  <span class="token parameter variable">-LO</span>  http://releases.llvm.org/7.0.1/llvm-7.0.1.src.tar.xz</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">curl</span>  <span class="token parameter variable">-LO</span>  http://releases.llvm.org/7.0.1/cfe-7.0.1.src.tar.xz</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token function">tar</span> <span class="token parameter variable">-xf</span> cfe-7.0.1.src.tar.xz</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">tar</span> <span class="token parameter variable">-xf</span> llvm-7.0.1.src.tar.xz</pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre><span class="token function">mkdir</span> clang-build</pre></td></tr><tr><td data-num="7"></td><td><pre><span class="token function">mkdir</span> llvm-build</pre></td></tr><tr><td data-num="8"></td><td><pre></pre></td></tr><tr><td data-num="9"></td><td><pre><span class="token builtin class-name">cd</span> llvm-build</pre></td></tr><tr><td data-num="10"></td><td><pre>cmake3 <span class="token parameter variable">-G</span> <span class="token string">"Unix Makefiles"</span> <span class="token parameter variable">-DLLVM_TARGETS_TO_BUILD</span><span class="token operator">=</span><span class="token string">"BPF;X86"</span> <span class="token punctuation">\</span></pre></td></tr><tr><td data-num="11"></td><td><pre>  <span class="token parameter variable">-DCMAKE_BUILD_TYPE</span><span class="token operator">=</span>Release <span class="token punctuation">..</span>/llvm-7.0.1.src</pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token function">make</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span></pre></td></tr><tr><td data-num="14"></td><td><pre></pre></td></tr><tr><td data-num="15"></td><td><pre><span class="token builtin class-name">cd</span> <span class="token punctuation">..</span>/clang-build</pre></td></tr><tr><td data-num="16"></td><td><pre>cmake3 <span class="token parameter variable">-G</span> <span class="token string">"Unix Makefiles"</span> <span class="token parameter variable">-DLLVM_TARGETS_TO_BUILD</span><span class="token operator">=</span><span class="token string">"BPF;X86"</span> <span class="token punctuation">\</span></pre></td></tr><tr><td data-num="17"></td><td><pre>  <span class="token parameter variable">-DCMAKE_BUILD_TYPE</span><span class="token operator">=</span>Release <span class="token punctuation">..</span>/cfe-7.0.1.src</pre></td></tr><tr><td data-num="18"></td><td><pre><span class="token function">make</span></pre></td></tr><tr><td data-num="19"></td><td><pre><span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span></pre></td></tr><tr><td data-num="20"></td><td><pre><span class="token builtin class-name">cd</span> <span class="token punctuation">..</span></pre></td></tr></table></figure><h3 id="22编译安装bcc"><a class="anchor" href="#22编译安装bcc">#</a> 2.2 编译安装 bcc</h3>
+<p>前面编译的 llvm 是 7.0 版本，根据官网的说明，bcc 最新版本需要 11，因此安装 0.24.0 版本，下载<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2lvdmlzb3IvYmNjL3JlbGVhc2VzL3RhZy92MC4yNC4w"> release 版本</span><br />
+注意，要下载 <code>bcc-src-with-submodule</code> ，不然会少一下库文件。</p>
+<p>下载好解压后执行以下命令进行安装</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">git</span> clone https://github.com/iovisor/bcc.git</pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">mkdir</span> bcc/build<span class="token punctuation">;</span> <span class="token builtin class-name">cd</span> bcc/build</pre></td></tr><tr><td data-num="3"></td><td><pre>cmake <span class="token punctuation">..</span> <span class="token parameter variable">-DCMAKE_INSTALL_PREFIX</span><span class="token operator">=</span>/usr</pre></td></tr><tr><td data-num="4"></td><td><pre><span class="token function">make</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token function">make</span> <span class="token function">install</span></pre></td></tr></table></figure><h2 id="附录"><a class="anchor" href="#附录">#</a> 附录</h2>
+<p>在 /usr/share/bcc/tools/ 下有一系列基于 bcc 实现的工具，如下：</p>
+<pre><code class="language-argdist.py">bashreadline.py 获取正在运行的bash命令所带的参数
+biolatency.py 统计block IO请求的耗时，打印直方图
+biosnoop.py 打印每次block IO请求的详细信息
+biotop.py 打印每个进程的block IO详情
+bitesize.py 分别打印每个进程的IO请求直方图
+bpflist.py 打印当前系统正在运行哪些BPF程序
+btrfsslower.py 打印btrfs 慢于某一阈值的 read/write/open/fsync 操作的数量
+cachestat.py 打印Linux页缓存 hit/miss状况
+cachetop.py 分别打印每个进程的页缓存状况
+capable.py 跟踪到内核函数 cap_capable() （安全检查相关）的调用，打印详情
+ujobnew.sh 跟踪内存对象分配事件，打印统计，对研究GC很有帮助
+cpudist.py 统计task on-CPU time，即任务在被调度走之前在CPU上执行的时间
+cpuunclaimed.py 跟踪CPU run queues length，打印idle CPU (yet unclaimed by waiting threads) 百分比
+criticalstat.py 跟踪涉及内核原子操作的事件，打印调用栈
+dbslower.py 跟踪 MySQL 或 PostgreSQL 的慢查询
+dbstat.py 打印MySQL或PostgreSQL的查询耗时直方图
+dcsnoop.py 跟踪目录缓存（dcache）查询请求
+dcstat.py 打印目录缓存（dcache）统计信息
+deadlock.py 检查运行中的进行可能存在的死锁
+execsnoop.py 跟踪新进程创建事件
+ext4dist.py 跟踪ext4文件系统的 read/write/open/fsyncs 请求，打印耗时直方图
+ext4slower.py 跟踪ext4慢请求
+filelife.py 跟踪短寿命文件（跟踪期间创建然后删除）
+fileslower.py 跟踪较慢的同步读写请求
+filetop.py 打印文件读写排行榜（top），以及进程详细信息
+funccount.py 跟踪指定函数的调用次数，支持正则表达式
+funclatency.py 跟踪指定函数，打印耗时
+funcslower.py 跟踪唤醒时间（function invocations）较慢的内核和用户函数
+gethostlatency.py 跟踪hostname查询耗时
+hardirqs.py 跟踪硬中断耗时
+inject.py
+javacalls.sh
+javaflow.sh
+javagc.sh
+javaobjnew.sh
+javastat.sh
+javathreads.sh
+killsnoop.py 跟踪 kill() 系统调用发出的信号
+llcstat.py 跟踪缓存引用和缓存命中率事件
+mdflush.py 跟踪md driver level的flush事件
+memleak.py 检查内存泄漏
+mountsnoop.py 跟踪mount和unmount系统调用
+mysqld_qslower.py 跟踪MySQL慢查询
+nfsdist.py 打印NFS read/write/open/getattr 耗时直方图
+nfsslower.py 跟踪NFS read/write/open/getattr慢操作
+nodegc.sh 跟踪高级语言（Java/Python/Ruby/Node/）的GC事件
+offcputime.py 跟踪被阻塞的进程，打印调用栈、阻塞耗时等信息
+offwaketime.py 跟踪被阻塞且off-CPU的进程
+oomkill.py 跟踪Linux out-of-memory (OOM) killer
+opensnoop.py 跟踪 open() 系统调用
+perlcalls.sh
+perlstat.sh
+phpcalls.sh
+phpflow.sh
+phpstat.sh
+pidpersec.py 跟踪每分钟新创建的进程数量（通过跟踪 fork() ）
+profile.py CPU profiler
+pythoncalls.sh
+pythoonflow.sh
+pythongc.sh
+pythonstat.sh
+reset-trace.sh
+rubycalls.sh
+rubygc.sh
+rubyobjnew.sh
+runqlat.py 调度器run queue latency直方图，每个task等待CPU的时间
+runqlen.py 调度器run queue使用百分比
+runqslower.py 跟踪调度延迟很大的进程（等待被执行但是没有空闲CPU）
+shmsnoop.py 跟踪 shm*() 系统调用
+slabratetop.py 跟踪内核内存分配缓存（SLAB或SLUB）
+sofdsnoop.py 跟踪unix socket 文件描述符（FD）
+softirqs.py 跟踪软中断
+solisten.py 跟踪内核TCP listen事件
+sslsniff.py 跟踪OpenSSL/GnuTLS/NSS的 write/send和read/recv函数
+stackcount.py 跟踪函数和调用栈
+statsnoop.py 跟踪 stat() 系统调用
+syncsnoop.py 跟踪 sync() 系统调用
+syscount.py 跟踪各系统调用次数
+tclcalls.sh
+tclflow.sh
+tclobjnew.sh
+tclstat.sh
+tcpaccept.py 跟踪内核接受TCP连接的事件
+tcpconnect.py 跟踪内核建立TCP连接的事件
+tcpconnlat.py 跟踪建立TCP连接比较慢的事件，打印进程、IP、端口等详细信息
+tcpdrop.py 跟踪内核drop TCP 包或片（segment）的事件
+tcplife.py 打印跟踪期间建立和关闭的的TCP session
+tcpretrans.py 跟踪TCP重传
+tcpstates.py 跟踪TCP状态变化，包括每个状态的时长
+tcpsubnet.py 根据destination打印每个subnet的throughput
+tcptop.py 根据host和port打印throughput
+tcptracer.py 跟踪进行TCP connection操作的内核函数
+tplist.py 打印内核tracepoint和USDT probes点，已经它们的参数
+trace.py 跟踪指定的函数，并按照指定的格式打印函数当时的参数值
+ttysnoop.py 跟踪指定的tty或pts设备，将其打印复制一份输出
+vfscount.py 统计VFS（虚拟文件系统）调用
+vfsstat.py 跟踪一些重要的VFS函数，打印统计信息
+wakeuptime.py 打印进程被唤醒的延迟及其调用栈
+xfsdist.py 打印XFS read/write/open/fsync 耗时直方图
+xfsslower.py 打印XFS慢请求
+zfsdist.py 打印ZFS read/write/open/fsync 耗时直方图
+zfsslower.py 打印ZFS慢请求
+
+
+</code></pre>
+]]></content>
+      
+        <categories>
+            
+            <category> Ebpf内核追踪 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> Ebpf </tag>
+            
+            <tag> BCC </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[【内核追踪】BCC，bpftrace，libbpf内核追踪技术初探及对比]]></title>
+      <url>/2023/04/27/kernel-trace/</url>
+      <content type="html"><![CDATA[<h2 id="ebpf技术"><a class="anchor" href="#ebpf技术">#</a> Ebpf 技术</h2>
+<p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8zNzg3NjYyMTc=">参考</span><br />
+ Ebpf 全称为 Extended Berkeley Packet Filter”，其前身为 BPF（Berkeley Packet Filter），用来灵活高效的从操作系统内种抓取数据包，和内核追踪本身没什么关系。<br />
+tcpudump 即使采用的 BPF 技术抓取数据包。<br />
+1. 其原理就是在内核中实现一个虚拟机，然后用户态程序通过系统调用把数据包过滤代码载入到虚拟机中运行。</p>
+<p>2. 通过在协议栈代码中添加 hook 点，实现数据包在虚拟机中的重放，协议栈的运行与虚拟机的运行相互独立。<br />
+3. 虚拟机中的模块与用户态程序通过 buffer 共享内存进行通信，不进行系统调用，减少上下文切换。</p>
+<p>之后再 BPF 基础上，linux 实现了 eBPF。这是对 BPF 的一个扩展。eBPF 不仅仅局限于在网络代码中添加 hook，他可以在更多内核事件中实现监控。<br />
+本文主要关注也不在数据包抓取上，而是内核追踪。目前采用该技术的内核追踪技术有三个，下面分别介绍和对比。</p>
+<h2 id="bcc"><a class="anchor" href="#bcc">#</a> BCC</h2>
+<p>BCC 是基于 Ebpf 的内核跟踪工具集，大多数 BCC 功能需要 linux4.1 及以上版本<br />
+ BCC 使用 C 语言进行内核检测，并使用 Python 和 lua 作为前端简化了 BPF 程序的编写，它适用于多种任务，如性能分析和网络流量控制。</p>
+<h2 id="bpftrace"><a class="anchor" href="#bpftrace">#</a> bpftrace</h2>
+<h2 id="libbpf"><a class="anchor" href="#libbpf">#</a> libbpf</h2>
+]]></content>
+      
+        <categories>
+            
+            <category> Ebpf内核追踪 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> Ebpf </tag>
+            
+            <tag> BCC </tag>
+            
+            <tag> bpftrace </tag>
+            
+            <tag> libbpf </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[【uniapp+express+mysql制作视频网站】express后端搭建]]></title>
       <url>/2023/04/26/video_web-1/</url>
-      <content type="html"><![CDATA[<h2 id="主人还没有任何更新"><a class="anchor" href="#主人还没有任何更新">#</a> 主人还没有任何更新</h2>
+      <content type="html"><![CDATA[<p>这个系列用来记录视频网站的搭建过程。为了降低学习成本，我选择使用 uniapp 实现跨平台软件开发，使用 express 作为简易后端，使用 mysql 作为数据库。由于是低成本制作，并不会考虑自己存储视频资源，而是选择全部使用外部链接。</p>
+<h3 id="express简介"><a class="anchor" href="#express简介">#</a> Express 简介</h3>
+<p>Express 是一个体积很小使用灵活的 nodejs web 程序开发框架。他的安装部署非常的便捷。</p>
+<h3 id="安装"><a class="anchor" href="#安装">#</a> 安装</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">npm</span> <span class="token function">install</span> <span class="token parameter variable">-g</span> express-generator</pre></td></tr></table></figure><h3 id="创建项目"><a class="anchor" href="#创建项目">#</a> 创建项目</h3>
+<p>只需要简单的命令就可以创建出一个 web 项目</p>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>express + 项目名称</pre></td></tr><tr><td data-num="2"></td><td><pre>    <span class="token builtin class-name">cd</span> 项目名称</pre></td></tr><tr><td data-num="3"></td><td><pre>    <span class="token function">npm</span> <span class="token function">install</span></pre></td></tr></table></figure><h3 id="启动web"><a class="anchor" href="#启动web">#</a> 启动 web</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">npm</span> start</pre></td></tr></table></figure><p>之后打开 localhost:3000 即可看到 express 返回的页面</p>
+<h3 id="文件结构"><a class="anchor" href="#文件结构">#</a> 文件结构</h3>
+<figure class="highlight bash"><figcaption data-lang="bash"></figcaption><table><tr><td data-num="1"></td><td><pre>├── app.js</pre></td></tr><tr><td data-num="2"></td><td><pre>├── node_modules</pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token operator">|</span>   └── <span class="token punctuation">..</span>.</pre></td></tr><tr><td data-num="4"></td><td><pre>├── bin</pre></td></tr><tr><td data-num="5"></td><td><pre>│   └── www</pre></td></tr><tr><td data-num="6"></td><td><pre>├── package.json</pre></td></tr><tr><td data-num="7"></td><td><pre>├── public</pre></td></tr><tr><td data-num="8"></td><td><pre>│   ├── images</pre></td></tr><tr><td data-num="9"></td><td><pre>│   ├── javascripts</pre></td></tr><tr><td data-num="10"></td><td><pre>│   └── stylesheets</pre></td></tr><tr><td data-num="11"></td><td><pre>│       └── style.css</pre></td></tr><tr><td data-num="12"></td><td><pre>├── routes</pre></td></tr><tr><td data-num="13"></td><td><pre>│   ├── index.js</pre></td></tr><tr><td data-num="14"></td><td><pre>│   └── users.js</pre></td></tr><tr><td data-num="15"></td><td><pre>└── views</pre></td></tr><tr><td data-num="16"></td><td><pre>    ├── error.pug</pre></td></tr><tr><td data-num="17"></td><td><pre>    ├── index.pug</pre></td></tr><tr><td data-num="18"></td><td><pre>    └── layout.pug</pre></td></tr></table></figure><p>1.node_modules 是 npm install 生成的项目依赖项<br />
+ 2.package.json  此文件是项目的配置文件，配置启动脚本目录，项目名称，以及 npm install 所使用的项目依赖项等<br />
+ 3.public 文件包含的是网站静态文件<br />
+ 4.route 是路由文件夹<br />
+ 5.views 存放视图</p>
 ]]></content>
       
         <categories>
@@ -44,7 +250,13 @@
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token keyword">int</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token function">rte_log_register</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>name<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="3"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>	<span class="token keyword">struct</span> <span class="token class-name">rte_log_dynamic_type</span> <span class="token operator">*</span>new_dynamic_types<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre>	<span class="token keyword">int</span> id<span class="token punctuation">,</span> ret<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="6"></td><td><pre></pre></td></tr><tr><td data-num="7"></td><td><pre>	id <span class="token operator">=</span> <span class="token function">rte_log_lookup</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>	<span class="token keyword">if</span> <span class="token punctuation">(</span>id <span class="token operator">>=</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="9"></td><td><pre>		<span class="token keyword">return</span> id<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre></pre></td></tr><tr><td data-num="11"></td><td><pre>	new_dynamic_types <span class="token operator">=</span> <span class="token function">realloc</span><span class="token punctuation">(</span>rte_logs<span class="token punctuation">.</span>dynamic_types<span class="token punctuation">,</span></pre></td></tr><tr><td data-num="12"></td><td><pre>		<span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">rte_log_dynamic_type</span><span class="token punctuation">)</span> <span class="token operator">*</span></pre></td></tr><tr><td data-num="13"></td><td><pre>		<span class="token punctuation">(</span>rte_logs<span class="token punctuation">.</span>dynamic_types_len <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="14"></td><td><pre>	<span class="token keyword">if</span> <span class="token punctuation">(</span>new_dynamic_types <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="15"></td><td><pre>		<span class="token keyword">return</span> <span class="token operator">-</span>ENOMEM<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>	rte_logs<span class="token punctuation">.</span>dynamic_types <span class="token operator">=</span> new_dynamic_types<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>	ret <span class="token operator">=</span> <span class="token function">__rte_log_register</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> rte_logs<span class="token punctuation">.</span>dynamic_types_len<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="19"></td><td><pre>	<span class="token keyword">if</span> <span class="token punctuation">(</span>ret <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="20"></td><td><pre>		<span class="token keyword">return</span> ret<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="21"></td><td><pre></pre></td></tr><tr><td data-num="22"></td><td><pre>	rte_logs<span class="token punctuation">.</span>dynamic_types_len<span class="token operator">++</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="23"></td><td><pre></pre></td></tr><tr><td data-num="24"></td><td><pre>	<span class="token keyword">return</span> ret<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><h3 id="3输出日志"><a class="anchor" href="#3输出日志">#</a> 3. 输出日志</h3>
 <figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">rte_log</span><span class="token punctuation">(</span><span class="token class-name">uint32_t</span> level<span class="token punctuation">,</span> <span class="token class-name">uint32_t</span> logtype<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>format<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>	va_list ap<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>	<span class="token keyword">int</span> ret<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre></pre></td></tr><tr><td data-num="6"></td><td><pre>	<span class="token function">va_start</span><span class="token punctuation">(</span>ap<span class="token punctuation">,</span> format<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="7"></td><td><pre>	ret <span class="token operator">=</span> <span class="token function">rte_vlog</span><span class="token punctuation">(</span>level<span class="token punctuation">,</span> logtype<span class="token punctuation">,</span> format<span class="token punctuation">,</span> ap<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="8"></td><td><pre>	<span class="token function">va_end</span><span class="token punctuation">(</span>ap<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="9"></td><td><pre>	<span class="token keyword">return</span> ret<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="10"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr><tr><td data-num="11"></td><td><pre></pre></td></tr><tr><td data-num="12"></td><td><pre><span class="token keyword">int</span></pre></td></tr><tr><td data-num="13"></td><td><pre><span class="token function">rte_vlog</span><span class="token punctuation">(</span><span class="token class-name">uint32_t</span> level<span class="token punctuation">,</span> <span class="token class-name">uint32_t</span> logtype<span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span>format<span class="token punctuation">,</span> va_list ap<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="14"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="15"></td><td><pre>	FILE <span class="token operator">*</span>f <span class="token operator">=</span> <span class="token function">rte_log_get_stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="16"></td><td><pre>	<span class="token keyword">int</span> ret<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="17"></td><td><pre></pre></td></tr><tr><td data-num="18"></td><td><pre>	<span class="token keyword">if</span> <span class="token punctuation">(</span>logtype <span class="token operator">>=</span> rte_logs<span class="token punctuation">.</span>dynamic_types_len<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="19"></td><td><pre>		<span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="20"></td><td><pre>	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">rte_log_can_log</span><span class="token punctuation">(</span>logtype<span class="token punctuation">,</span> level<span class="token punctuation">)</span><span class="token punctuation">)</span></pre></td></tr><tr><td data-num="21"></td><td><pre>		<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="22"></td><td><pre></pre></td></tr><tr><td data-num="23"></td><td><pre>	<span class="token comment">/* save loglevel and logtype in a global per-lcore variable */</span></pre></td></tr><tr><td data-num="24"></td><td><pre>	<span class="token function">RTE_PER_LCORE</span><span class="token punctuation">(</span>log_cur_msg<span class="token punctuation">)</span><span class="token punctuation">.</span>loglevel <span class="token operator">=</span> level<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="25"></td><td><pre>	<span class="token function">RTE_PER_LCORE</span><span class="token punctuation">(</span>log_cur_msg<span class="token punctuation">)</span><span class="token punctuation">.</span>logtype <span class="token operator">=</span> logtype<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="26"></td><td><pre></pre></td></tr><tr><td data-num="27"></td><td><pre>	ret <span class="token operator">=</span> <span class="token function">vfprintf</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> format<span class="token punctuation">,</span> ap<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="28"></td><td><pre>	<span class="token function">fflush</span><span class="token punctuation">(</span>f<span class="token punctuation">)</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="29"></td><td><pre>	<span class="token keyword">return</span> ret<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="30"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure><p>rte_vlog 首先获取到目前系统设置的文件流，然后判断等级参数是否合理，如果等级大于系统设置的默认等级，不进行打印，之后调用 vprintf 日志数据打入到流文件中。<br />
 另外可以设置日志输入流</p>
-<figure class="highlight c"><figcaption data-lang="c"></figcaption><table><tr><td data-num="1"></td><td><pre><span class="token function">rte_openlog_stream</span><span class="token punctuation">(</span>FILE <span class="token operator">*</span>f<span class="token punctuation">)</span></pre></td></tr><tr><td data-num="2"></td><td><pre><span class="token punctuation">&#123;</span></pre></td></tr><tr><td data-num="3"></td><td><pre>	rte_logs<span class="token punctuation">.</span>file <span class="token operator">=</span> f<span class="token punctuation">;</span></pre></td></tr><tr><td data-num="4"></td><td><pre>	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span></pre></td></tr><tr><td data-num="5"></td><td><pre><span class="token punctuation">&#125;</span></pre></td></tr></table></figure>]]></content>
+<pre><code class="language-C">rte_openlog_stream(FILE *f)
+&#123;
+	rte_logs.file = f;
+	return 0;
+&#125;
+</code></pre>
+]]></content>
       
         <categories>
             
